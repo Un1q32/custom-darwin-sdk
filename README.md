@@ -1,4 +1,4 @@
-# Custom iOS libc
+# Custom iOS SDK
 
 > Write programs for 32bit iOS without Apple's SDK
 
