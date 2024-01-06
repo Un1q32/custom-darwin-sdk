@@ -1,0 +1,4 @@
+*.o
+libc.a
+/sdk
+a.out
