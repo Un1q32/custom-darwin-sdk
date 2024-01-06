@@ -1,3 +1,5 @@
+CROSS_PREFIX := armv7-apple-darwin11-
+
 CC := $(CROSS_PREFIX)cc
 AR := $(CROSS_PREFIX)ar
 
