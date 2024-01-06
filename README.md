@@ -10,7 +10,6 @@ Probobly won't ever go anywhere
 
 ```sh
 make [CROSS_PREFIX=armv7-apple-darwin11-]
-make sdk
 ```
 
 ## Usage:

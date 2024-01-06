@@ -16,7 +16,6 @@ sdk: all
 	mkdir -p sdk/usr/lib
 	cp src/libc.a sdk/usr/lib
 	ln -sf libc.a sdk/usr/lib/libSystem.a
-	cp *.o sdk/usr/lib
 	cp -r include sdk/usr
 
 src/libc.a: $(OBJS)
