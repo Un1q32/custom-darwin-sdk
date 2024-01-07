@@ -7,5 +7,8 @@
 #define EXIT_FAILURE 1
 
 extern void exit(int);
+extern void *malloc(size_t);
+extern void free(void *);
+extern void *realloc(void *, size_t);
 
 #endif
