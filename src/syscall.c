@@ -39,3 +39,8 @@ int munmap(void *addr, size_t length) {
 ssize_t write(int fd, const void *buf, size_t count) {
     return syscall(SYS_write, fd, buf, count);
 }
+
+[[noreturn]] void _exit(int status) {
+    syscall(SYS_exit, status);
+    while (1) {}
+}
