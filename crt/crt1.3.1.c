@@ -6,9 +6,8 @@ void start(void) {
     int argc = 0;
     char **argv = (char **)(&argc + 4);
     char **argv_index = argv;
-    while (*argv_index != NULL) {
+    while (*argv_index != NULL)
         argv_index++;
-    }
     argc = argv_index - argv;
     exit(main(argc, argv));
 }
