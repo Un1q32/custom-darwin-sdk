@@ -13,5 +13,5 @@ make [CROSS_PREFIX=armv7-apple-darwin11-]
 ## Usage:
 
 ```sh
-armv7-apple-darwin11-cc hello.c src/libc.a -Iinclude
+armv7-apple-darwin11-cc hello.c -isysroot sdk
 ```
