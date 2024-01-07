@@ -2,8 +2,6 @@
 
 > Write programs for 32bit iOS without Apple's SDK
 
-Currently still requires the offical SDK for crt*.o
-
 Probobly won't ever go anywhere
 
 ## Building:

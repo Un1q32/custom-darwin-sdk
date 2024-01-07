@@ -3,18 +3,25 @@ CROSS_PREFIX := armv7-apple-darwin11-
 CC := $(CROSS_PREFIX)cc
 AR := $(CROSS_PREFIX)ar
 
-CFLAGS := -Wall -Wextra -Werror -O2 -g
+CFLAGS := -Wall -Wextra -Werror
+OPTFLAGS := -O2
 
 SRCS := $(wildcard src/*.c)
 OBJS := $(SRCS:.c=.o)
+CRTSRCS := $(wildcard crt/*.c)
+CRTOBJS := $(CRTSRCS:.c=.o)
 
-.PHONY: all sdk clean
+.PHONY: all debug crt sdk clean
 
-all: src/libc.a
+all: src/libc.a $(CRTOBJS)
+
+debug: OPTFLAGS := -O0 -g
+debug: all
 
 sdk: all
 	mkdir -p sdk/usr/lib
 	cp src/libc.a sdk/usr/lib
+	cp crt/*.o sdk/usr/lib
 	ln -sf libc.a sdk/usr/lib/libSystem.a
 	cp -r include sdk/usr
 
@@ -22,7 +29,7 @@ src/libc.a: $(OBJS)
 	$(AR) rcs $@ $^
 
 %.o: %.c
-	$(CC) $(CFLAGS) -Iinclude -c $< -o $@
+	$(CC) $(CFLAGS) $(OPTFLAGS) -Iinclude -c $< -o $@
 
 clean:
-	rm -rf sdk src/*.o src/libc.a
+	rm -rf sdk src/*.o crt/*.o src/libc.a
