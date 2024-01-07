@@ -1,5 +1,5 @@
 #ifndef _STDIO_H_
-#define _STDIO_H_ 1
+#define _STDIO_H_
 
 #include <stddef.h>
 #include <sys/types.h>
@@ -23,9 +23,9 @@ extern FILE *__stderrp;
 #define __SWR  0x0008
 #define __SRW  0x0010
 
-extern int fputc(int c, FILE *stream);
-extern int putc(int c, FILE *stream);
-extern int putchar(int c);
-extern int puts(const char *s);
+extern int fputc(int, FILE *);
+extern int putc(int, FILE *);
+extern int putchar(int);
+extern int puts(const char *);
 
 #endif

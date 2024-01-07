@@ -1,5 +1,5 @@
 #ifndef _UNISTD_H_
-#define _UNISTD_H_ 1
+#define _UNISTD_H_
 
 #include <stddef.h>
 #include <sys/types.h>
@@ -10,6 +10,6 @@
 
 extern void _exit(int);
 extern ssize_t write(int, const void *, size_t);
-extern long syscall(long number, ...);
+extern long syscall(long, ...);
 
 #endif
