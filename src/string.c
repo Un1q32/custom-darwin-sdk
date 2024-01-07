@@ -1,3 +1,5 @@
+#include <stddef.h>
+
 char *strcat(char *dest, const char *src) {
     char *p = dest;
     while (*p) p++;
@@ -17,4 +19,12 @@ char *stpcpy(char *dest, const char *src) {
     while ((*dest++ = *src++) != '\0')
         ;
     return dest - 1;
+}
+
+void *memcpy(void *dest, const void *src, size_t n) {
+    char *d = dest;
+    const char *s = src;
+    while (n--)
+        *d++ = *s++;
+    return dest;
 }

@@ -1,4 +1,7 @@
 #include <stdarg.h>
+#include <stddef.h>
+#include <sys/syscall.h>
+#include <sys/types.h>
 
 long syscall(long number, ...) {
     long ret;
@@ -23,4 +26,16 @@ long syscall(long number, ...) {
         : [number] "r"(number), [arg1] "r"(arg1), [arg2] "r"(arg2), [arg3] "r"(arg3), [arg4] "r"(arg4), [arg5] "r"(arg5)
     );
     return ret;
+}
+
+void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset) {
+    return (void *)syscall(SYS_mmap, addr, length, prot, flags, fd, offset);
+}
+
+int munmap(void *addr, size_t length) {
+    return syscall(SYS_munmap, addr, length);
+}
+
+ssize_t write(int fd, const void *buf, size_t count) {
+    return syscall(SYS_write, fd, buf, count);
 }
