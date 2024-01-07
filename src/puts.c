@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 int puts(const char *s) {
-    int ret = write(1, s, strlen(s));
+    int ret = write(STDOUT_FILENO, s, strlen(s));
     putchar('\n');
     return ret;
 }

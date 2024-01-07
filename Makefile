@@ -29,7 +29,7 @@ src/libc.a: $(OBJS)
 	$(AR) rcs $@ $^
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(OPTFLAGS) -Iinclude -c $< -o $@
+	$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
 	rm -rf sdk src/*.o crt/*.o src/libc.a
