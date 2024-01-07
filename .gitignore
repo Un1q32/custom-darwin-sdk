@@ -1,4 +1,5 @@
 *.o
 libc.a
+*.dSYM
 /sdk
 a.out
