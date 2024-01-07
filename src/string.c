@@ -28,3 +28,11 @@ void *memcpy(void *dest, const void *src, size_t n) {
         *d++ = *s++;
     return dest;
 }
+
+size_t strlen(const char *s) {
+    int n;
+
+    for (n = 0; *s != '\0'; s++)
+        n++;
+    return n;
+}
