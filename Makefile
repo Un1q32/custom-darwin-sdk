@@ -28,6 +28,9 @@ sdk: all
 src/libc.a: $(OBJS)
 	$(AR) rcs $@ $^
 
+src/syscall.o: src/syscall.c
+	$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -O1 -c $< -o $@
+
 %.o: %.c
 	$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
