@@ -14,6 +14,7 @@ long syscall(long number, ...) {
         args[i] = va_arg(va_args, long);
     va_end(va_args);
     __asm__ __volatile__ (
+#if defined(__thumb__)
         "mov r12, %[number];"
         "ldm %[args], {r0-r5};"
         "svc #0x80;"
@@ -21,6 +22,9 @@ long syscall(long number, ...) {
         : [ret] "=r"(ret)
         : [number] "r"(number), [args] "r"(args)
         : "r12", "r0", "r1", "r2", "r3", "r4", "r5"
+#else
+#error "syscall not implemented for this architecture"
+#endif
     );
     return ret;
 }
