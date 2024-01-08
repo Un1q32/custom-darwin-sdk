@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <sys/syscall.h>
@@ -22,6 +23,17 @@ long syscall(long number, ...) {
         : "r12", "r0", "r1", "r2", "r3", "r4", "r5"
     );
     return ret;
+}
+
+int open(const char *path, int flags, ...) {
+    mode_t mode = 0;
+    if (flags & O_CREAT) {
+        va_list va_args;
+        va_start(va_args, flags);
+        mode = va_arg(va_args, int);
+        va_end(va_args);
+    }
+    return syscall(SYS_open, path, flags, mode);
 }
 
 void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset) {
