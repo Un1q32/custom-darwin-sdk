@@ -23,6 +23,8 @@ sdk: all
 	cp src/libc.a sdk/usr/lib
 	cp crt/*.o sdk/usr/lib
 	ln -sf libc.a sdk/usr/lib/libSystem.a
+	ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
+	ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
 	cp -r include sdk/usr
 
 src/libc.a: $(OBJS)
