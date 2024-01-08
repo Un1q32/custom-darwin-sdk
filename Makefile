@@ -1,5 +1,5 @@
 CC := clang -target armv7-apple-darwin
-AR := ar
+AR := llvm-ar
 
 CFLAGS := -Wall -Wextra -Werror
 OPTFLAGS := -O2
