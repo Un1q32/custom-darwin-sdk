@@ -1,4 +1,6 @@
 #include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 char *strcat(char *dest, const char *src) {
     char *p = dest;
@@ -22,9 +24,11 @@ char *stpcpy(char *dest, const char *src) {
 }
 
 char *strdup(const char *str) {
-    const char str2[strlen(str) + 1];
-    strcpy(str2, str);
-    return str2;
+    size_t len = strlen(str) + 1;
+    char *dup = malloc(len);
+    if (dup)
+        memcpy(dup, str, len);
+    return dup;
 }
 
 void *memcpy(void *dest, const void *src, size_t n) {

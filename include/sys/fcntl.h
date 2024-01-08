@@ -9,6 +9,10 @@
 #define O_EXCL     0x0800
 #define O_NOFOLLOW 0x0100
 
+#define AT_FDCWD -2
+
+#define F_GETPATH 50
+
 extern int open(const char *, int, ...);
 extern int fcntl(int, int, ...);
 
