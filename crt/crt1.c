@@ -1,7 +1,7 @@
 #include <stdlib.h>
 extern int main(int argc, char *argv[]);
 
-void start(void) asm("start");
+void start(void) __asm__("start");
 void start(void) {
     int argc = 0;
     char **argv = (char **)(&argc + 4);

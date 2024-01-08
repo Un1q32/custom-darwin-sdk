@@ -1,5 +1,6 @@
 #include <unistd.h>
 
-[[noreturn]] void exit(int status) {
+void exit(int status) {
     _exit(status);
+    while (1) {}
 }

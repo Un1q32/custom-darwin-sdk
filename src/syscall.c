@@ -8,10 +8,11 @@ long syscall(long number, ...) {
     long args[6];
     va_list va_args;
     va_start(va_args, number);
-    for (int i = 0; i < 6; i++)
+    int i;
+    for (i = 0; i < 6; i++)
         args[i] = va_arg(va_args, long);
     va_end(va_args);
-    asm volatile (
+    __asm__ __volatile__ (
         "mov r12, %[number];"
         "ldm %[args], {r0-r5};"
         "svc #0x80;"
@@ -39,7 +40,7 @@ ssize_t write(int fd, const void *buf, size_t count) {
     return syscall(SYS_write, fd, buf, count);
 }
 
-[[noreturn]] void _exit(int status) {
+void _exit(int status) {
     syscall(SYS_exit, status);
     while (1) {}
 }

@@ -1,7 +1,7 @@
 CC := clang -target armv7-apple-darwin
 AR := llvm-ar
 
-CFLAGS := -Wall -Wextra -Werror
+CFLAGS := -Wall -Wextra -Werror -std=c89
 OPTFLAGS := -O2
 
 SRCS := $(wildcard src/*.c)
