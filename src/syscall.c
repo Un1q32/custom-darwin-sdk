@@ -11,7 +11,7 @@ long syscall(long number, ...) {
     for (int i = 0; i < 6; i++)
         args[i] = va_arg(va_args, long);
     va_end(va_args);
-    asm(
+    asm volatile (
         "mov r12, %[number];"
         "ldm %[args], {r0-r5};"
         "svc #0x80;"

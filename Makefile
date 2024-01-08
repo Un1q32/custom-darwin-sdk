@@ -28,13 +28,6 @@ sdk: all
 src/libc.a: $(OBJS)
 	$(AR) rcs $@ $^
 
-src/syscall.o: src/syscall.c
-	if [ "$(OPTFLAGS)" = "-O0 -g" ]; then \
-		$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o $@; \
-	else \
-		$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -O1 -c $< -o $@; \
-	fi
-
 %.o: %.c
 	$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
