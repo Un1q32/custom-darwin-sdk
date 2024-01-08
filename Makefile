@@ -1,7 +1,5 @@
-CROSS_PREFIX := armv7-apple-darwin11-
-
-CC := $(CROSS_PREFIX)cc
-AR := $(CROSS_PREFIX)ar
+CC := clang -target armv7-apple-darwin
+AR := ar
 
 CFLAGS := -Wall -Wextra -Werror
 OPTFLAGS := -O2
