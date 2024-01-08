@@ -10,5 +10,6 @@
 #define O_NOFOLLOW 0x0100
 
 extern int open(const char *, int, ...);
+extern int fcntl(int, int, ...);
 
 #endif
