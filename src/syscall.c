@@ -1,6 +1,9 @@
 #include <fcntl.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 
@@ -37,6 +40,7 @@ int open(const char *path, int flags, ...) {
         mode = va_arg(va_args, int);
         va_end(va_args);
     }
+
     return syscall(SYS_open, path, flags, mode);
 }
 
@@ -71,4 +75,50 @@ int fcntl(int fd, int cmd, ...) {
 void _exit(int status) {
     syscall(SYS_exit, status);
     while (1) {}
+}
+
+int mkdirat(int fd, const char* path, mode_t mode) {
+#ifdef SYS_mkdirat
+    return syscall(SYS_mkdirat, fd, path, mode);
+#else
+    if (fd == AT_FDCWD || path[0] == '/')
+        return mkdir(path, mode);
+
+    char fdpath[PATH_MAX];
+    if (fcntl(fd, F_GETPATH, fdpath) == -1)
+        return -1;
+
+    char new_path[strlen(fdpath) + strlen(path) + 2];
+    strcpy(new_path, fdpath);
+    strcat(new_path, "/");
+    strcat(new_path, path);
+    return mkdir(new_path, mode);
+#endif
+}
+
+int openat(int fd, const char* path, int flags, ...) {
+    mode_t mode = 0;
+    if (flags & O_CREAT) {
+        va_list va_args;
+        va_start(va_args, flags);
+        mode = va_arg(va_args, int);
+        va_end(va_args);
+    }
+
+#ifdef SYS_openat
+    return syscall(SYS_openat, fd, path, flags, mode);
+#else
+    if (fd == AT_FDCWD || path[0] == '/')
+        return open(path, flags, mode);
+
+    char fdpath[PATH_MAX];
+    if (fcntl(fd, F_GETPATH, fdpath) == -1)
+        return -1;
+
+    char new_path[strlen(fdpath) + strlen(path) + 2];
+    strcpy(new_path, fdpath);
+    strcat(new_path, "/");
+    strcat(new_path, path);
+    return open(new_path, flags, mode);
+#endif
 }

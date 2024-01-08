@@ -14,6 +14,7 @@
 #define F_GETPATH 50
 
 extern int open(const char *, int, ...);
+extern int openat(int, const char *, int, ...);
 extern int fcntl(int, int, ...);
 
 #endif

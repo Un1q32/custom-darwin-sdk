@@ -4,5 +4,6 @@
 #include <sys/types.h>
 
 extern int mkdir(const char *, mode_t);
+extern int mkdirat(int, const char *, mode_t);
 
 #endif
