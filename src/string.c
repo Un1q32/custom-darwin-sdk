@@ -21,6 +21,12 @@ char *stpcpy(char *dest, const char *src) {
     return dest - 1;
 }
 
+char *strdup(const char *str) {
+    const char str2[strlen(str) + 1];
+    strcpy(str2, str);
+    return str2;
+}
+
 void *memcpy(void *dest, const void *src, size_t n) {
     char *d = dest;
     const char *s = src;
