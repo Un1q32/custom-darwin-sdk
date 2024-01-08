@@ -21,6 +21,7 @@
 #define SYS_getuid    24
 #define SYS_geteuid   25
 #define SYS_munmap    73
+#define SYS_mkdir    136
 #define SYS_mmap     197
 
 #endif
