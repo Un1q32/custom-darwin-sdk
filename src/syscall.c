@@ -4,28 +4,21 @@
 #include <sys/types.h>
 
 long syscall(long number, ...) {
-    long ret, arg1, arg2, arg3, arg4, arg5, arg6;
-    va_list args;
-    va_start(args, number);
-    arg1 = va_arg(args, long);
-    arg2 = va_arg(args, long);
-    arg3 = va_arg(args, long);
-    arg4 = va_arg(args, long);
-    arg5 = va_arg(args, long);
-    arg6 = va_arg(args, long);
-    va_end(args);
+    long ret;
+    long args[6];
+    va_list va_args;
+    va_start(va_args, number);
+    for (int i = 0; i < 6; i++)
+        args[i] = va_arg(va_args, long);
+    va_end(va_args);
     asm(
         "mov r12, %[number];"
-        "mov r0, %[arg1];"
-        "mov r1, %[arg2];"
-        "mov r2, %[arg3];"
-        "mov r3, %[arg4];"
-        "mov r4, %[arg5];"
-        "mov r5, %[arg6];"
+        "ldm %[args], {r0-r5};"
         "svc #0x80;"
         "mov %[ret], r0;"
         : [ret] "=r"(ret)
-        : [number] "r"(number), [arg1] "r"(arg1), [arg2] "r"(arg2), [arg3] "r"(arg3), [arg4] "r"(arg4), [arg5] "r"(arg5), [arg6] "r"(arg6)
+        : [number] "r"(number), [args] "r"(args)
+        : "r12", "r0", "r1", "r2", "r3", "r4", "r5"
     );
     return ret;
 }
