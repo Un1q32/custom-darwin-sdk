@@ -1,8 +1,9 @@
-CC := clang -target armv7-apple-darwin --no-default-config -mlinker-version=907
+CC := clang -target armv7-apple-darwin --no-default-config
 AR := llvm-ar
 
 CFLAGS := -Wall -Wextra -Werror -std=c89
 OPTFLAGS := -O2
+LDFLAGS := -mlinker-version=907
 
 SRCS := $(wildcard src/*.c)
 OBJS := $(SRCS:.c=.o)
@@ -36,7 +37,7 @@ sdk/usr/lib: src/libc.a $(CRTOBJS)
 tests: $(TESTEXES)
 
 $(TESTEXES): $(TESTSRCS) all
-	$(CC) -isysroot sdk $(CFLAGS) $(OPTFLAGS) $< -o $@
+	$(CC) -isysroot sdk $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) $< -o $@
 
 src/libc.a: $(OBJS)
 	$(AR) rcs $@ $^
