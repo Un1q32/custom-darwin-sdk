@@ -10,5 +10,7 @@ extern void exit(int);
 extern void *malloc(size_t);
 extern void free(void *);
 extern void *realloc(void *, size_t);
+extern long strtol(const char *, char **, int);
+extern int atoi(const char *);
 
 #endif
