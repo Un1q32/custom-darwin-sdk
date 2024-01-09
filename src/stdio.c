@@ -24,9 +24,8 @@ FILE *__stderrp = &__stdio[2];
 int puts(const char *s) {
     char str[strlen(s) + 2];
     strcpy(str, s);
-    strcat(str, "\n");
-    int ret = write(STDOUT_FILENO, str, strlen(str));
-    return ret;
+    str[strlen(s)] = '\n';
+    return write(STDOUT_FILENO, str, strlen(str));
 }
 
 int putchar(int c) {
