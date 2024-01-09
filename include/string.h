@@ -10,5 +10,6 @@ extern char *stpcpy(char *, const char *);
 extern char *strdup(const char *);
 extern void *memcpy(void *, const void *, size_t);
 extern void *memset(void *, int, size_t);
+extern void explicit_bzero(void *, size_t);
 
 #endif
