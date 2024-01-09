@@ -1,8 +1,10 @@
 #include <stdlib.h>
 extern int main(int argc, char *argv[]);
 
-void start(void) __asm__("start");
-void start(void) {
+#ifdef __APPLE__
+void _start(void) __asm__("start");
+#endif
+void _start(void) {
     int argc = 0;
     char **argv = (char **)(&argc + 4);
     char **argv_index = argv;
