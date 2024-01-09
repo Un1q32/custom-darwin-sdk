@@ -1,9 +1,9 @@
-CC := clang -target armv7-apple-darwin --no-default-config
+CC := clang -target armv7-apple-darwin
 AR := llvm-ar
 
 CFLAGS := -Wall -Wextra -Werror -std=c89
 OPTFLAGS := -O2
-LDFLAGS := -mlinker-version=907
+LDFLAGS := -mlinker-version=907 -fuse-ld=ld
 
 SRCS := $(wildcard src/*.c)
 OBJS := $(SRCS:.c=.o)
