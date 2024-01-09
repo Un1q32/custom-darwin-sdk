@@ -23,13 +23,15 @@ debug: OPTFLAGS := -g
 debug: all
 
 sdk/usr/include: $(HEADERS)
+	rm -rf sdk/usr/include
 	mkdir -p sdk/usr
 	cp -r include sdk/usr
 
 sdk/usr/lib: src/libc.a $(CRTOBJS)
+	rm -rf sdk/usr/lib
 	mkdir -p sdk/usr/lib
 	cp src/libc.a sdk/usr/lib
-	cp crt/*.o sdk/usr/lib
+	cp $(CRTOBJS) sdk/usr/lib
 	ln -sf libc.a sdk/usr/lib/libSystem.a
 	ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
 	ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
