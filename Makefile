@@ -19,7 +19,7 @@ HEADERS := $(wildcard include/*.h) $(wildcard include/*/*.h)
 
 all: sdk/usr/include sdk/usr/lib
 
-debug: OPTFLAGS := -O0 -g
+debug: OPTFLAGS := -g
 debug: all
 
 sdk/usr/include: $(HEADERS)
