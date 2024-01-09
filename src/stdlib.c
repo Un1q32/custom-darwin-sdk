@@ -45,6 +45,24 @@ int atoi(const char *nptr) {
     return (int)strtol(nptr, NULL, 10);
 }
 
+char *itoa(int num) {
+    static char buf[32];
+    char *p = buf + 31;
+    int sign = 0;
+    if (num < 0) {
+        sign = 1;
+        num = -num;
+    }
+    *p = '\0';
+    do {
+        *--p = '0' + num % 10;
+        num /= 10;
+    } while (num);
+    if (sign)
+        *--p = '-';
+    return p;
+}
+
 void exit(int status) {
     _exit(status);
     while (1) {}
