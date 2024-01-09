@@ -36,7 +36,7 @@ sdk/usr/lib: src/libc.a $(CRTOBJS)
 
 tests: $(TESTEXES)
 
-$(TESTEXES): $(TESTSRCS) all
+tests/bin/%: tests/%.c all
 	$(CC) -isysroot sdk $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) $< -o $@
 
 src/libc.a: $(OBJS)
