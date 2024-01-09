@@ -22,10 +22,15 @@ FILE *__stdoutp = &__stdio[1];
 FILE *__stderrp = &__stdio[2];
 
 int puts(const char *s) {
-    char str[strlen(s) + 2];
-    strcpy(str, s);
-    str[strlen(s)] = '\n';
-    return write(STDOUT_FILENO, str, strlen(str));
+    size_t len = strlen(s);
+    char str[len + 1];
+    memcpy(str, s, len);
+    str[len] = '\n';
+    return write(STDOUT_FILENO, str, len + 1);
+}
+
+int fputs(const char *s, FILE *stream) {
+    return write(stream->_file, s, strlen(s));
 }
 
 int putchar(int c) {

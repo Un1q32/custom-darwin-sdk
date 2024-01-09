@@ -27,5 +27,6 @@ extern int fputc(int, FILE *);
 extern int putc(int, FILE *);
 extern int putchar(int);
 extern int puts(const char *);
+extern int fputs(const char *, FILE *);
 
 #endif
