@@ -3,3 +3,4 @@ libc.a
 *.dSYM
 /sdk
 a.out
+/tests/bin
