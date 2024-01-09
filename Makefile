@@ -1,4 +1,4 @@
-CC := clang -target armv7-apple-darwin --no-default-config
+CC := clang -target armv7-apple-darwin --no-default-config -mlinker-version=907
 AR := llvm-ar
 
 CFLAGS := -Wall -Wextra -Werror -std=c89
