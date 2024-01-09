@@ -1,5 +1,13 @@
+int isascii(int c) {
+    return c >= 0 && c <= 127;
+}
+
 int isdigit(int c) {
     return c >= '0' && c <= '9';
+}
+
+int islower(int c) {
+    return c >= 'a' && c <= 'z';
 }
 
 int isspace(int c) {
@@ -14,4 +22,8 @@ int isspace(int c) {
         default:
             return 0;
     }
+}
+
+int isupper(int c) {
+    return c >= 'A' && c <= 'Z';
 }
