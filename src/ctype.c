@@ -33,3 +33,19 @@ int isspace(int c) {
 int isxdigit(int c) {
     return isdigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
 }
+
+int iscntrl(int c) {
+    return (c >= 0 && c <= 31) || c == 127;
+}
+
+int isgraph(int c) {
+    return c >= 33 && c <= 126;
+}
+
+int isprint(int c) {
+    return c >= 32 && c <= 126;
+}
+
+int ispunct(int c) {
+    return isgraph(c) && !isalnum(c);
+}
