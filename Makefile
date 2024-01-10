@@ -17,7 +17,7 @@ HEADERS := $(wildcard include/*.h) $(wildcard include/*/*.h)
 
 .PHONY: all debug tests clean
 
-all: sdk/usr/include sdk/usr/lib
+all: sdk/usr/lib sdk/usr/include
 
 debug: OPTFLAGS := -g
 debug: all
@@ -36,11 +36,11 @@ sdk/usr/lib: src/libc.a $(CRTOBJS)
 	ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
 	ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
 
+tests: OPTFLAGS := -g
 tests: $(TESTEXES)
 
-tests/bin/%: OPTFLAGS := -g
-tests/bin/%: tests/%.c debug
-	$(CC) -isysroot sdk $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) $< -o $@
+tests/bin/%: tests/%.c sdk/usr/lib sdk/usr/include
+	$(CC) -isysroot sdk $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) -o $@ $<
 
 src/libc.a: $(OBJS)
 	$(AR) rcs $@ $^
@@ -49,4 +49,4 @@ src/libc.a: $(OBJS)
 	$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
-	rm -rf sdk src/*.o crt/*.o src/libc.a $(TESTEXES)
+	rm -rf sdk src/*.o crt/*.o src/libc.a tests/bin/*
