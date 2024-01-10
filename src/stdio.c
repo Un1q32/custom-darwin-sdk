@@ -51,21 +51,60 @@ int fputc(int c, FILE *stream) {
 
 char *__tostr(const char *format, va_list ap) {
     char *ret;
+    char formatlen = 0;
     switch (format[0]) {
         case 'd':
             ret = itoa(va_arg(ap, int));
+            formatlen = 1;
             break;
         case 's':
             ret = va_arg(ap, char *);
+            formatlen = 1;
             break;
         case 'c':
             ret = malloc(2);
             ret[0] = va_arg(ap, int);
             ret[1] = '\0';
+            formatlen = 1;
+            break;
+        case 'l':
+            switch (format[1]) {
+                case 'l':
+                    switch (format[2]) {
+                        case 'd':
+                            ret = itoa(va_arg(ap, long long));
+                            formatlen = 3;
+                            break;
+                        case 'u':
+                            ret = utoa(va_arg(ap, unsigned long long));
+                            formatlen = 3;
+                            break;
+                        default:
+                            ret = NULL;
+                            break;
+                    }
+                    break;
+                case 'd':
+                    ret = itoa(va_arg(ap, long));
+                    formatlen = 2;
+                    break;
+                case 'u':
+                    ret = utoa(va_arg(ap, unsigned long));
+                    formatlen = 2;
+                    break;
+                default:
+                    ret = NULL;
+                    break;
+            }
             break;
         default:
             ret = NULL;
             break;
+    }
+    if (ret != NULL) {
+        size_t len = strlen(ret);
+        ret = realloc(ret, len + 2);
+        ret[len + 1] = formatlen;
     }
     return ret;
 }
@@ -79,7 +118,7 @@ int vsprintf(char *str, const char *format, va_list ap) {
                 if (str != NULL)
                     strcpy(str + j, tmp);
                 j += strlen(tmp);
-                i += 2;
+                i += tmp[strlen(tmp) + 1] + 1;
                 free(tmp);
             } else {
                 if (str != NULL)
