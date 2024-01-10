@@ -6,7 +6,5 @@ int bcmp(const void *s1, const void *s2, size_t n) {
 }
 
 void bzero(void *s, size_t n) {
-    char *p = s;
-    while (n--)
-        *p++ = 0;
+    memset(s, 0, n);
 }
