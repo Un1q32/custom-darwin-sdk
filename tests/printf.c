@@ -1,12 +1,12 @@
 #include <stdio.h>
 
-int main(int argc, char *argv[]) {
+int main(int argc, const char *argv[]) {
     int num = -123;
     printf("num = %d\n", num);
     int num2 = 12345;
     printf("num2 = %d\n", num2);
-    long num3 = 123456;
-    printf("num3 = %ld\n", num3);
+    long long num3 = 8589934592;
+    printf("num3 = %lld\n", num3);
     unsigned long long num4 = 0xFFFFFFFFFFFFFFFF;
     printf("num4 = %llu\n", num4);
     if (argc > 1)
