@@ -49,10 +49,8 @@ int fputc(int c, FILE *stream) {
     return c;
 }
 
-char *__tostr(char *format, ...) {
+char *__tostr(const char *format, va_list ap) {
     char *ret;
-    va_list ap;
-    va_start(ap, format);
     switch (format[0]) {
         case 'd':
             ret = itoa(va_arg(ap, int));
@@ -69,23 +67,41 @@ char *__tostr(char *format, ...) {
             ret = NULL;
             break;
     }
-    va_end(ap);
     return ret;
 }
 
-/* TODO: make vsprintf so printf can work */
 int vsprintf(char *str, const char *format, va_list ap) {
-    (void)str;
-    (void)format;
-    (void)ap;
-    return 0;
+    int i = 0, j = 0;
+    while (format[i]) {
+        if (format[i] == '%') {
+            char *tmp = __tostr(format + i + 1, ap);
+            if (tmp) {
+                if (str != NULL)
+                    strcpy(str + j, tmp);
+                j += strlen(tmp);
+                i += 2;
+            } else {
+                if (str != NULL)
+                    str[j] = format[i];
+                j++;
+                i++;
+            }
+        } else {
+            if (str != NULL)
+                str[j] = format[i];
+            j++;
+            i++;
+        }
+    }
+    if (str != NULL)
+        str[j] = '\0';
+    return j;
 }
 
 int vsnprintf(char *str, size_t size, const char *format, va_list ap) {
     int ret = vsprintf(str, format, ap);
-    if (ret >= (int)size) {
+    if (ret >= (int)size && str != NULL)
         str[size - 1] = '\0';
-    }
     return ret;
 }
 

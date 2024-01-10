@@ -38,7 +38,8 @@ sdk/usr/lib: src/libc.a $(CRTOBJS)
 
 tests: $(TESTEXES)
 
-tests/bin/%: tests/%.c all
+tests/bin/%: OPTFLAGS := -g
+tests/bin/%: tests/%.c debug
 	$(CC) -isysroot sdk $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) $< -o $@
 
 src/libc.a: $(OBJS)

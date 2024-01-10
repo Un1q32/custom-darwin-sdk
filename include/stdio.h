@@ -29,17 +29,15 @@ extern int putc(int, FILE *);
 extern int putchar(int);
 extern int puts(const char *);
 extern int fputs(const char *, FILE *);
-/*
-* extern int printf(const char *, ...);
-* extern int fprintf(FILE *, const char *, ...);
-* extern int dprintf(int, const char *, ...);
-* extern int sprintf(char *, const char *, ...);
-* extern int snprintf(char *, size_t, const char *, ...);
-* extern int vprintf(const char *, va_list);
-* extern int vfprintf(FILE *, const char *, va_list);
-* extern int vdprintf(int, const char *, va_list);
-* extern int vsprintf(char *, const char *, va_list);
-* extern int vsnprintf(char *, size_t, const char *, va_list);
-*/
+extern int printf(const char *, ...);
+extern int fprintf(FILE *, const char *, ...);
+extern int dprintf(int, const char *, ...);
+extern int sprintf(char *, const char *, ...);
+extern int snprintf(char *, size_t, const char *, ...);
+extern int vprintf(const char *, va_list);
+extern int vfprintf(FILE *, const char *, va_list);
+extern int vdprintf(int, const char *, va_list);
+extern int vsprintf(char *, const char *, va_list);
+extern int vsnprintf(char *, size_t, const char *, va_list);
 
 #endif
