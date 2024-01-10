@@ -80,6 +80,7 @@ int vsprintf(char *str, const char *format, va_list ap) {
                     strcpy(str + j, tmp);
                 j += strlen(tmp);
                 i += 2;
+                free(tmp);
             } else {
                 if (str != NULL)
                     str[j] = format[i];
