@@ -51,46 +51,122 @@ int fputc(int c, FILE *stream) {
 
 char *__tostr(const char *format, va_list ap) {
     char *ret;
-    char formatlen = 0;
+    char formatlen = 1;
     switch (format[0]) {
-        case 'd':
-            ret = itoa(va_arg(ap, int));
-            formatlen = 1;
+        case '%':
+            ret = malloc(2);
+            ret[0] = '%';
+            ret[1] = '\0';
             break;
         case 's':
             ret = va_arg(ap, char *);
-            formatlen = 1;
             break;
         case 'c':
             ret = malloc(2);
             ret[0] = va_arg(ap, int);
             ret[1] = '\0';
+            break;
+        case 'd':
+        case 'i':
+            ret = itoa(va_arg(ap, int));
             formatlen = 1;
             break;
+        case 'u':
+        case 'o':
+        case 'x':
+        case 'X':
+            ret = utoa(va_arg(ap, unsigned int));
+            break;
+        case 'n':
+            ret = malloc(sizeof(int));
+            *(int *)ret = va_arg(ap, int);
+            break;
         case 'l':
+            formatlen = 2;
             switch (format[1]) {
+                case 's':
+                    ret = va_arg(ap, char *);
+                    break;
+                case 'c':
+                    ret = malloc(2);
+                    ret[0] = va_arg(ap, int);
+                    ret[1] = '\0';
+                    break;
+                case 'd':
+                case 'i':
+                    ret = itoa(va_arg(ap, long));
+                    break;
+                case 'u':
+                case 'o':
+                case 'x':
+                case 'X':
+                    ret = utoa(va_arg(ap, unsigned long));
+                    break;
+                case 'n':
+                    ret = malloc(sizeof(long));
+                    *(long *)ret = va_arg(ap, long);
+                    break;
                 case 'l':
+                    formatlen = 3;
                     switch (format[2]) {
                         case 'd':
+                        case 'i':
                             ret = itoa(va_arg(ap, long long));
-                            formatlen = 3;
                             break;
                         case 'u':
+                        case 'o':
+                        case 'x':
+                        case 'X':
                             ret = utoa(va_arg(ap, unsigned long long));
-                            formatlen = 3;
+                            break;
+                        case 'n':
+                            ret = malloc(sizeof(long long));
+                            *(long long *)ret = va_arg(ap, long long);
                             break;
                         default:
                             ret = NULL;
                             break;
                     }
                     break;
+                default:
+                    ret = NULL;
+                    break;
+            }
+            break;
+        case 'h':
+            formatlen = 2;
+            switch (format[1]) {
                 case 'd':
-                    ret = itoa(va_arg(ap, long));
-                    formatlen = 2;
+                case 'i':
+                    ret = itoa(va_arg(ap, int));
                     break;
                 case 'u':
-                    ret = utoa(va_arg(ap, unsigned long));
-                    formatlen = 2;
+                case 'o':
+                case 'x':
+                case 'X':
+                    ret = utoa(va_arg(ap, unsigned int));
+                    break;
+                case 'n':
+                    ret = malloc(sizeof(int));
+                    *(int *)ret = va_arg(ap, int);
+                    break;
+                case 'h':
+                    formatlen = 3;
+                    switch (format[2]) {
+                        case 'd':
+                        case 'i':
+                            ret = itoa(va_arg(ap, int));
+                            break;
+                        case 'u':
+                        case 'o':
+                        case 'x':
+                        case 'X':
+                            ret = utoa(va_arg(ap, unsigned int));
+                            break;
+                        default:
+                            ret = NULL;
+                            break;
+                    }
                     break;
                 default:
                     ret = NULL;
