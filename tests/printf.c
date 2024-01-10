@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
     printf("num2 = %d\n", num2);
     long num3 = 123456;
     printf("num3 = %ld\n", num3);
-    unsigned long long num4 = 1234567;
+    unsigned long long num4 = 0xFFFFFFFFFFFFFFFF;
     printf("num4 = %llu\n", num4);
     if (argc > 1)
         printf("argv[1] = %s\n", argv[1]);
