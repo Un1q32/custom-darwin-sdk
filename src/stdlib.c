@@ -45,7 +45,7 @@ int atoi(const char *nptr) {
     return (int)strtol(nptr, NULL, 10);
 }
 
-char *utoa(unsigned int num) {
+char *utoa(unsigned long long num) {
     static char buf[32];
     char *p = buf + 31;
     *p = '\0';
@@ -56,7 +56,7 @@ char *utoa(unsigned int num) {
     return p;
 }
 
-char *itoa(int num) {
+char *itoa(long long num) {
     if (num < 0) {
         char *ret = utoa(-num);
         char *p = ret - 1;

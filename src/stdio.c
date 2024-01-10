@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -49,137 +50,112 @@ int fputc(int c, FILE *stream) {
     return c;
 }
 
-char *__tostr(const char *format, va_list ap) {
+char *__tostr(const char *format, int charssofar, va_list ap) {
     char *ret;
-    char formatlen = 1;
-    switch (format[0]) {
-        case '%':
-            ret = malloc(2);
-            ret[0] = '%';
-            ret[1] = '\0';
-            break;
-        case 's':
-            ret = va_arg(ap, char *);
-            break;
-        case 'c':
-            ret = malloc(2);
-            ret[0] = va_arg(ap, int);
-            ret[1] = '\0';
-            break;
-        case 'd':
-        case 'i':
-            ret = itoa(va_arg(ap, int));
-            formatlen = 1;
-            break;
-        case 'u':
-        case 'o':
-        case 'x':
-        case 'X':
-            ret = utoa(va_arg(ap, unsigned int));
-            break;
-        case 'n':
-            ret = malloc(sizeof(int));
-            *(int *)ret = va_arg(ap, int);
-            break;
-        case 'l':
-            formatlen = 2;
-            switch (format[1]) {
-                case 's':
-                    ret = va_arg(ap, char *);
-                    break;
-                case 'c':
-                    ret = malloc(2);
-                    ret[0] = va_arg(ap, int);
-                    ret[1] = '\0';
-                    break;
-                case 'd':
-                case 'i':
-                    ret = itoa(va_arg(ap, long));
-                    break;
-                case 'u':
-                case 'o':
-                case 'x':
-                case 'X':
-                    ret = utoa(va_arg(ap, unsigned long));
-                    break;
-                case 'n':
-                    ret = malloc(sizeof(long));
-                    *(long *)ret = va_arg(ap, long);
-                    break;
-                case 'l':
-                    formatlen = 3;
-                    switch (format[2]) {
-                        case 'd':
-                        case 'i':
-                            ret = itoa(va_arg(ap, long long));
-                            break;
-                        case 'u':
-                        case 'o':
-                        case 'x':
-                        case 'X':
-                            ret = utoa(va_arg(ap, unsigned long long));
-                            break;
-                        case 'n':
-                            ret = malloc(sizeof(long long));
-                            *(long long *)ret = va_arg(ap, long long);
-                            break;
-                        default:
-                            ret = NULL;
-                            break;
-                    }
-                    break;
-                default:
-                    ret = NULL;
-                    break;
-            }
-            break;
-        case 'h':
-            formatlen = 2;
-            switch (format[1]) {
-                case 'd':
-                case 'i':
-                    ret = itoa(va_arg(ap, int));
-                    break;
-                case 'u':
-                case 'o':
-                case 'x':
-                case 'X':
-                    ret = utoa(va_arg(ap, unsigned int));
-                    break;
-                case 'n':
-                    ret = malloc(sizeof(int));
-                    *(int *)ret = va_arg(ap, int);
-                    break;
-                case 'h':
-                    formatlen = 3;
-                    switch (format[2]) {
-                        case 'd':
-                        case 'i':
-                            ret = itoa(va_arg(ap, int));
-                            break;
-                        case 'u':
-                        case 'o':
-                        case 'x':
-                        case 'X':
-                            ret = utoa(va_arg(ap, unsigned int));
-                            break;
-                        default:
-                            ret = NULL;
-                            break;
-                    }
-                    break;
-                default:
-                    ret = NULL;
-                    break;
-            }
-            break;
-        default:
-            ret = NULL;
-            break;
+    char size = 0, formatlen = 1;
+    bool done = false;
+    while (!done) {
+        switch (format[formatlen - 1]) {
+            case 's':
+                /* TODO: if size > 0 then use unicode */
+                ret = va_arg(ap, char *);
+                done = true;
+                break;
+            case 'c':
+                /* TODO: unicode */
+                ret = malloc(2);
+                ret[0] = va_arg(ap, int);
+                ret[1] = '\0';
+                done = true;
+                break;
+            case 'd':
+            case 'i':
+                if (size == 0)
+                    ret = itoa((int)va_arg(ap, int));
+                else if (size == 1)
+                    ret = itoa((long)va_arg(ap, long));
+                else if (size == 2)
+                    ret = itoa(va_arg(ap, long long));
+                else if (size == -1)
+                    ret = itoa((short)va_arg(ap, int));
+                else if (size == -2)
+                    ret = itoa((char)va_arg(ap, int));
+                done = true;
+                break;
+            case 'u':
+            case 'o':
+            case 'x':
+            case 'X':
+                if (size == 0)
+                    ret = utoa((int)va_arg(ap, unsigned int));
+                else if (size == 1)
+                    ret = utoa((long)va_arg(ap, unsigned long));
+                else if (size == 2)
+                    ret = utoa(va_arg(ap, unsigned long long));
+                else if (size == -1)
+                    ret = utoa((short)va_arg(ap, unsigned int));
+                else if (size == -2)
+                    ret = utoa((char)va_arg(ap, unsigned int));
+                done = true;
+                break;
+            case 'n':
+                if (size == 0)
+                    *(int *)va_arg(ap, int *) = charssofar;
+                else if (size == 1)
+                    *(long *)va_arg(ap, long *) = charssofar;
+                else if (size == 2)
+                    *(long long *)va_arg(ap, long long *) = charssofar;
+                else if (size == -1)
+                    *(short *)va_arg(ap, short *) = charssofar;
+                else if (size == -2)
+                    *(char *)va_arg(ap, char *) = charssofar;
+                done = true;
+                break;
+            case 'l':
+                formatlen++;
+                if (size < 1)
+                    size = 1;
+                else if (size < 2)
+                    size = 2;
+                break;
+            case 'j':
+            case 'q':
+                formatlen++;
+                size = 2;
+                break;
+            case 'h':
+                formatlen++;
+                if (size == 0)
+                    size = -1;
+                else if (size < 0)
+                    size = -2;
+                break;
+            case 't':
+            case 'z':
+                formatlen++;
+                if (sizeof(size_t) == sizeof(long)) {
+                    if (size < 2)
+                        size = 2;
+                } else if (size < 0)
+                    size = 0;
+                break;
+            default:
+                formatlen--;
+                ret = malloc(1);
+                ret[0] = '\0';
+                done = true;
+                break;
+        }
     }
     if (ret != NULL) {
         size_t len = strlen(ret);
-        ret = realloc(ret, len + 2);
+        char *ret2 = realloc(ret, len + 2);
+        if (ret2 != NULL)
+            ret = ret2;
+        else {
+            free(ret);
+            return NULL;
+        }
         ret[len + 1] = formatlen;
     }
     return ret;
@@ -189,7 +165,7 @@ int vsprintf(char *str, const char *format, va_list ap) {
     int i = 0, j = 0;
     while (format[i]) {
         if (format[i] == '%') {
-            char *tmp = __tostr(format + i + 1, ap);
+            char *tmp = __tostr(format + i + 1, j, ap);
             if (tmp) {
                 if (str != NULL)
                     strcpy(str + j, tmp);

@@ -12,7 +12,7 @@ extern void free(void *);
 extern void *realloc(void *, size_t);
 extern long strtol(const char *, char **, int);
 extern int atoi(const char *);
-extern char *itoa(int);
-extern char *utoa(unsigned int);
+extern char *itoa(long long);
+extern char *utoa(unsigned long long);
 
 #endif
