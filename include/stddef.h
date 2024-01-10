@@ -2,6 +2,7 @@
 #define _STDDEF_H
 
 #define NULL ((void *)0)
-typedef long unsigned int size_t;
+typedef unsigned long size_t;
+typedef long ptrdiff_t;
 
 #endif
