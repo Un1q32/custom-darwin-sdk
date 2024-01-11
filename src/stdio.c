@@ -166,6 +166,7 @@ int vsprintf(char *str, const char *format, va_list ap) {
     while (format[i]) {
         if (format[i] == '%') {
             char *tmp = __tostr(format + i + 1, j, ap);
+            va_arg(ap, void *);
             if (tmp) {
                 if (str != NULL)
                     strcpy(str + j, tmp);
