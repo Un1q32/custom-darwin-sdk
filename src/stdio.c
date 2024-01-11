@@ -51,18 +51,16 @@ int fputc(int c, FILE *stream) {
 }
 
 char *__tostr(const char *format, int charssofar, va_list ap) {
-    char *ret;
+    char *ret = NULL;
     char size = 0, formatlen = 1;
     bool done = false;
     while (!done) {
         switch (format[formatlen - 1]) {
             case 's':
-                /* TODO: if size > 0 then use unicode */
                 ret = va_arg(ap, char *);
                 done = true;
                 break;
             case 'c':
-                /* TODO: unicode */
                 ret = malloc(2);
                 ret[0] = va_arg(ap, int);
                 ret[1] = '\0';
@@ -109,6 +107,8 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
                     *(short *)va_arg(ap, short *) = charssofar;
                 else if (size == -2)
                     *(char *)va_arg(ap, char *) = charssofar;
+                ret = malloc(1);
+                ret[0] = '\0';
                 done = true;
                 break;
             case 'l':
