@@ -20,6 +20,7 @@
 #define SYS_setuid    23
 #define SYS_getuid    24
 #define SYS_geteuid   25
+#define SYS_execve    59
 #define SYS_munmap    73
 #define SYS_fcntl     92
 #define SYS_mkdir    136
