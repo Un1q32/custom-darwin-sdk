@@ -1,7 +1,8 @@
-CC := clang -target armv7-apple-ios
 ifeq ($(shell uname),Darwin)
+CC := ccache /opt/local/libexec/llvm-17/bin/clang -target armv7-apple-ios
 AR := ar
 else
+CC := clang -target armv7-apple-ios
 AR := llvm-ar
 endif
 
