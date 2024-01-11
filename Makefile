@@ -1,5 +1,9 @@
-CC := clang -target armv7-apple-darwin
+CC := clang -target armv7-apple-ios
+ifeq ($(shell uname),Darwin)
+AR := ar
+else
 AR := llvm-ar
+endif
 
 CFLAGS := -Wall -Wextra -Werror -std=c89
 OPTFLAGS := -O2
