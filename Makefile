@@ -20,6 +20,10 @@ TESTEXES := $(subst tests,tests/bin,$(TESTEXES))
 
 HEADERS := $(wildcard include/*.h) $(wildcard include/*/*.h)
 
+ifndef VERBOSE
+V := @
+endif
+
 .PHONY: all debug tests clean
 
 all: sdk/usr/lib sdk/usr/include
@@ -28,30 +32,36 @@ debug: OPTFLAGS := -g
 debug: all
 
 sdk/usr/include: $(HEADERS)
-	rm -rf sdk/usr/include
-	mkdir -p sdk/usr
-	cp -r include sdk/usr
+	@printf "Installing headers...\n"
+	@rm -rf sdk/usr/include
+	@mkdir -p sdk/usr
+	@cp -r include sdk/usr
 
-sdk/usr/lib: src/libc.a $(CRTOBJS)
-	rm -rf sdk/usr/lib
-	mkdir -p sdk/usr/lib
-	cp src/libc.a sdk/usr/lib
-	cp $(CRTOBJS) sdk/usr/lib
-	ln -sf libc.a sdk/usr/lib/libSystem.a
-	ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
-	ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
+sdk/usr/lib: $(CRTOBJS) src/libc.a
+	@printf "Installing libraries...\n"
+	@rm -rf sdk/usr/lib
+	@mkdir -p sdk/usr/lib
+	@cp src/libc.a sdk/usr/lib
+	@cp $(CRTOBJS) sdk/usr/lib
+	@ln -sf libc.a sdk/usr/lib/libSystem.a
+	@ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
+	@ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
 
 tests: OPTFLAGS := -g
 tests: $(TESTEXES)
 
 tests/bin/%: tests/%.c sdk/usr/lib sdk/usr/include
-	$(CC) -isysroot sdk $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) -o $@ $<
+	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
+	$(V)$(CC) -isysroot sdk $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) -o $@ $<
 
 src/libc.a: $(OBJS)
-	$(AR) rcs $@ $^
+	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
+	@$(AR) rcs $@ $^
 
 %.o: %.c
-	$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
+	$(V)$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
-	rm -rf sdk src/*.o crt/*.o src/libc.a tests/bin/*
+	@printf "Cleaning up...\n"
+	@rm -rf sdk src/*.o crt/*.o src/libc.a tests/bin/*
