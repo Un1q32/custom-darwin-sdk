@@ -1,8 +1,7 @@
+CC := clang -target armv7-apple-ios -isysroot sdk
 ifeq ($(shell uname),Darwin)
-CC := ccache /opt/local/libexec/llvm-17/bin/clang -target armv7-apple-ios
 AR := ar
 else
-CC := clang -target armv7-apple-ios
 AR := llvm-ar
 endif
 
@@ -52,16 +51,16 @@ tests: $(TESTEXES)
 
 tests/bin/%: tests/%.c sdk/usr/lib sdk/usr/include
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) -isysroot sdk $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) -o $@ $<
+	$(V)$(CC) $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) -o $@ $<
 
 src/libc.a: $(OBJS)
 	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
 	@$(AR) rcs $@ $^
 
-%.o: %.c
+%.o: %.c sdk/usr/include
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
 	@printf "Cleaning up...\n"
-	@rm -rf sdk src/*.o crt/*.o src/libc.a tests/bin/*
+	@rm -rf sdk/* src/*.o crt/*.o src/libc.a tests/bin/*

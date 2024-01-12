@@ -1,6 +1,6 @@
 *.o
 libc.a
 *.dSYM
-/sdk
+/sdk/usr
 a.out
 /tests/bin
