@@ -29,8 +29,8 @@ void *realloc(void *ptr, size_t size) {
         return NULL;
     }
 
-    void *new_ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
-    if (new_ptr == MAP_FAILED)
+    void *new_ptr = malloc(size);
+    if (new_ptr == NULL)
         return NULL;
 
     memcpy(new_ptr, ptr, size);
