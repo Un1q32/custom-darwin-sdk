@@ -47,19 +47,19 @@ sdk/usr/lib: $(CRTOBJS) src/libc.a
 	@ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
 
 tests: OPTFLAGS := -g
-tests: $(TESTEXES)
+tests: all $(TESTEXES)
 
-tests/bin/%: tests/%.c sdk/usr/lib sdk/usr/include
+tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) -o $@ $<
+	$(V)$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) -o $@ $<
 
 src/libc.a: $(OBJS)
 	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
 	@$(AR) rcs $@ $^
 
-%.o: %.c sdk/usr/include
+%.o: %.c
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
 	@printf "Cleaning up...\n"
