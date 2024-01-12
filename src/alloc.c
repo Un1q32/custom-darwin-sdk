@@ -6,18 +6,24 @@ void free(void *ptr) {
     if (ptr == NULL)
         return;
 
-    munmap(ptr, 0);
+    ptr = (char *)ptr - sizeof(size_t);
+    size_t size = *(size_t *)ptr;
+
+    munmap(ptr, size);
 }
 
 void *malloc(size_t size) {
     if (size == 0)
         return NULL;
 
-    void *ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+    size_t total_size = size + sizeof(size_t);
+    void *ptr = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
     if (ptr == MAP_FAILED)
         return NULL;
 
-    return ptr;
+    *(size_t *)ptr = total_size;
+
+    return (char *)ptr + sizeof(size_t);
 }
 
 void *realloc(void *ptr, size_t size) {
