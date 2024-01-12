@@ -24,30 +24,29 @@ FILE *__stdinp = &__stdio[0];
 FILE *__stdoutp = &__stdio[1];
 FILE *__stderrp = &__stdio[2];
 
-int puts(const char *s) {
-    size_t len = strlen(s);
-    char str[len + 1];
-    memcpy(str, s, len);
-    str[len] = '\n';
-    return write(STDOUT_FILENO, str, len + 1);
+int puts(const char *str) {
+    size_t len = strlen(str);
+    char str2[len + 1];
+    memcpy(str2, str, len);
+    str2[len] = '\n';
+    return write(STDOUT_FILENO, str2, len + 1);
 }
 
-int fputs(const char *s, FILE *stream) {
-    return write(stream->_file, s, strlen(s));
+int fputs(const char *str, FILE *stream) {
+    return write(stream->_file, str, strlen(str));
 }
 
-int putchar(int c) {
-    return putc(c, stdout);
+int putchar(int ch) {
+    return putc(ch, stdout);
 }
 
-int putc(int c, FILE *stream) {
-    return fputc(c, stream);
+int putc(int ch, FILE *stream) {
+    return fputc(ch, stream);
 }
 
-int fputc(int c, FILE *stream) {
-    char ch = c;
-    write(stream->_file, &ch, 1);
-    return c;
+int fputc(int ch, FILE *stream) {
+    write(stream->_file, (unsigned char *)&ch, 1);
+    return ch;
 }
 
 char *__tostr(const char *format, int charssofar, va_list ap) {

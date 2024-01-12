@@ -6,8 +6,8 @@
 #include <sys/types.h>
 
 typedef struct {
-    int _file;
-    int _flags;
+    short _file;
+    short _flags;
 } FILE;
 
 extern FILE *__stdinp;
@@ -23,6 +23,8 @@ extern FILE *__stderrp;
 #define __SRD  0x0004
 #define __SWR  0x0008
 #define __SRW  0x0010
+
+#define EOF (-1)
 
 extern int fputc(int, FILE *);
 extern int putc(int, FILE *);

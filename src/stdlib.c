@@ -67,6 +67,9 @@ char *itoa(long long num) {
 }
 
 void exit(int status) {
+    /* TODO: call functions registered with atexit() */
+    /* fcloseall(); */
+    /* TODO: unlink all files created with tmpfile() */
     _exit(status);
     while (1) {}
 }
