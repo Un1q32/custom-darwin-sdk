@@ -14,4 +14,17 @@ typedef __PTRDIFF_TYPE__ ptrdiff_t;
 typedef long ptrdiff_t;
 #endif
 
+#ifdef __WCHAR_TYPE__
+typedef __WCHAR_TYPE__ wchar_t;
+#else
+typedef int wchar_t;
+#endif
+
+#ifdef __WINT_TYPE__
+typedef __WINT_TYPE__ wint_t;
+#else
+typedef int wint_t;
+#endif
+
+
 #endif
