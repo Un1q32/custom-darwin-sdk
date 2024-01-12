@@ -123,12 +123,16 @@ int openat(int fd, const char* path, int flags, ...) {
 #endif
 }
 
-pid_t fork(void) {
-    return syscall(SYS_fork);
-}
-
 pid_t getpid(void) {
     return syscall(SYS_getpid);
+}
+
+pid_t fork(void) {
+    pid_t child = syscall(SYS_fork);
+    pid_t me = getpid();
+    if (me == child)
+        return 0;
+    return child;
 }
 
 int execve(const char *filename, char *const argv[], char *const envp[]) {
@@ -136,7 +140,7 @@ int execve(const char *filename, char *const argv[], char *const envp[]) {
 }
 
 int execv(const char *filename, char *const argv[]) {
-    return syscall(SYS_execve, filename, argv, NULL);
+    return syscall(SYS_execve, filename, argv);
 }
 
 int execl(const char *filename, const char *arg, ...) {
@@ -151,7 +155,7 @@ int execl(const char *filename, const char *arg, ...) {
             break;
     }
     va_end(va_args);
-    return syscall(SYS_execve, filename, argv, NULL);
+    return syscall(SYS_execve, filename, argv);
 }
 
 int execle(const char *filename, const char *arg, ...) {
