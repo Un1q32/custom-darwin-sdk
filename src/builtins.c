@@ -1,63 +1,20 @@
-int __modsi3(int a, int b) {
+unsigned long long __divmoddi4(unsigned long long a, unsigned long long b, unsigned long long *rem) {
+    unsigned long long r = 0;
     while (a >= b) {
         a -= b;
+        r++;
     }
-    return a;
+    *rem = a;
+    return r;
 }
 
-int __divsi3(int a, int b) {
-    int ret = 0;
-    while (a >= b) {
-        a -= b;
-        ret++;
-    }
-    return ret;
+unsigned long long __udivdi3(unsigned long long a, unsigned long long b) {
+    unsigned long long r;
+    return __divmoddi4(a, b, &r);
 }
 
-int __udivsi3(unsigned int a, unsigned int b) {
-    int ret = 0;
-    while (a >= b) {
-        a -= b;
-        ret++;
-    }
-    return ret;
-}
-
-int __umodsi3(unsigned int a, unsigned int b) {
-    while (a >= b) {
-        a -= b;
-    }
-    return a;
-}
-
-int __divdi3(long long a, long long b) {
-    int ret = 0;
-    while (a >= b) {
-        a -= b;
-        ret++;
-    }
-    return ret;
-}
-
-int __moddi3(long long a, long long b) {
-    while (a >= b) {
-        a -= b;
-    }
-    return a;
-}
-
-int __udivdi3(unsigned long long a, unsigned long long b) {
-    int ret = 0;
-    while (a >= b) {
-        a -= b;
-        ret++;
-    }
-    return ret;
-}
-
-int __umoddi3(unsigned long long a, unsigned long long b) {
-    while (a >= b) {
-        a -= b;
-    }
-    return a;
+unsigned long long __umoddi3(unsigned long long a, unsigned long long b) {
+    unsigned long long r;
+    __divmoddi4(a, b, &r);
+    return r;
 }
