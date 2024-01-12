@@ -44,8 +44,62 @@ int open(const char *path, int flags, ...) {
     return syscall(SYS_open, path, flags, mode);
 }
 
+int openat(int fd, const char* path, int flags, ...) {
+    mode_t mode = 0;
+    if (flags & O_CREAT) {
+        va_list va_args;
+        va_start(va_args, flags);
+        mode = va_arg(va_args, int);
+        va_end(va_args);
+    }
+
+#ifdef SYS_openat
+    return syscall(SYS_openat, fd, path, flags, mode);
+#else
+    if (fd == AT_FDCWD || path[0] == '/')
+        return open(path, flags, mode);
+
+    char fdpath[PATH_MAX];
+    if (fcntl(fd, F_GETPATH, fdpath) == -1)
+        return -1;
+
+    char new_path[strlen(fdpath) + strlen(path) + 2];
+    strcpy(new_path, fdpath);
+    strcat(new_path, "/");
+    strcat(new_path, path);
+    return syscall(SYS_open, new_path, flags, mode);
+#endif
+}
+
+int close(int fd) {
+    return syscall(SYS_close, fd);
+}
+
 int mkdir(const char *path, mode_t mode) {
     return syscall(SYS_mkdir, path, mode);
+}
+
+int mkdirat(int fd, const char* path, mode_t mode) {
+#ifdef SYS_mkdirat
+    return syscall(SYS_mkdirat, fd, path, mode);
+#else
+    if (fd == AT_FDCWD || path[0] == '/')
+        return mkdir(path, mode);
+
+    char fdpath[PATH_MAX];
+    if (fcntl(fd, F_GETPATH, fdpath) == -1)
+        return -1;
+
+    char new_path[strlen(fdpath) + strlen(path) + 2];
+    strcpy(new_path, fdpath);
+    strcat(new_path, "/");
+    strcat(new_path, path);
+    return mkdir(new_path, mode);
+#endif
+}
+
+int rmdir(const char *path) {
+    return syscall(SYS_rmdir, path);
 }
 
 void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset) {
@@ -77,50 +131,12 @@ void _exit(int status) {
     while (1) {}
 }
 
-int mkdirat(int fd, const char* path, mode_t mode) {
-#ifdef SYS_mkdirat
-    return syscall(SYS_mkdirat, fd, path, mode);
-#else
-    if (fd == AT_FDCWD || path[0] == '/')
-        return mkdir(path, mode);
-
-    char fdpath[PATH_MAX];
-    if (fcntl(fd, F_GETPATH, fdpath) == -1)
-        return -1;
-
-    char new_path[strlen(fdpath) + strlen(path) + 2];
-    strcpy(new_path, fdpath);
-    strcat(new_path, "/");
-    strcat(new_path, path);
-    return mkdir(new_path, mode);
-#endif
+int chdir(const char *path) {
+    return syscall(SYS_chdir, path);
 }
 
-int openat(int fd, const char* path, int flags, ...) {
-    mode_t mode = 0;
-    if (flags & O_CREAT) {
-        va_list va_args;
-        va_start(va_args, flags);
-        mode = va_arg(va_args, int);
-        va_end(va_args);
-    }
-
-#ifdef SYS_openat
-    return syscall(SYS_openat, fd, path, flags, mode);
-#else
-    if (fd == AT_FDCWD || path[0] == '/')
-        return open(path, flags, mode);
-
-    char fdpath[PATH_MAX];
-    if (fcntl(fd, F_GETPATH, fdpath) == -1)
-        return -1;
-
-    char new_path[strlen(fdpath) + strlen(path) + 2];
-    strcpy(new_path, fdpath);
-    strcat(new_path, "/");
-    strcat(new_path, path);
-    return open(new_path, flags, mode);
-#endif
+int fchdir(int fd) {
+    return syscall(SYS_fchdir, fd);
 }
 
 pid_t getpid(void) {
@@ -177,12 +193,4 @@ int execle(const char *filename, const char *arg, ...) {
     }
     va_end(va_args);
     return syscall(SYS_execve, filename, argv, envp);
-}
-
-int chdir(const char *path) {
-    return syscall(SYS_chdir, path);
-}
-
-int fchdir(int fd) {
-    return syscall(SYS_fchdir, fd);
 }
