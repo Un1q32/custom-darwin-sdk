@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -116,13 +117,10 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
                 break;
             case 'f':
             case 'F':
-                (void)percision;
                 if (flags & 128)
-                    /* ret = strdup(ftoa(va_arg(ap, long double), percision)); */
-                    ret = strdup(ftoa(va_arg(ap, long double)));
+                    ret = strdup(ftoa(va_arg(ap, long double), percision));
                 else
-                    /* ret = strdup(ftoa(va_arg(ap, double), percision)); */
-                    ret = strdup(ftoa(va_arg(ap, double)));
+                    ret = strdup(ftoa(va_arg(ap, double), percision));
                 done = true;
                 break;
             case 'n':
@@ -182,11 +180,11 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
                 break;
             case '.':
                 formatlen++;
-                char *percisionstr = strdup(format + formatlen);
-                char *i = percisionstr;
-                while (*i >= '0' && *i <= '9')
-                    i++;
-                percisionstr[i - percisionstr] = '\0';
+                while (isdigit(format[formatlen - 1]))
+                    formatlen++;
+                char *percisionstr = malloc(formatlen - 1);
+                memcpy(percisionstr, format + 1, formatlen - 2);
+                percisionstr[formatlen - 1] = '\0';
                 percision = atoi(percisionstr);
                 free(percisionstr);
                 break;

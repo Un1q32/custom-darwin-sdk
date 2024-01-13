@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <string.h>
 #include <unistd.h>
 
 long strtol(const char *nptr, char **endptr, int base) {
@@ -66,23 +67,26 @@ char *itoa(long long num) {
         return utoa(num);
 }
 
-/* char *ftoa(long double num, int percision) { */
-char *ftoa(long double num) {
-    int ipart = (int)num;
-    long double fpart = num - (long double)ipart;
-    char *ret = itoa(ipart);
-    char *p = ret;
-    while (*p) p++;
+char *ftoa(long double num, int percision) {
+    static char buf[32];
+    char *p = buf;
+    if (num < 0) {
+        *p++ = '-';
+        num = -num;
+    }
+    unsigned long long integer = num;
+    num -= integer;
+    char *int_str = utoa(integer);
+    strcpy(p, int_str);
+    p += strlen(int_str);
     *p++ = '.';
-    int i;
-    for (i = 0; i < 6; i++) {
-        fpart *= 10;
-        int digit = (int)fpart;
-        *p++ = '0' + digit;
-        fpart -= (long double)digit;
+    while (percision--) {
+        num *= 10;
+        *p++ = '0' + (int)num;
+        num -= (int)num;
     }
     *p = '\0';
-    return ret;
+    return buf;
 }
 
 void exit(int status) {
