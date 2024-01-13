@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <stdarg.h>
@@ -17,7 +18,7 @@ char *getcwd(char *buf, size_t size) {
 
     size_t len = strlen(tmp);
     if (len >= size && buf != NULL) {
-        /* errno = ERANGE; */
+        errno = ERANGE;
         return NULL;
     }
 
