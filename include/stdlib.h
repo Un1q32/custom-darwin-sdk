@@ -14,5 +14,6 @@ extern long strtol(const char *, char **, int);
 extern int atoi(const char *);
 extern char *itoa(long long);
 extern char *utoa(unsigned long long);
+extern char *ftoa(long double);
 
 #endif

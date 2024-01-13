@@ -10,6 +10,8 @@ int main(int argc, const char *argv[]) {
     printf("num3 = %lld\n", num3);
     unsigned long long num4 = 0xFFFFFFFFFFFFFFFF;
     printf("num4 = %llu\n", num4);
+    float num5 = 3.14159;
+    printf("num5 = %f\n", num5);
     if (argc > 1) {
         int charcount = 0;
         printf("argv[1] = (%s)%n\n", argv[1], &charcount);

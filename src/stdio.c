@@ -95,6 +95,20 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
                     ret = strdup(utoa((char)va_arg(ap, unsigned int)));
                 done = true;
                 break;
+            case 'f':
+            case 'F':
+            case 'e':
+            case 'E':
+            case 'g':
+            case 'G':
+            case 'a':
+            case 'A':
+                if (size <= 0)
+                    ret = strdup(ftoa(va_arg(ap, double)));
+                else
+                    ret = strdup(ftoa(va_arg(ap, long double)));
+                done = true;
+                break;
             case 'n':
                 if (size == 0)
                     *(int *)va_arg(ap, int *) = charssofar;

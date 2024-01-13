@@ -66,6 +66,24 @@ char *itoa(long long num) {
         return utoa(num);
 }
 
+char *ftoa(long double num) {
+    int ipart = (int)num;
+    long double fpart = num - (long double)ipart;
+    char *ret = itoa(ipart);
+    char *p = ret;
+    while (*p) p++;
+    *p++ = '.';
+    int i;
+    for (i = 0; i < 6; i++) {
+        fpart *= 10;
+        int digit = (int)fpart;
+        *p++ = '0' + digit;
+        fpart -= (long double)digit;
+    }
+    *p = '\0';
+    return ret;
+}
+
 void exit(int status) {
     /* TODO: call functions registered with atexit() */
     /* fcloseall(); */
