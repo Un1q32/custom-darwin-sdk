@@ -11,7 +11,7 @@ void free(void *ptr) {
     ptr = (char *)ptr - sizeof(size_t) - 1;
     if (*(char *)ptr != 0x5a) {
         puts("free(): invalid pointer");
-        exit(1);
+        return;
     }
     size_t size = *(size_t *)((char *)ptr + 1);
 
