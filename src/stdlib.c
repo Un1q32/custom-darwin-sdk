@@ -66,6 +66,7 @@ char *itoa(long long num) {
         return utoa(num);
 }
 
+/* char *ftoa(long double num, int percision) { */
 char *ftoa(long double num) {
     int ipart = (int)num;
     long double fpart = num - (long double)ipart;
