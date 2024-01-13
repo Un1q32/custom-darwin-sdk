@@ -29,6 +29,124 @@ char *strdup(const char *str) {
     return dup;
 }
 
+size_t strlen(const char *s) {
+    int n;
+
+    for (n = 0; *s != '\0'; s++)
+        n++;
+    return n;
+}
+
+char *strchr(const char *s, int c) {
+    while (*s != (char)c) {
+        if (*s == '\0')
+            return NULL;
+        s++;
+    }
+    return (char *)s;
+}
+
+char *strrchr(const char *s, int c) {
+    char *last = NULL;
+    do {
+        if (*s == (char)c)
+            last = (char *)s;
+    } while (*s++);
+    return last;
+}
+
+int strcmp(const char *s1, const char *s2) {
+    while (*s1 && (*s1 == *s2))
+        s1++, s2++;
+    return *(const unsigned char *)s1 - *(const unsigned char *)s2;
+}
+
+int strncmp(const char *s1, const char *s2, size_t n) {
+    while (n-- && *s1 && (*s1 == *s2))
+        s1++, s2++;
+    return n < 0 ? 0 : *(const unsigned char *)s1 - *(const unsigned char *)s2;
+}
+
+char *strstr(const char *haystack, const char *needle) {
+    size_t needle_len = strlen(needle);
+    size_t haystack_len = strlen(haystack);
+
+    if (needle_len == 0)
+        return (char *)haystack;
+
+    if (haystack_len < needle_len)
+        return NULL;
+
+    haystack_len -= needle_len;
+    for (size_t i = 0; i <= haystack_len; i++) {
+        if (haystack[i] == needle[0] && !memcmp(haystack + i + 1, needle + 1, needle_len - 1))
+            return (char *)(haystack + i);
+    }
+
+    return NULL;
+}
+
+char *strtok(char *str, const char *delim) {
+    static char *next = NULL;
+    if (str)
+        next = str;
+    if (!next)
+        return NULL;
+    char *ret = next;
+    next += strspn(next, delim);
+    if (!*next) {
+        next = NULL;
+        return ret;
+    }
+    next[strcspn(next, delim)] = '\0';
+    return ret;
+}
+
+char *strtok_r(char *str, const char *delim, char **saveptr) {
+    char *ret;
+    if (!str)
+        str = *saveptr;
+    str += strspn(str, delim);
+    if (!*str) {
+        *saveptr = str;
+        return NULL;
+    }
+    ret = str;
+    str += strcspn(str, delim);
+    if (*str)
+        *str++ = '\0';
+    *saveptr = str;
+    return ret;
+}
+
+size_t strspn(const char *s, const char *accept) {
+    size_t ret = 0;
+    while (*s && strchr(accept, *s++))
+        ret++;
+    return ret;
+}
+
+size_t strcspn(const char *s, const char *reject) {
+    size_t ret = 0;
+    while (*s) {
+        if (strchr(reject, *s))
+            return ret;
+        else
+            s++, ret++;
+    }
+    return ret;
+}
+
+char *strpbrk(const char *s, const char *accept) {
+    while (*s) {
+        if (strchr(accept, *s))
+            return (char *)s;
+        else
+            s++;
+    }
+    return NULL;
+}
+
 void *memcpy(void *dest, const void *src, size_t n) {
     char *d = dest;
     const char *s = src;
@@ -53,14 +171,6 @@ int memcmp(const void *s1, const void *s2, size_t n) {
         p2++;
     }
     return 0;
-}
-
-size_t strlen(const char *s) {
-    int n;
-
-    for (n = 0; *s != '\0'; s++)
-        n++;
-    return n;
 }
 
 void explicit_bzero(void *s, size_t n) {
