@@ -78,7 +78,8 @@ char *strstr(const char *haystack, const char *needle) {
         return NULL;
 
     haystack_len -= needle_len;
-    for (size_t i = 0; i <= haystack_len; i++) {
+    size_t i;
+    for (i = 0; i <= haystack_len; i++) {
         if (haystack[i] == needle[0] && !memcmp(haystack + i + 1, needle + 1, needle_len - 1))
             return (char *)(haystack + i);
     }
