@@ -264,7 +264,7 @@ int sprintf(char *str, const char *format, ...) {
 }
 
 int vdprintf(int fd, const char *format, va_list ap) {
-    char buf[vsnprintf(NULL, 0, format, ap) + 1];
+    char buf[vsprintf(NULL, format, ap) + 1];
     int ret = vsprintf(buf, format, ap);
     write(fd, buf, ret);
     return ret;
