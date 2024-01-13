@@ -56,7 +56,7 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
     while (!done) {
         switch (format[formatlen - 1]) {
             case 's':
-                ret = va_arg(ap, char *);
+                ret = strdup(va_arg(ap, char *));
                 done = true;
                 break;
             case 'c':
@@ -68,15 +68,15 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
             case 'd':
             case 'i':
                 if (size == 0)
-                    ret = itoa((int)va_arg(ap, int));
+                    ret = strdup(itoa((int)va_arg(ap, int)));
                 else if (size == 1)
-                    ret = itoa((long)va_arg(ap, long));
+                    ret = strdup(itoa((long)va_arg(ap, long)));
                 else if (size == 2)
-                    ret = itoa(va_arg(ap, long long));
+                    ret = strdup(itoa(va_arg(ap, long long)));
                 else if (size == -1)
-                    ret = itoa((short)va_arg(ap, int));
+                    ret = strdup(itoa((short)va_arg(ap, int)));
                 else if (size == -2)
-                    ret = itoa((char)va_arg(ap, int));
+                    ret = strdup(itoa((char)va_arg(ap, int)));
                 done = true;
                 break;
             case 'u':
@@ -84,15 +84,15 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
             case 'x':
             case 'X':
                 if (size == 0)
-                    ret = utoa((int)va_arg(ap, unsigned int));
+                    ret = strdup(utoa((int)va_arg(ap, unsigned int)));
                 else if (size == 1)
-                    ret = utoa((long)va_arg(ap, unsigned long));
+                    ret = strdup(utoa((long)va_arg(ap, unsigned long)));
                 else if (size == 2)
-                    ret = utoa(va_arg(ap, unsigned long long));
+                    ret = strdup(utoa(va_arg(ap, unsigned long long)));
                 else if (size == -1)
-                    ret = utoa((short)va_arg(ap, unsigned int));
+                    ret = strdup(utoa((short)va_arg(ap, unsigned int)));
                 else if (size == -2)
-                    ret = utoa((char)va_arg(ap, unsigned int));
+                    ret = strdup(utoa((char)va_arg(ap, unsigned int)));
                 done = true;
                 break;
             case 'n':
