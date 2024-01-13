@@ -1,9 +1,11 @@
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <sys/types.h>
 
 FILE __stdio[3] = {
     {
@@ -51,106 +53,142 @@ int fputc(int ch, FILE *stream) {
 
 char *__tostr(const char *format, int charssofar, va_list ap) {
     char *ret = NULL;
-    char size = 0, formatlen = 1;
+    int flags = 0, formatlen = 1, percision = 6;
     bool done = false;
     while (!done) {
         switch (format[formatlen - 1]) {
+            case '%':
+                ret = malloc(2);
+                ret[0] = '%';
+                ret[1] = '\0';
+                done = true;
+                break;
             case 's':
+            case 'S':
                 ret = strdup(va_arg(ap, char *));
                 done = true;
                 break;
             case 'c':
+            case 'C':
                 ret = malloc(2);
-                ret[0] = va_arg(ap, int);
+                ret[0] = (unsigned char)va_arg(ap, int);
                 ret[1] = '\0';
                 done = true;
                 break;
             case 'd':
             case 'i':
-                if (size == 0)
-                    ret = strdup(itoa((int)va_arg(ap, int)));
-                else if (size == 1)
-                    ret = strdup(itoa((long)va_arg(ap, long)));
-                else if (size == 2)
+                if (flags & 16)
+                    ret = strdup(itoa(va_arg(ap, intmax_t)));
+                else if (flags & 256)
+                    ret = strdup(itoa(va_arg(ap, quad_t)));
+                else if (flags & 2)
                     ret = strdup(itoa(va_arg(ap, long long)));
-                else if (size == -1)
+                else if (flags & 32 || flags & 64)
+                    ret = strdup(itoa(va_arg(ap, ptrdiff_t)));
+                else if (flags & 1)
+                    ret = strdup(itoa(va_arg(ap, long)));
+                else if (flags & 4)
                     ret = strdup(itoa((short)va_arg(ap, int)));
-                else if (size == -2)
+                else if (flags & 8)
                     ret = strdup(itoa((char)va_arg(ap, int)));
+                else
+                    ret = strdup(itoa(va_arg(ap, int)));
                 done = true;
                 break;
             case 'u':
-            case 'o':
-            case 'x':
-            case 'X':
-                if (size == 0)
-                    ret = strdup(utoa((int)va_arg(ap, unsigned int)));
-                else if (size == 1)
-                    ret = strdup(utoa((long)va_arg(ap, unsigned long)));
-                else if (size == 2)
+                if (flags & 16)
+                    ret = strdup(utoa(va_arg(ap, uintmax_t)));
+                else if (flags & 256)
+                    ret = strdup(utoa(va_arg(ap, u_quad_t)));
+                else if (flags & 2)
                     ret = strdup(utoa(va_arg(ap, unsigned long long)));
-                else if (size == -1)
-                    ret = strdup(utoa((short)va_arg(ap, unsigned int)));
-                else if (size == -2)
-                    ret = strdup(utoa((char)va_arg(ap, unsigned int)));
+                else if (flags & 32 || flags & 64)
+                    ret = strdup(utoa(va_arg(ap, size_t)));
+                else if (flags & 1)
+                    ret = strdup(utoa(va_arg(ap, unsigned long)));
+                else if (flags & 4)
+                    ret = strdup(utoa((unsigned short)va_arg(ap, unsigned int)));
+                else if (flags & 8)
+                    ret = strdup(utoa((unsigned char)va_arg(ap, unsigned int)));
+                else
+                    ret = strdup(utoa(va_arg(ap, unsigned int)));
                 done = true;
                 break;
             case 'f':
             case 'F':
-            case 'e':
-            case 'E':
-            case 'g':
-            case 'G':
-            case 'a':
-            case 'A':
-                if (size <= 0)
-                    ret = strdup(ftoa(va_arg(ap, double)));
-                else
+                (void)percision;
+                if (flags & 128)
+                    /* ret = strdup(ftoa(va_arg(ap, long double), percision)); */
                     ret = strdup(ftoa(va_arg(ap, long double)));
+                else
+                    /* ret = strdup(ftoa(va_arg(ap, double), percision)); */
+                    ret = strdup(ftoa(va_arg(ap, double)));
                 done = true;
                 break;
             case 'n':
-                if (size == 0)
-                    *(int *)va_arg(ap, int *) = charssofar;
-                else if (size == 1)
-                    *(long *)va_arg(ap, long *) = charssofar;
-                else if (size == 2)
-                    *(long long *)va_arg(ap, long long *) = charssofar;
-                else if (size == -1)
-                    *(short *)va_arg(ap, short *) = charssofar;
-                else if (size == -2)
-                    *(char *)va_arg(ap, char *) = charssofar;
+                if (flags & 16)
+                    *(va_arg(ap, intmax_t *)) = charssofar;
+                else if (flags & 256)
+                    *(va_arg(ap, quad_t *)) = charssofar;
+                else if (flags & 2)
+                    *(va_arg(ap, long long *)) = charssofar;
+                else if (flags & 32 || flags & 64)
+                    *(va_arg(ap, ptrdiff_t *)) = charssofar;
+                else if (flags & 1)
+                    *(va_arg(ap, long *)) = charssofar;
+                else if (flags & 4)
+                    *(va_arg(ap, short *)) = charssofar;
+                else if (flags & 8)
+                    *(va_arg(ap, char *)) = charssofar;
+                else
+                    *(va_arg(ap, int *)) = charssofar;
                 ret = malloc(1);
                 ret[0] = '\0';
                 done = true;
                 break;
             case 'l':
                 formatlen++;
-                if (size < 1)
-                    size = 1;
-                else if (size < 2)
-                    size = 2;
-                break;
-            case 'j':
-            case 'q':
-                formatlen++;
-                size = 2;
+                if (flags & 1)
+                    flags |= 2;
+                else
+                    flags |= 1;
                 break;
             case 'h':
                 formatlen++;
-                if (size == 0)
-                    size = -1;
-                else if (size < 0)
-                    size = -2;
+                if (flags & 4)
+                    flags |= 8;
+                else
+                    flags |= 4;
+                break;
+            case 'j':
+                formatlen++;
+                flags |= 16;
                 break;
             case 't':
+                formatlen++;
+                flags |= 32;
+                break;
             case 'z':
                 formatlen++;
-                if (sizeof(size_t) == sizeof(long)) {
-                    if (size < 2)
-                        size = 2;
-                } else if (size < 0)
-                    size = 0;
+                flags |= 64;
+                break;
+            case 'L':
+                formatlen++;
+                flags |= 128;
+                break;
+            case 'q':
+                formatlen++;
+                flags |= 256;
+                break;
+            case '.':
+                formatlen++;
+                char *percisionstr = strdup(format + formatlen);
+                char *i = percisionstr;
+                while (*i >= '0' && *i <= '9')
+                    i++;
+                percisionstr[i - percisionstr] = '\0';
+                percision = atoi(percisionstr);
+                free(percisionstr);
                 break;
             default:
                 formatlen--;
