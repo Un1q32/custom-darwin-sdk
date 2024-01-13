@@ -1,13 +1,14 @@
-CC := clang -target armv7-apple-ios -isysroot sdk
+CC := clang -target armv7-apple-ios
 ifeq ($(shell uname),Darwin)
 AR := ar
 else
 AR := llvm-ar
 endif
 
-CFLAGS := -Wall -Wextra -Werror -std=c89
+CFLAGS := -Wall -Wextra -Werror
 OPTFLAGS := -O2
 LDFLAGS := -mlinker-version=907 -fuse-ld=ld
+_REQFLAGS := -isysroot sdk -Iinclude -std=c89
 
 SRCS := $(wildcard src/*.c)
 OBJS := $(SRCS:.c=.o)
@@ -51,7 +52,7 @@ tests: all $(TESTEXES)
 
 tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) -o $@ $<
+	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) -o $@ $<
 	$(V)ldid -Sentitlements.xml $@
 
 src/libc.a: $(OBJS)
@@ -60,7 +61,7 @@ src/libc.a: $(OBJS)
 
 %.o: %.c
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) -Iinclude $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
 	@printf "Cleaning up...\n"
