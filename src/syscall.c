@@ -102,6 +102,14 @@ int rmdir(const char *path) {
     return syscall(SYS_rmdir, path);
 }
 
+int link(const char *oldpath, const char *newpath) {
+    return syscall(SYS_link, oldpath, newpath);
+}
+
+int unlink(const char *path) {
+    return syscall(SYS_unlink, path);
+}
+
 void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset) {
     return (void *)syscall(SYS_mmap, addr, length, prot, flags, fd, offset);
 }

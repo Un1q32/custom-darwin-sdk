@@ -15,6 +15,8 @@ extern long syscall(long, ...);
 extern int chdir(const char *);
 extern int fchdir(int);
 extern int rmdir(const char *);
+extern int link(const char *, const char *);
+extern int unlink(const char *);
 extern int close(int);
 extern char *getcwd(char *, size_t);
 extern pid_t fork(void);
