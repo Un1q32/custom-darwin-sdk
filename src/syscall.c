@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <stdarg.h>
@@ -76,7 +77,10 @@ int close(int fd) {
 }
 
 int mkdir(const char *path, mode_t mode) {
-    return syscall(SYS_mkdir, path, mode);
+    errno = syscall(SYS_mkdir, path, mode);
+    if (errno != 0)
+        return -1;
+    return 0;
 }
 
 int mkdirat(int fd, const char* path, mode_t mode) {
@@ -99,7 +103,10 @@ int mkdirat(int fd, const char* path, mode_t mode) {
 }
 
 int rmdir(const char *path) {
-    return syscall(SYS_rmdir, path);
+    errno = syscall(SYS_rmdir, path);
+    if (errno != 0)
+        return -1;
+    return 0;
 }
 
 int link(const char *oldpath, const char *newpath) {
