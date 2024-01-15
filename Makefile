@@ -52,7 +52,7 @@ tests: all $(TESTEXES)
 
 tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) $(LDFLAGS) -o $@ $<
+	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -nostdlib -lc -lcrt1.o $(LDFLAGS) -o $@ $<
 	$(V)ldid -Sentitlements.xml $@
 
 src/libc.a: $(OBJS)
