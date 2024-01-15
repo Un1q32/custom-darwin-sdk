@@ -14,6 +14,7 @@ int main(int argc, const char *argv[]) {
     printf("num5 = %f\n", num5);
     printf("num5 = %.2f\n", num5);
     printf("num5 = %.15f\n", num5);
+    printf("percent sign: %%\n");
     if (argc > 1) {
         int charcount = 0;
         printf("argv[1] = (%s)%n\n", argv[1], &charcount);
