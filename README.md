@@ -21,7 +21,7 @@ To build an SDK for another architecture
 make CC='clang -target armv7s-apple-ios6'
 ```
 
-To build the tests (requires Apple's linker)
+To build the tests
 
 ```sh
 make tests
