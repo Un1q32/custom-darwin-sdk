@@ -1,4 +1,4 @@
-CC := clang -target armv6-apple-ios2
+CC := clang -target armv7-apple-ios
 ifeq ($(shell uname),Darwin)
 AR := ar
 else
