@@ -47,9 +47,6 @@
 #define EPROTONOSUPPORT 43
 #define ESOCKTNOSUPPORT 44
 #define ENOTSUP         45
-#if !__DARWIN_UNIX03 && !defined(KERNEL)
-#define EOPNOTSUPP ENOTSUP
-#endif
 #define EPFNOSUPPORT    46
 #define EAFNOSUPPORT    47
 #define EADDRINUSE      48
@@ -106,14 +103,17 @@
 #define ENOSTR          99
 #define EPROTO          100
 #define ETIME           101
-#if __DARWIN_UNIX03 || defined(KERNEL)
-#define EOPNOTSUPP      102
-#endif
 #define ENOPOLICY       103
 #define ENOTRECOVERABLE 104
 #define EOWNERDEAD      105
 #define EQFULL          106
 #define ELAST           106
+
+#if __DARWIN_UNIX03 || defined(KERNEL)
+#define EOPNOTSUPP      102
+else
+#define EOPNOTSUPP ENOTSUP
+#endif
 
 extern int errno;
 
