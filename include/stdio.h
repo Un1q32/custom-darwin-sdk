@@ -18,11 +18,11 @@ extern FILE *__stderrp;
 #define stdout __stdoutp
 #define stderr __stderrp
 
-#define __SLBF 0x0001
-#define __SNBF 0x0002
-#define __SRD  0x0004
-#define __SWR  0x0008
-#define __SRW  0x0010
+#define __SLBF  0x0001
+#define __SNBF  0x0002
+#define __SRD   0x0004
+#define __SWR   0x0008
+#define __SRW   0x0010
 
 #define EOF (-1)
 
