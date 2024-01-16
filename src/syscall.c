@@ -77,9 +77,11 @@ int close(int fd) {
 }
 
 int mkdir(const char *path, mode_t mode) {
-    errno = syscall(SYS_mkdir, path, mode);
-    if (errno != 0)
+    int ret = syscall(SYS_mkdir, path, mode);
+    if (ret != 0) {
+        errno = ret;
         return -1;
+    }
     return 0;
 }
 
@@ -103,18 +105,39 @@ int mkdirat(int fd, const char* path, mode_t mode) {
 }
 
 int rmdir(const char *path) {
-    errno = syscall(SYS_rmdir, path);
-    if (errno != 0)
+    int ret = syscall(SYS_rmdir, path);
+    if (ret != 0) {
+        errno = ret;
         return -1;
+    }
     return 0;
 }
 
 int link(const char *oldpath, const char *newpath) {
-    return syscall(SYS_link, oldpath, newpath);
+    int ret = syscall(SYS_link, oldpath, newpath);
+    if (ret != 0) {
+        errno = ret;
+        return -1;
+    }
+    return 0;
 }
 
 int unlink(const char *path) {
-    return syscall(SYS_unlink, path);
+    int ret = syscall(SYS_unlink, path);
+    if (ret != 0) {
+        errno = ret;
+        return -1;
+    }
+    return 0;
+}
+
+int symlink(const char *target, const char *linkpath) {
+    int ret = syscall(SYS_symlink, target, linkpath);
+    if (ret != 0) {
+        errno = ret;
+        return -1;
+    }
+    return 0;
 }
 
 void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset) {
@@ -122,7 +145,12 @@ void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)
 }
 
 int munmap(void *addr, size_t length) {
-    return syscall(SYS_munmap, addr, length);
+    int ret = syscall(SYS_munmap, addr, length);
+    if (ret != 0) {
+        errno = ret;
+        return -1;
+    }
+    return 0;
 }
 
 ssize_t read(int fd, void *buf, size_t count) {
@@ -147,11 +175,21 @@ void _exit(int status) {
 }
 
 int chdir(const char *path) {
-    return syscall(SYS_chdir, path);
+    int ret = syscall(SYS_chdir, path);
+    if (ret != 0) {
+        errno = ret;
+        return -1;
+    }
+    return 0;
 }
 
 int fchdir(int fd) {
-    return syscall(SYS_fchdir, fd);
+    int ret = syscall(SYS_fchdir, fd);
+    if (ret != 0) {
+        errno = ret;
+        return -1;
+    }
+    return 0;
 }
 
 pid_t getpid(void) {
