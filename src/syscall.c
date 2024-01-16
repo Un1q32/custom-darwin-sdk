@@ -33,6 +33,15 @@ long syscall(long number, ...) {
     return ret;
 }
 
+int access(const char *path, int mode) {
+    int ret = syscall(SYS_access, path, mode);
+    if (ret != 0) {
+        errno = ret;
+        return -1;
+    }
+    return 0;
+}
+
 int open(const char *path, int flags, ...) {
     mode_t mode = 0;
     if (flags & O_CREAT) {

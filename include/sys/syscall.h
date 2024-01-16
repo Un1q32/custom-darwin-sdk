@@ -20,6 +20,7 @@
 #define SYS_setuid     23
 #define SYS_getuid     24
 #define SYS_geteuid    25
+#define SYS_access     33
 #define SYS_symlink    57
 #define SYS_execve     59
 #define SYS_munmap     73
