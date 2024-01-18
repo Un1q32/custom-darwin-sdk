@@ -19,4 +19,5 @@ int main() {
         puts("Fork failed");
         return 1;
     }
+    return 0;
 }
