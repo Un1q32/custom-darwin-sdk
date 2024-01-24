@@ -53,6 +53,8 @@ int fputc(int ch, FILE *stream) {
 }
 
 char *__tostr(const char *format, int charssofar, va_list ap) {
+    if (format == NULL || format[0] != '%')
+        return NULL;
     char *ret = NULL;
     int flags = 0, formatlen = 1, percision = 6;
     bool done = false;
