@@ -12,8 +12,6 @@ _REQFLAGS := -isysroot sdk -Iinclude -std=c89
 
 SRCS := $(wildcard src/*.c)
 OBJS := $(SRCS:.c=.o)
-CRTSRCS := $(wildcard crt/*.c)
-CRTOBJS := $(CRTSRCS:.c=.o)
 TESTSRCS := $(wildcard tests/*.c)
 TESTEXES := $(TESTSRCS:.c=)
 TESTEXES := $(subst tests,tests/bin,$(TESTEXES))
@@ -37,12 +35,12 @@ sdk/usr/include: $(HEADERS)
 	@mkdir -p sdk/usr
 	@cp -r include sdk/usr
 
-sdk/usr/lib: $(CRTOBJS) src/libc.a
+sdk/usr/lib: crt/crt1.o src/libc.a
 	@printf "Installing libraries...\n"
 	@rm -rf sdk/usr/lib
 	@mkdir -p sdk/usr/lib
 	@cp src/libc.a sdk/usr/lib
-	@cp $(CRTOBJS) sdk/usr/lib
+	@cp crt/crt1.o sdk/usr/lib
 	@ln -sf libc.a sdk/usr/lib/libSystem.a
 	@ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
 	@ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
