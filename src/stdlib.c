@@ -94,5 +94,5 @@ void exit(int status) {
     /* fcloseall(); */
     /* TODO: unlink all files created with tmpfile() */
     _exit(status);
-    while (1) {}
+    while (1);
 }

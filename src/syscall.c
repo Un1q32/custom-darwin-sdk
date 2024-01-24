@@ -180,7 +180,7 @@ int fcntl(int fd, int cmd, ...) {
 
 void _exit(int status) {
     syscall(SYS_exit, status);
-    while (1) {}
+    while (1);
 }
 
 int chdir(const char *path) {
