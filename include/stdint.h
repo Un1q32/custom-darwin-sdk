@@ -30,6 +30,8 @@
 #define SIZE_MAX UINT32_MAX
 #endif
 
+#define INT64_C(c) (c##LL)
+
 typedef long long intmax_t;
 typedef unsigned long long uintmax_t;
 

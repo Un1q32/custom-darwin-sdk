@@ -1,7 +1,7 @@
 #include <errno.h>
-#include <limits.h>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <sys/syslimits.h>
 #include <unistd.h>
 
 int main() {

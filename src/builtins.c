@@ -1,7 +1,5 @@
 #include <stdint.h>
 
-#define INT64_C(c) (c##LL)
-
 unsigned long long __divmoddi4(unsigned long long a, unsigned long long b,
                                unsigned long long *rem) {
   unsigned long long r = 0;

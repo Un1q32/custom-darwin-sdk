@@ -1,9 +1,9 @@
 #include <errno.h>
 #include <fcntl.h>
-#include <limits.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/syslimits.h>
 #include <sys/types.h>
 #include <unistd.h>
 
