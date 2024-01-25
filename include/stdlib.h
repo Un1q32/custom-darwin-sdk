@@ -15,5 +15,7 @@ extern int atoi(const char *);
 extern char *itoa(long long);
 extern char *utoa(unsigned long long);
 extern char *ftoa(long double, int);
+extern char *getenv(const char *);
+extern char *setenv(const char *, const char *, int);
 
 #endif

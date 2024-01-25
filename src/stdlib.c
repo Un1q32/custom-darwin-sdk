@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -87,6 +88,41 @@ char *ftoa(long double num, int percision) {
     }
     *p = '\0';
     return buf;
+}
+
+char *getenv(const char *name) {
+    extern char **environ;
+    char **env;
+    for (env = environ; *env; env++) {
+        char *p = strchr(*env, '=');
+        if (!strncmp(name, *env, p - *env))
+            return p + 1;
+    }
+    return NULL;
+}
+
+char *setenv(const char *name, const char *value, int overwrite) {
+    extern char **environ;
+    char **env;
+    for (env = environ; *env; env++) {
+        char *p = *env;
+        while (*p && *p != '=')
+            p++;
+        if (!strncmp(name, *env, p - *env)) {
+            if (overwrite)
+                break;
+            else
+                return *env;
+        }
+    }
+    char *new_env = malloc(strlen(name) + strlen(value) + 2);
+    strcpy(new_env, name);
+    strcat(new_env, "=");
+    strcat(new_env, value);
+    *env = new_env;
+    env++;
+    *env = NULL;
+    return new_env;
 }
 
 void exit(int status) {
