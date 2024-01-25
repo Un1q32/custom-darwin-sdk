@@ -22,7 +22,7 @@ ifndef VERBOSE
 V := @
 endif
 
-.PHONY: all debug tests clean
+.PHONY: all debug tests clean clangd
 
 all: sdk/usr/lib sdk/usr/include
 
@@ -66,7 +66,7 @@ clean:
 	@printf "Cleaning up...\n"
 	@rm -rf sdk/* src/*.o crt/*.o tests/*.o tests/bin/* src/libc.a
 
-.clangd:
+clangd:
 	@printf "Generating .clangd...\n"
 	@rm -f .clangd
 	@printf 'CompileFlags:\n  Add: [-I$(PWD)/include]\n' > .clangd
