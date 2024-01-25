@@ -1,11 +1,10 @@
 #include <errno.h>
 #include <fcntl.h>
-#include <limits.h>
 #include <stdarg.h>
 #include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
 #include <sys/syscall.h>
+#include <sys/syslimits.h>
 #include <sys/types.h>
 
 long syscall(long number, ...) {
