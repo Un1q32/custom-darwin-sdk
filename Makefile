@@ -50,7 +50,8 @@ tests: all $(TESTEXES)
 
 tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -nostdlib -lc -lcrt1.o $(LDFLAGS) -o $@ $<
+	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
+	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) tests/$*.o -o $@
 	$(V)ldid -Sentitlements.xml $@
 
 src/libc.a: $(OBJS)
@@ -63,4 +64,4 @@ src/libc.a: $(OBJS)
 
 clean:
 	@printf "Cleaning up...\n"
-	@rm -rf sdk/* src/*.o crt/*.o src/libc.a tests/bin/*
+	@rm -rf sdk/* src/*.o crt/*.o tests/*.o tests/bin/* src/libc.a
