@@ -92,10 +92,10 @@ char *ftoa(long double num, int percision) {
 
 char *getenv(const char *name) {
     extern char **environ;
-    char **env;
-    for (env = environ; *env; env++) {
-        char *p = strchr(*env, '=');
-        if (!strncmp(name, *env, p - *env))
+    int i;
+    for (i = 0; environ[i] != NULL; i++) {
+        char *p = strchr(environ[i], '=');
+        if (!strncmp(name, environ[i], p - environ[i]))
             return p + 1;
     }
     return NULL;
