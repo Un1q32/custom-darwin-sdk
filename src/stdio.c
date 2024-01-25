@@ -76,38 +76,38 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
       break;
     case 'd':
     case 'i':
-      if (flags & 16)
+      if (flags & 1 << 4)
         ret = strdup(itoa(va_arg(ap, intmax_t)));
-      else if (flags & 256)
+      else if (flags & 1 << 8)
         ret = strdup(itoa(va_arg(ap, quad_t)));
-      else if (flags & 2)
+      else if (flags & 1 << 1)
         ret = strdup(itoa(va_arg(ap, long long)));
-      else if (flags & 32 || flags & 64)
+      else if (flags & 1 << 5 || flags & 1 << 6)
         ret = strdup(itoa(va_arg(ap, ptrdiff_t)));
-      else if (flags & 1)
+      else if (flags & 1 << 0)
         ret = strdup(itoa(va_arg(ap, long)));
-      else if (flags & 4)
+      else if (flags & 1 << 2)
         ret = strdup(itoa((short)va_arg(ap, int)));
-      else if (flags & 8)
+      else if (flags & 1 << 3)
         ret = strdup(itoa((char)va_arg(ap, int)));
       else
         ret = strdup(itoa(va_arg(ap, int)));
       done = true;
       break;
     case 'u':
-      if (flags & 16)
+      if (flags & 1 << 4)
         ret = strdup(utoa(va_arg(ap, uintmax_t)));
-      else if (flags & 256)
+      else if (flags & 1 << 8)
         ret = strdup(utoa(va_arg(ap, u_quad_t)));
-      else if (flags & 2)
+      else if (flags & 1 << 1)
         ret = strdup(utoa(va_arg(ap, unsigned long long)));
-      else if (flags & 32 || flags & 64)
+      else if (flags & 1 << 5 || flags & 1 << 6)
         ret = strdup(utoa(va_arg(ap, size_t)));
-      else if (flags & 1)
+      else if (flags & 1 << 0)
         ret = strdup(utoa(va_arg(ap, unsigned long)));
-      else if (flags & 4)
+      else if (flags & 1 << 2)
         ret = strdup(utoa((unsigned short)va_arg(ap, unsigned int)));
-      else if (flags & 8)
+      else if (flags & 1 << 3)
         ret = strdup(utoa((unsigned char)va_arg(ap, unsigned int)));
       else
         ret = strdup(utoa(va_arg(ap, unsigned int)));
@@ -115,26 +115,26 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
       break;
     case 'f':
     case 'F':
-      if (flags & 128)
+      if (flags & 1 << 7)
         ret = strdup(ftoa(va_arg(ap, long double), percision));
       else
         ret = strdup(ftoa(va_arg(ap, double), percision));
       done = true;
       break;
     case 'n':
-      if (flags & 16)
+      if (flags & 1 << 4)
         *(va_arg(ap, intmax_t *)) = charssofar;
-      else if (flags & 256)
+      else if (flags & 1 << 8)
         *(va_arg(ap, quad_t *)) = charssofar;
-      else if (flags & 2)
+      else if (flags & 1 << 1)
         *(va_arg(ap, long long *)) = charssofar;
-      else if (flags & 32 || flags & 64)
+      else if (flags & 1 << 5 || flags & 1 << 6)
         *(va_arg(ap, ptrdiff_t *)) = charssofar;
-      else if (flags & 1)
+      else if (flags & 1 << 0)
         *(va_arg(ap, long *)) = charssofar;
-      else if (flags & 4)
+      else if (flags & 1 << 2)
         *(va_arg(ap, short *)) = charssofar;
-      else if (flags & 8)
+      else if (flags & 1 << 3)
         *(va_arg(ap, char *)) = charssofar;
       else
         *(va_arg(ap, int *)) = charssofar;
@@ -144,37 +144,37 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
       break;
     case 'l':
       formatlen++;
-      if (flags & 1)
-        flags |= 2;
+      if (flags & 1 << 0)
+        flags |= 1 << 1;
       else
-        flags |= 1;
+        flags |= 1 << 0;
       break;
     case 'h':
       formatlen++;
-      if (flags & 4)
-        flags |= 8;
+      if (flags & 1 << 2)
+        flags |= 1 << 3;
       else
-        flags |= 4;
+        flags |= 1 << 2;
       break;
     case 'j':
       formatlen++;
-      flags |= 16;
+      flags |= 1 << 4;
       break;
     case 't':
       formatlen++;
-      flags |= 32;
+      flags |= 1 << 5;
       break;
     case 'z':
       formatlen++;
-      flags |= 64;
+      flags |= 1 << 6;
       break;
     case 'L':
       formatlen++;
-      flags |= 128;
+      flags |= 1 << 7;
       break;
     case 'q':
       formatlen++;
-      flags |= 256;
+      flags |= 1 << 8;
       break;
     case '.':
       formatlen++;
