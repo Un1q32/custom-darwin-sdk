@@ -1,7 +1,10 @@
 #include <ctype.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
+extern char **environ;
 
 long strtol(const char *nptr, char **endptr, int base) {
     long ret = 0;
@@ -91,7 +94,6 @@ char *ftoa(long double num, int percision) {
 }
 
 char *getenv(const char *name) {
-    extern char **environ;
     int i;
     for (i = 0; environ[i] != NULL; i++) {
         char *p = strchr(environ[i], '=');
@@ -101,28 +103,34 @@ char *getenv(const char *name) {
     return NULL;
 }
 
-char *setenv(const char *name, const char *value, int overwrite) {
-    extern char **environ;
-    char **env;
-    for (env = environ; *env; env++) {
-        char *p = *env;
-        while (*p && *p != '=')
-            p++;
-        if (!strncmp(name, *env, p - *env)) {
+int setenv(const char *name, const char *value, int overwrite) {
+    if (name == NULL || value == NULL || name[0] == '\0' || strchr(name, '=') != NULL) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    int i;
+    for (i = 0; environ[i] != NULL; i++) {
+        char *p = strchr(environ[i], '=');
+        if (!strncmp(name, environ[i], p - environ[i])) {
             if (overwrite)
                 break;
             else
-                return *env;
+                return 0;
         }
     }
-    char *new_env = malloc(strlen(name) + strlen(value) + 2);
-    strcpy(new_env, name);
-    strcat(new_env, "=");
-    strcat(new_env, value);
-    *env = new_env;
-    env++;
-    *env = NULL;
-    return new_env;
+
+    char *tmp = malloc(strlen(name) + strlen(value) + 2);
+    if (tmp) {
+        free(environ[i]);
+        environ[i] = tmp;
+    } else
+        return -1;
+    strcpy(environ[i], name);
+    strcat(environ[i], "=");
+    strcat(environ[i], value);
+    environ[i + 1] = NULL;
+    return 0;
 }
 
 void exit(int status) {
