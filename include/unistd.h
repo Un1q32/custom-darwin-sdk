@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/unistd.h>
 
-#define STDIN_FILENO  0
+#define STDIN_FILENO 0
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
@@ -24,8 +24,8 @@ extern int close(int);
 extern char *getcwd(char *, size_t);
 extern pid_t fork(void);
 extern pid_t getpid(void);
-extern int execve(const char *, char *const [], char *const []);
-extern int execv(const char *, char *const []);
+extern int execve(const char *, char *const[], char *const[]);
+extern int execv(const char *, char *const[]);
 extern int execl(const char *, const char *, ...);
 extern int execle(const char *, const char *, ...);
 

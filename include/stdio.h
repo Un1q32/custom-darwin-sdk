@@ -6,23 +6,23 @@
 #include <sys/types.h>
 
 typedef struct {
-    short _file;
-    short _flags;
+  short _file;
+  short _flags;
 } FILE;
 
 extern FILE *__stdinp;
 extern FILE *__stdoutp;
 extern FILE *__stderrp;
 
-#define stdin  __stdinp
+#define stdin __stdinp
 #define stdout __stdoutp
 #define stderr __stderrp
 
-#define __SLBF  0x0001
-#define __SNBF  0x0002
-#define __SRD   0x0004
-#define __SWR   0x0008
-#define __SRW   0x0010
+#define __SLBF 0x0001
+#define __SNBF 0x0002
+#define __SRD 0x0004
+#define __SWR 0x0008
+#define __SRW 0x0010
 
 #define EOF (-1)
 
