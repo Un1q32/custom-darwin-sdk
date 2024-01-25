@@ -1,19 +1,19 @@
 #include <libgen.h>
 #include <stdlib.h>
-extern int main(int argc, char *argv[], char *envp[]);
+extern int main(int argc, const char *argv[], const char *envp[]);
 
 extern int NXArgc;
-extern char **NXArgv;
-extern char **environ;
-extern char *__progname;
+extern const char **NXArgv;
+extern const char **environ;
+extern const char *__progname;
 
 void start(void) __asm__("start");
 void start(void) {
   int argc = 0;
-  char **argv = (char **)(&argc + 4);
+  const char **argv = (const char **)(&argc + 4);
   while (argv[argc] != NULL)
     argc++;
-  char **envp = argv + argc + 1;
+  const char **envp = argv + argc + 1;
   NXArgc = argc;
   NXArgv = argv;
   environ = envp;
