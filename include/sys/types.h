@@ -8,5 +8,7 @@ typedef long long off_t;
 typedef off_t fpos_t;
 typedef unsigned short mode_t;
 typedef int pid_t;
+typedef int suseconds_t;
+typedef unsigned int useconds_t;
 
 #endif
