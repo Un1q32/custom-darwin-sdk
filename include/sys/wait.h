@@ -1,6 +1,7 @@
 #ifndef _SYS_WAIT_H_
 #define _SYS_WAIT_H_
 
+#include <sys/resource.h>
 #include <sys/types.h>
 
 extern pid_t wait(int *);

@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 extern char **environ;
@@ -131,6 +132,19 @@ int setenv(const char *name, const char *value, int overwrite) {
   strcat(environ[i], value);
   environ[i + 1] = NULL;
   return 0;
+}
+
+int system(const char *command) {
+  int pid = fork();
+  if (pid == 0) {
+    execl("/bin/sh", "sh", "-c", command, NULL);
+    _exit(127);
+  } else if (pid > 0) {
+    int status;
+    waitpid(pid, &status, 0);
+    return status;
+  }
+  return -1;
 }
 
 void exit(int status) {
