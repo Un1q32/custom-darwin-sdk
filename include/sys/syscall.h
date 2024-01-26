@@ -25,6 +25,8 @@
 #define SYS_execve 59
 #define SYS_munmap 73
 #define SYS_fcntl 92
+#define SYS_gettimeofday 116
+#define SYS_settimeofday 122
 #define SYS_mkdir 136
 #define SYS_rmdir 137
 #define SYS_mmap 197
