@@ -4,7 +4,19 @@
  * See https://llvm.org/LICENSE.txt for license information.
  */
 
+#include <limits.h>
 #include <stdint.h>
+
+#if UINT_MAX == 0xFFFFFFFF
+#define clzsi __builtin_clz
+#elif ULONG_MAX == 0xFFFFFFFF
+#define clzsi __builtin_clzl
+#else
+#error could not determine appropriate clzsi macro for this system
+#endif
+
+#define clz(a)                                                                 \
+  (sizeof(a) == sizeof(unsigned long long) ? __builtin_clzll(a) : clzsi(a))
 
 unsigned long long __divmoddi4(unsigned long long a, unsigned long long b,
                                unsigned long long *rem) {
@@ -100,3 +112,29 @@ int __divsi3(int a, int b) {
 }
 
 int __modsi3(int a, int b) { return a - __divsi3(a, b) * b; }
+
+static unsigned long long __umodXi3(unsigned long long n,
+                                    unsigned long long d) {
+  const unsigned N = sizeof(unsigned long long) * __CHAR_BIT__;
+  unsigned sr = (d ? clz(d) : N) - (n ? clz(n) : N);
+  if (sr > N - 1)
+    return n;
+  if (sr == N - 1)
+    return 0;
+  ++sr;
+  unsigned long long r = n >> sr;
+  n <<= N - sr;
+  unsigned long long carry = 0;
+  for (; sr > 0; --sr) {
+    r = (r << 1) | (n >> (N - 1));
+    n = (n << 1) | carry;
+    const unsigned long long s = (unsigned long long)(d - r - 1) >> (N - 1);
+    carry = s & 1;
+    r -= d & s;
+  }
+  return r;
+}
+
+unsigned int __umodsi3(unsigned int a, unsigned int b) {
+  return (unsigned int)__umodXi3(a, b);
+}

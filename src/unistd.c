@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/syslimits.h>
 #include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 
 char *getcwd(char *buf, size_t size) {
@@ -67,4 +68,11 @@ int execle(const char *filename, const char *arg, ...) {
   }
   va_end(va_args);
   return execve(filename, argv, envp);
+}
+
+int usleep(useconds_t usec) {
+  struct timespec ts;
+  ts.tv_sec = usec / 1000000;
+  ts.tv_nsec = (usec % 1000000) * 1000;
+  return nanosleep(&ts, NULL);
 }
