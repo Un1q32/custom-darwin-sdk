@@ -9,6 +9,12 @@
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
+#if defined(__arm__)
+#define PAGE_SIZE 4096
+#endif
+
+#define PAGE_MASK (~(PAGE_SIZE - 1))
+
 extern void _exit(int);
 extern int access(const char *, int);
 extern ssize_t read(int, void *, size_t);

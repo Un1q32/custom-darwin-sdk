@@ -3,10 +3,12 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
+#include <sys/mman.h>
 #include <sys/resource.h>
 #include <sys/syscall.h>
 #include <sys/syslimits.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 long syscall(long number, ...) {
   long ret;
@@ -150,6 +152,13 @@ int symlink(const char *target, const char *linkpath) {
 
 void *mmap(void *addr, size_t length, int prot, int flags, int fd,
            off_t offset) {
+  if ((offset & PAGE_MASK) ||
+      (((flags & MAP_PRIVATE) != MAP_PRIVATE) &&
+       ((flags & MAP_SHARED) != MAP_SHARED)) ||
+      (length == 0)) {
+    errno = EINVAL;
+    return MAP_FAILED;
+  }
   return (void *)syscall(SYS_mmap, addr, length, prot, flags, fd, offset);
 }
 
