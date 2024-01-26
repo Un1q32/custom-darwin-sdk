@@ -67,6 +67,6 @@ clean:
 	@rm -rf sdk/* src/*.o crt/*.o tests/*.o tests/bin/* src/libc.a
 
 clangd:
-	@printf "Generating .clangd...\n"
+	@printf "Generating clangd config...\n"
 	@rm -f .clangd
 	@printf 'CompileFlags:\n  Add: [-I$(PWD)/include, --target=armv6-apple-ios2]\n' > .clangd
