@@ -2,14 +2,10 @@
 #include <string.h>
 
 int main(int argc, const char *argv[]) {
-  int num = -123;
-  printf("num = %d\n", num);
-  int num2 = 12345;
-  printf("num2 = %d\n", num2);
-  long long num3 = 8589934592;
-  printf("num3 = %lld\n", num3);
-  unsigned long long num4 = 0xFFFFFFFFFFFFFFFF;
-  printf("num4 = %llu\n", num4);
+  printf("num = %d\n", -123);
+  printf("num2 = %d\n", 12345);
+  printf("num3 = %lld\n", 8589934592);
+  printf("num4 = %llu\n", 0xFFFFFFFFFFFFFFFF);
   float num5 = 3.1415926535897932384;
   printf("num5 = %f\n", num5);
   printf("num5 = %.2f\n", num5);
