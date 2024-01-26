@@ -1,3 +1,9 @@
+/*
+ * These functions are adapted from the compiler-rt project and are therefore
+ * licenced under the Apache License v2.0 with LLVM Exceptions.
+ * See https://llvm.org/LICENSE.txt for license information.
+ */
+
 #include <stdint.h>
 
 unsigned long long __divmoddi4(unsigned long long a, unsigned long long b,
