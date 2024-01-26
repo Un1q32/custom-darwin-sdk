@@ -1,5 +1,6 @@
 #include <errno.h>
 #include <fcntl.h>
+#include <mach/machine/vm_param.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
@@ -8,7 +9,6 @@
 #include <sys/syscall.h>
 #include <sys/syslimits.h>
 #include <sys/types.h>
-#include <unistd.h>
 
 long syscall(long number, ...) {
   long ret;
@@ -30,7 +30,7 @@ long syscall(long number, ...) {
       : "r12", "r0", "r1", "r2", "r3", "r4", "r5"
 #else
       ""
-#error "syscall not implemented for this architecture"
+#error architecture not supported
 #endif
   );
   return ret;
