@@ -10,5 +10,6 @@ typedef unsigned short mode_t;
 typedef int pid_t;
 typedef int suseconds_t;
 typedef unsigned int useconds_t;
+typedef unsigned long clock_t;
 
 #endif
