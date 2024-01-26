@@ -217,5 +217,7 @@ int execve(const char *filename, char *const argv[], char *const envp[]) {
 }
 
 pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage) {
-  return syscall(SYS_wait4, pid, status, options, rusage);
+  long ret = syscall(SYS_wait4, pid, status, options, rusage);
+  *status >>= 8;
+  return ret;
 }
