@@ -24,6 +24,35 @@ unsigned long long __udivdi3(unsigned long long a, unsigned long long b) {
   return __divmoddi4(a, b, &r);
 }
 
+unsigned int __udivsi3(unsigned int n, unsigned int d) {
+  const unsigned n_uword_bits = sizeof(unsigned int) * __CHAR_BIT__;
+  unsigned int q;
+  unsigned int r;
+  unsigned sr;
+  if (d == 0)
+    return 0;
+  if (n == 0)
+    return 0;
+  sr = __builtin_clz(d) - __builtin_clz(n);
+  if (sr > n_uword_bits - 1)
+    return 0;
+  if (sr == n_uword_bits - 1)
+    return n;
+  ++sr;
+  q = n << (n_uword_bits - sr);
+  r = n >> sr;
+  unsigned int carry = 0;
+  for (; sr > 0; --sr) {
+    r = (r << 1) | (q >> (n_uword_bits - 1));
+    q = (q << 1) | carry;
+    const int s = (int)(d - r - 1) >> (n_uword_bits - 1);
+    carry = s & 1;
+    r -= d & s;
+  }
+  q = (q << 1) | carry;
+  return q;
+}
+
 unsigned long long __umoddi3(unsigned long long a, unsigned long long b) {
   unsigned long long r;
   __divmoddi4(a, b, &r);
@@ -53,3 +82,15 @@ double __floatundidf(long long a) {
   const double result = (high - twop52) + low.d;
   return result;
 }
+
+int __divsi3(int a, int b) {
+  const int bits_in_word_m1 = (int)(sizeof(int) * __CHAR_BIT__) - 1;
+  int s_a = a >> bits_in_word_m1;
+  int s_b = b >> bits_in_word_m1;
+  a = (a ^ s_a) - s_a;
+  b = (b ^ s_b) - s_b;
+  s_a ^= s_b;
+  return ((unsigned int)a / (unsigned int)b ^ s_a) - s_a;
+}
+
+int __modsi3(int a, int b) { return a - __divsi3(a, b) * b; }
