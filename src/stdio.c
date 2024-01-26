@@ -57,9 +57,7 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
   while (!done) {
     switch (format[formatlen - 1]) {
     case '%':
-      ret = malloc(2);
-      ret[0] = '%';
-      ret[1] = '\0';
+      ret = strdup("%");
       done = true;
       break;
     case 's':
