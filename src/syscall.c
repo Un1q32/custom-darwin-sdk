@@ -1,6 +1,6 @@
 #include <errno.h>
 #include <fcntl.h>
-#include <mach/vm_param.h>
+#include <machine/param.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
