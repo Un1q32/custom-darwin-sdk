@@ -241,8 +241,6 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
 
     unsigned long day = tv->tv_sec / (60 * 60 * 24);
     switch (tz->tz_dsttime) {
-    case DST_NONE:
-      break;
     case DST_USA:
       if (day >= 69 && day <= 307)
         tv->tv_sec -= 60 * 60;
