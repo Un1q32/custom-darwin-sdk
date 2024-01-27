@@ -232,7 +232,9 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage) {
 }
 
 int gettimeofday(struct timeval *tv, struct timezone *tz) {
-  return syscall(SYS_gettimeofday, tv, tz);
+  tv->tv_sec = syscall(SYS_gettimeofday, tz);
+  tv->tv_usec = 0;
+  return 0;
 }
 
 int settimeofday(const struct timeval *tv, const struct timezone *tz) {
