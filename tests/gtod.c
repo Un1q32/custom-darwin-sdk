@@ -14,6 +14,7 @@ void fmttime(struct timeval *tv) {
 }
 
 int main(int argc, char *argv[]) {
+  (void)argc;
   struct timeval tv;
   struct timezone tz = {
       .tz_minuteswest = ((argv[1] != NULL) ? atoi(argv[1]) : 0),
