@@ -45,6 +45,9 @@ sdk/usr/lib: crt/crt1.o src/libc.a
 	@ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
 	@ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
 
+debug: OPTFLAGS := -g
+debug: all
+
 tests: OPTFLAGS := -g
 tests: all $(TESTEXES)
 
