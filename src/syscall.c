@@ -241,7 +241,3 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
     tv->tv_sec -= tz->tz_minuteswest * 60;
   return 0;
 }
-
-int settimeofday(const struct timeval *tv, const struct timezone *tz) {
-  return syscall(SYS_settimeofday, tv, tz);
-}
