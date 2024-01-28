@@ -29,6 +29,9 @@ all: sdk/usr/lib sdk/usr/include
 debug: OPTFLAGS := -g
 debug: all
 
+tests: OPTFLAGS := -g
+tests: all $(TESTEXES)
+
 sdk/usr/include: $(HEADERS)
 	@printf "Installing headers...\n"
 	@rm -rf sdk/usr/include
@@ -44,12 +47,6 @@ sdk/usr/lib: crt/crt1.o src/libc.a
 	@ln -sf libc.a sdk/usr/lib/libSystem.a
 	@ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
 	@ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
-
-debug: OPTFLAGS := -g
-debug: all
-
-tests: OPTFLAGS := -g
-tests: all $(TESTEXES)
 
 tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
