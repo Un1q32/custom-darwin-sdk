@@ -4,11 +4,12 @@
 #include <time.h>
 
 int nanosleep(const struct timespec *req, struct timespec *rem) {
-  unsigned long long nsec = req->tv_sec * 1000000000ULL + req->tv_nsec;
-  if (nsec < 0 || nsec > 999999999999999999ULL) {
+  if (req->tv_nsec < 0 || req->tv_nsec >= 1000000000) {
     errno = EINVAL;
     return -1;
   }
+
+  long long nsec = req->tv_sec * 1000000000ULL + req->tv_nsec;
 
   struct timeval tv;
   gettimeofday(&tv, NULL);

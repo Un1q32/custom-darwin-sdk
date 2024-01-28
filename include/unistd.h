@@ -29,5 +29,6 @@ extern int execv(const char *, char *const[]);
 extern int execl(const char *, const char *, ...);
 extern int execle(const char *, const char *, ...);
 extern int usleep(useconds_t);
+extern unsigned int sleep(unsigned int);
 
 #endif

@@ -76,3 +76,10 @@ int usleep(useconds_t usec) {
   ts.tv_nsec = (usec % 1000000) * 1000;
   return nanosleep(&ts, NULL);
 }
+
+unsigned int sleep(unsigned int seconds) {
+  struct timespec ts;
+  ts.tv_sec = seconds;
+  ts.tv_nsec = 0;
+  return nanosleep(&ts, NULL);
+}
