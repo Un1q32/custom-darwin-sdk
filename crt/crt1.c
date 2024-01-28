@@ -4,7 +4,6 @@ extern int main(int argc, const char *argv[], const char *envp[]);
 extern int NXArgc;
 extern const char **NXArgv;
 extern const char **environ;
-extern const char *__progname;
 
 void start(void) __asm__("start");
 void start(void) {
@@ -18,6 +17,5 @@ void start(void) {
   NXArgc = argc;
   NXArgv = argv;
   environ = envp;
-  __progname = ((argv[0] != NULL) ? argv[0] : "");
   exit(main(argc, argv, envp));
 }
