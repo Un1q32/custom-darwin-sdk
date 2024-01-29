@@ -4,12 +4,12 @@
 
 void fmttime(struct timeval *tv) {
   long year, month, day, hour, min, sec;
-  year = tv->tv_sec / 31536000 + 1970;
-  month = (tv->tv_sec % 31536000) / 2592000 + 1;
-  day = ((tv->tv_sec % 31536000) % 2592000) / 86400 + 1;
-  hour = (((tv->tv_sec % 31536000) % 2592000) % 86400) / 3600;
-  min = ((((tv->tv_sec % 31536000) % 2592000) % 86400) % 3600) / 60;
-  sec = (((((tv->tv_sec % 31536000) % 2592000) % 86400) % 3600) % 60);
+  year = tv->tv_sec / 31556926 + 1970;
+  month = (tv->tv_sec % 31556926) / 2629743 + 1;
+  day = ((tv->tv_sec % 31556926) % 2629743) / 86400 + 1;
+  hour = (((tv->tv_sec % 31556926) % 2629743) % 86400) / 3600;
+  min = ((((tv->tv_sec % 31556926) % 2629743) % 86400) % 3600) / 60;
+  sec = ((((tv->tv_sec % 31556926) % 2629743) % 86400) % 3600) % 60;
   printf("%ld-%ld-%ld %ld:%ld:%ld:%d\n", year, month, day, hour, min, sec,
          tv->tv_usec);
 }
