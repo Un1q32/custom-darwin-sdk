@@ -52,7 +52,7 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
   if (format == NULL)
     return NULL;
   char *ret = NULL;
-  int flags = 0, formatlen = 1, percision = 6;
+  int flags = 0, formatlen = 1, percision = 6, zerofill = 0;
   bool done = false;
   while (!done) {
     switch (format[formatlen - 1]) {
@@ -90,6 +90,15 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
         ret = strdup(itoa((char)va_arg(ap, int)));
       else
         ret = strdup(itoa(va_arg(ap, int)));
+      int len = strlen(ret);
+      if (len < zerofill) {
+        char *ret2 = malloc(zerofill + 1);
+        memset(ret2, '0', zerofill - len);
+        memcpy(ret2 + zerofill - len, ret, len);
+        ret2[zerofill] = '\0';
+        free(ret);
+        ret = ret2;
+      }
       done = true;
       break;
     case 'u':
@@ -109,6 +118,15 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
         ret = strdup(utoa((unsigned char)va_arg(ap, unsigned int)));
       else
         ret = strdup(utoa(va_arg(ap, unsigned int)));
+      int len2 = strlen(ret);
+      if (len2 < zerofill) {
+        char *ret2 = malloc(zerofill + 1);
+        memset(ret2, '0', zerofill - len2);
+        memcpy(ret2 + zerofill - len2, ret, len2);
+        ret2[zerofill] = '\0';
+        free(ret);
+        ret = ret2;
+      }
       done = true;
       break;
     case 'f':
@@ -183,6 +201,16 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
       percisionstr[formatlen - 1] = '\0';
       percision = atoi(percisionstr);
       free(percisionstr);
+      break;
+    case '0':
+      formatlen++;
+      while (isdigit(format[formatlen - 1]))
+        formatlen++;
+      char *zerofillstr = malloc(formatlen - 1);
+      memcpy(zerofillstr, format + 1, formatlen - 2);
+      zerofillstr[formatlen - 1] = '\0';
+      zerofill = atoi(zerofillstr);
+      free(zerofillstr);
       break;
     default:
       formatlen--;

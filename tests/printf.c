@@ -13,6 +13,7 @@ int main(int argc, const char *argv[]) {
   printf("percent sign: %%\n");
   char *str = "chars";
   printf("%c%c%c%c%c\n", str[0], str[1], str[2], str[3], str[4]);
+  printf("1 with a width of 3 chars: %03d\n", 1);
   if (argc > 1) {
     int charcount = 0;
     printf("argv[1] = (%s)%n\n", argv[1], &charcount);
