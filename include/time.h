@@ -23,5 +23,6 @@ struct timespec {
 };
 
 extern int nanosleep(const struct timespec *, struct timespec *);
+extern time_t time(time_t *);
 
 #endif
