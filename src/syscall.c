@@ -231,42 +231,10 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage) {
   return ret;
 }
 
-int gettimeofday(struct timeval *tv, struct timezone *tz) {
+int gettimeofday(struct timeval *tv, void *tz) {
+  (void)tz;
   long nothing = 0;
   tv->tv_sec = syscall(SYS_gettimeofday, &nothing, NULL);
   tv->tv_usec = 0;
-
-  if (tz != NULL) {
-    tv->tv_sec -= tz->tz_minuteswest * 60;
-
-    long day = tv->tv_sec / (60 * 60 * 24);
-    switch (tz->tz_dsttime) {
-    case DST_USA:
-      if (day >= 69 && day <= 307)
-        tv->tv_sec -= 60 * 60;
-      break;
-    case DST_AUST:
-      if (day >= 0 && day <= 89)
-        tv->tv_sec -= 60 * 60;
-      break;
-    case DST_WET:
-      if (day >= 89 && day <= 304)
-        tv->tv_sec += 60 * 60;
-      break;
-    case DST_MET:
-      if (day >= 89 && day <= 303)
-        tv->tv_sec += 60 * 60;
-      break;
-    case DST_EET:
-      if (day >= 89 && day <= 303)
-        tv->tv_sec += 60 * 60;
-      break;
-    case DST_CAN:
-      if (day >= 119 && day <= 303)
-        tv->tv_sec -= 60 * 60;
-      break;
-    }
-  }
-
   return 0;
 }

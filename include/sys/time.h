@@ -22,6 +22,6 @@ struct timezone {
   int tz_dsttime;
 };
 
-extern int gettimeofday(struct timeval *, struct timezone *);
+extern int gettimeofday(struct timeval *, void *);
 
 #endif
