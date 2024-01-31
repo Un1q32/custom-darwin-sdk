@@ -232,9 +232,17 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage) {
 }
 
 int gettimeofday(struct timeval *tv, void *tz) {
-  (void)tz;
   long nothing = 0;
-  tv->tv_sec = syscall(SYS_gettimeofday, &nothing, NULL);
-  tv->tv_usec = 0;
+  if (tv != NULL) {
+    tv->tv_sec = syscall(SYS_gettimeofday, &nothing, NULL);
+    tv->tv_usec = 0;
+  }
+  if (tz != NULL) {
+    struct timezone tmp_tz = {
+        .tz_minuteswest = 0,
+        .tz_dsttime = 0,
+    };
+    memcpy(tz, &tmp_tz, sizeof(struct timezone));
+  }
   return 0;
 }
