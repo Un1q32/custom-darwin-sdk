@@ -51,7 +51,7 @@ sdk/usr/lib: crt/crt1.o src/libc.a
 tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
 	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
-	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) tests/$*.o -o $@
+	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -lcrt1.o tests/$*.o -o $@
 	$(V)ldid -Sentitlements.xml $@
 
 src/libc.a: $(OBJS)
