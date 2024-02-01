@@ -135,10 +135,16 @@ int setenv(const char *name, const char *value, int overwrite) {
 }
 
 int system(const char *command) {
+  if (command == NULL) {
+    if (access("/bin/sh", X_OK) == 0)
+      return 1;
+    else
+      return 0;
+  }
   int pid = fork();
   if (pid == 0) {
     execl("/bin/sh", "sh", "-c", command, NULL);
-    _exit(127);
+    return 127;
   } else if (pid > 0) {
     int status;
     waitpid(pid, &status, 0);
