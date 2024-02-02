@@ -11,8 +11,7 @@
 #include <sys/types.h>
 
 long syscall(long number, ...) {
-  long ret;
-  long args[6];
+  long ret, args[6];
   va_list va_args;
   va_start(va_args, number);
   int i;
