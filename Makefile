@@ -64,8 +64,8 @@ src/libc.a: $(OBJS)
 
 clean:
 	@printf "Cleaning up...\n"
-	@rm -rf sdk/* src/*.o crt/*.o tests/*.o tests/bin/* src/libc.a
+	$(V)rm -rf sdk/* src/*.o crt/*.o tests/*.o tests/bin/* src/libc.a
 
 clangd:
 	@printf "Generating clangd config...\n"
-	@printf 'CompileFlags:\n  Add: [-I$(PWD)/include, --target=armv6-apple-ios2]\n' > .clangd
+	$(V)printf 'CompileFlags:\n  Add: [-I$(PWD)/include, --target=armv6-apple-ios2]\n' > .clangd
