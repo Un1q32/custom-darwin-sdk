@@ -13,8 +13,7 @@ _REQFLAGS := -isysroot sdk -Iinclude -std=c89
 SRCS := $(wildcard src/*.c)
 OBJS := $(SRCS:.c=.o)
 TESTSRCS := $(wildcard tests/*.c)
-TESTEXES := $(TESTSRCS:.c=)
-TESTEXES := $(subst tests,tests/bin,$(TESTEXES))
+TESTEXES := $(TESTSRCS:tests/%.c=tests/bin/%)
 
 HEADERS := $(wildcard include/*.h) $(wildcard include/*/*.h)
 
