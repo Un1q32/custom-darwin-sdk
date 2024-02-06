@@ -68,5 +68,4 @@ clean:
 
 clangd:
 	@printf "Generating clangd config...\n"
-	@rm -f .clangd
 	@printf 'CompileFlags:\n  Add: [-I$(PWD)/include, --target=armv6-apple-ios2]\n' > .clangd
