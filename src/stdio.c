@@ -76,21 +76,21 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
     case 'd':
     case 'i':
       if (flags & 1 << 4)
-        ret = strdup(itoa(va_arg(ap, intmax_t)));
+        ret = itoa(va_arg(ap, intmax_t));
       else if (flags & 1 << 8)
-        ret = strdup(itoa(va_arg(ap, quad_t)));
+        ret = itoa(va_arg(ap, quad_t));
       else if (flags & 1 << 1)
-        ret = strdup(itoa(va_arg(ap, long long)));
+        ret = itoa(va_arg(ap, long long));
       else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = strdup(itoa(va_arg(ap, ptrdiff_t)));
+        ret = itoa(va_arg(ap, ptrdiff_t));
       else if (flags & 1 << 0)
-        ret = strdup(itoa(va_arg(ap, long)));
+        ret = itoa(va_arg(ap, long));
       else if (flags & 1 << 2)
-        ret = strdup(itoa((short)va_arg(ap, int)));
+        ret = itoa((short)va_arg(ap, int));
       else if (flags & 1 << 3)
-        ret = strdup(itoa((char)va_arg(ap, int)));
+        ret = itoa((char)va_arg(ap, int));
       else
-        ret = strdup(itoa(va_arg(ap, int)));
+        ret = itoa(va_arg(ap, int));
       int len = strlen(ret);
       if (len < zerofill) {
         char *ret2 = malloc(zerofill + 1);
@@ -104,21 +104,21 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       break;
     case 'u':
       if (flags & 1 << 4)
-        ret = strdup(utoa(va_arg(ap, uintmax_t)));
+        ret = utoa(va_arg(ap, uintmax_t));
       else if (flags & 1 << 8)
-        ret = strdup(utoa(va_arg(ap, u_quad_t)));
+        ret = utoa(va_arg(ap, u_quad_t));
       else if (flags & 1 << 1)
-        ret = strdup(utoa(va_arg(ap, unsigned long long)));
+        ret = utoa(va_arg(ap, unsigned long long));
       else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = strdup(utoa(va_arg(ap, size_t)));
+        ret = utoa(va_arg(ap, size_t));
       else if (flags & 1 << 0)
-        ret = strdup(utoa(va_arg(ap, unsigned long)));
+        ret = utoa(va_arg(ap, unsigned long));
       else if (flags & 1 << 2)
-        ret = strdup(utoa((unsigned short)va_arg(ap, unsigned int)));
+        ret = utoa((unsigned short)va_arg(ap, unsigned int));
       else if (flags & 1 << 3)
-        ret = strdup(utoa((unsigned char)va_arg(ap, unsigned int)));
+        ret = utoa((unsigned char)va_arg(ap, unsigned int));
       else
-        ret = strdup(utoa(va_arg(ap, unsigned int)));
+        ret = utoa(va_arg(ap, unsigned int));
       int len2 = strlen(ret);
       if (len2 < zerofill) {
         char *ret2 = malloc(zerofill + 1);
@@ -133,9 +133,9 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
     case 'f':
     case 'F':
       if (flags & 1 << 7)
-        ret = strdup(ftoa(va_arg(ap, long double), percision));
+        ret = ftoa(va_arg(ap, long double), percision);
       else
-        ret = strdup(ftoa(va_arg(ap, double), percision));
+        ret = ftoa(va_arg(ap, double), percision);
       done = true;
       break;
     case 'n':

@@ -58,7 +58,7 @@ char *utoa(unsigned long long num) {
     *--p = '0' + num % 10;
     num /= 10;
   } while (num);
-  return p;
+  return strdup(p);
 }
 
 char *itoa(long long num) {
@@ -66,7 +66,7 @@ char *itoa(long long num) {
     char *ret = utoa(-num);
     char *p = ret - 1;
     *p = '-';
-    return p;
+    return strdup(p);
   } else
     return utoa(num);
 }
@@ -90,7 +90,7 @@ char *ftoa(long double num, int percision) {
     num -= (int)num;
   }
   *p = '\0';
-  return buf;
+  return strdup(buf);
 }
 
 char *getenv(const char *name) {
