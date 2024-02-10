@@ -48,14 +48,15 @@ int fputc(int ch, FILE *stream) {
   return ch;
 }
 
-char *__tostr(const char *format, int charssofar, va_list ap) {
+char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
   if (format == NULL)
     return NULL;
   char *ret = NULL;
-  int flags = 0, formatlen = 1, percision = 6, zerofill = 0;
+  int flags = 0, percision = 6, zerofill = 0;
+  *formatlen = 1;
   bool done = false;
   while (!done) {
-    switch (format[formatlen - 1]) {
+    switch (format[*formatlen - 1]) {
     case '%':
       ret = strdup("%");
       done = true;
@@ -159,77 +160,66 @@ char *__tostr(const char *format, int charssofar, va_list ap) {
       done = true;
       break;
     case 'l':
-      formatlen++;
+      *formatlen += 1;
       if (flags & 1 << 0)
         flags |= 1 << 1;
       else
         flags |= 1 << 0;
       break;
     case 'h':
-      formatlen++;
+      *formatlen += 1;
       if (flags & 1 << 2)
         flags |= 1 << 3;
       else
         flags |= 1 << 2;
       break;
     case 'j':
-      formatlen++;
+      *formatlen += 1;
       flags |= 1 << 4;
       break;
     case 't':
-      formatlen++;
+      *formatlen += 1;
       flags |= 1 << 5;
       break;
     case 'z':
-      formatlen++;
+      *formatlen += 1;
       flags |= 1 << 6;
       break;
     case 'L':
-      formatlen++;
+      *formatlen += 1;
       flags |= 1 << 7;
       break;
     case 'q':
-      formatlen++;
+      *formatlen += 1;
       flags |= 1 << 8;
       break;
     case '.':
-      formatlen++;
-      while (isdigit(format[formatlen - 1]))
-        formatlen++;
-      char *percisionstr = malloc(formatlen - 1);
-      memcpy(percisionstr, format + 1, formatlen - 2);
-      percisionstr[formatlen - 1] = '\0';
+      *formatlen += 1;
+      while (isdigit(format[*formatlen - 1]))
+        *formatlen += 1;
+      char *percisionstr = malloc(*formatlen - 1);
+      memcpy(percisionstr, format + 1, *formatlen - 2);
+      percisionstr[*formatlen - 1] = '\0';
       percision = atoi(percisionstr);
       free(percisionstr);
       break;
     case '0':
-      formatlen++;
-      while (isdigit(format[formatlen - 1]))
-        formatlen++;
-      char *zerofillstr = malloc(formatlen - 1);
-      memcpy(zerofillstr, format + 1, formatlen - 2);
-      zerofillstr[formatlen - 1] = '\0';
+      *formatlen += 1;
+      while (isdigit(format[*formatlen - 1]))
+        *formatlen += 1;
+      char *zerofillstr = malloc(*formatlen - 1);
+      memcpy(zerofillstr, format + 1, *formatlen - 2);
+      zerofillstr[*formatlen - 1] = '\0';
       zerofill = atoi(zerofillstr);
       free(zerofillstr);
       break;
     default:
-      formatlen--;
+      *formatlen -= 1;
       ret = malloc(1);
       ret[0] = '\0';
       done = true;
       break;
     }
-  }
-  if (ret != NULL) {
-    size_t len = strlen(ret);
-    char *ret2 = realloc(ret, len + 2);
-    if (ret2 != NULL)
-      ret = ret2;
-    else {
-      free(ret);
-      return NULL;
-    }
-    ret[len + 1] = formatlen;
   }
   return ret;
 }
@@ -238,13 +228,14 @@ int vsprintf(char *str, const char *format, va_list ap) {
   int i = 0, j = 0;
   while (format[i]) {
     if (format[i] == '%') {
-      char *tmp = __tostr(format + i + 1, j, ap);
+      int formatlen;
+      char *tmp = __tostr(format + i + 1, j, ap, &formatlen);
       va_arg(ap, void *);
       if (tmp) {
         if (str != NULL)
           strcpy(str + j, tmp);
         j += strlen(tmp);
-        i += tmp[strlen(tmp) + 1] + 1;
+        i += formatlen + 1;
         free(tmp);
       } else {
         if (str != NULL)
