@@ -12,7 +12,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-long syscallret[1] = {0};
+long syscallret = 0;
 
 long syscall(long number, ...) {
   va_list va_args;
@@ -30,9 +30,9 @@ long syscall(long number, ...) {
       "svc 0x80;"             /* make syscall */
       "mov %[ret], r0;"       /* save return value if carry clear */
       "mov %[ret2], r1;"      /* save 2nd return value if carry clear */
-      "it cs;"                /* if carry set */
-      "movcs %[error], #1;"   /* set error flag */
-      : [ret] "=r"(ret), [ret2] "=r"(syscallret[0]), [error] "+r"(error)
+      "it cs;"                /* if carry set, set error flag */
+      "movcs %[error], #1;"   /* if carry set, set error flag */
+      : [ret] "=r"(ret), [ret2] "=r"(syscallret), [error] "=r"(error)
       : [number] "m"(number), [args] "r"(args)
       : "r0", "r1", "r2", "r3", "r4", "r5", "r12", "memory", "cc"
 #else
@@ -196,7 +196,7 @@ int gettimeofday(struct timeval *tv, void *tz) {
     long ret = syscall(SYS_gettimeofday, &nothing, NULL);
     if (ret != -1) {
       tv->tv_sec = ret;
-      tv->tv_usec = *(int *)syscallret;
+      tv->tv_usec = syscallret;
     } else
       return -1;
   }
