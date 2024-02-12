@@ -2,6 +2,7 @@
 #include <fcntl.h>
 #include <machine/param.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 #include <sys/mman.h>
@@ -11,41 +12,39 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-extern long _syscall(long number, long args[6]);
-extern long _syscall_multiret(long number, long args[6]);
-
 long syscallret[1] = {0};
-
-long _syscall_multiret_helper(long ret, long ret2) {
-  *syscallret = ret2;
-  return ret;
-}
-
-long _syscall_error(long err) {
-  errno = err;
-  return -1;
-}
 
 long syscall(long number, ...) {
   va_list va_args;
   va_start(va_args, number);
-  long args[6];
+  long ret, args[6];
   int i;
   for (i = 0; i < 6; i++)
     args[i] = va_arg(va_args, long);
   va_end(va_args);
-  return _syscall(number, args);
-}
-
-long syscall_multiret(long number, ...) {
-  va_list va_args;
-  va_start(va_args, number);
-  long args[6];
-  int i;
-  for (i = 0; i < 6; i++)
-    args[i] = va_arg(va_args, long);
-  va_end(va_args);
-  return _syscall_multiret(number, args);
+  bool error = false;
+  __asm__ volatile(
+#if defined(__arm__)
+      "ldr r12, %[number];"   /* load syscall number into r12 */
+      "ldm %[args], {r0-r5};" /* load arguements into r0-r5 */
+      "svc 0x80;"             /* make syscall */
+      "mov %[ret], r0;"       /* save return value */
+      "mov %[ret2], r1;"      /* save return value */
+      "it cs;"                /* conditional set */
+      "movcs %[error], #1;"   /* save carry flag */
+      : [ret] "=r"(ret), [ret2] "=r"(syscallret[0]), [error] "=r"(error)
+      : [number] "m"(number), [args] "r"(args)
+      : "r0", "r1", "r2", "r3", "r4", "r5", "r12", "memory", "cc"
+#else
+      ""
+#error architecture not supported
+#endif
+  );
+  if (error) {
+    errno = ret;
+    return -1;
+  }
+  return ret;
 }
 
 int access(const char *path, int mode) {
@@ -194,7 +193,7 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage) {
 int gettimeofday(struct timeval *tv, void *tz) {
   long nothing = 0;
   if (tv != NULL) {
-    long ret = syscall_multiret(SYS_gettimeofday, &nothing, NULL);
+    long ret = syscall(SYS_gettimeofday, &nothing, NULL);
     if (ret != -1) {
       tv->tv_sec = ret;
       tv->tv_usec = *(int *)syscallret;

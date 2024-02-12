@@ -11,7 +11,7 @@ LDFLAGS := -mlinker-version=907 -fuse-ld=ld
 _REQFLAGS := -isysroot sdk -Iinclude -std=c89
 
 SRCS := $(wildcard src/*.c)
-OBJS := $(SRCS:.c=.o) src/_syscall.o
+OBJS := $(SRCS:.c=.o)
 TESTSRCS := $(wildcard tests/*.c)
 TESTEXES := $(TESTSRCS:tests/%.c=tests/bin/%)
 
@@ -56,10 +56,6 @@ tests/bin/%: tests/%.c sdk/usr/lib
 src/libc.a: $(OBJS)
 	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
 	@$(AR) rcs $@ $^
-
-src/_syscall.o: src/syscall.s
-	@src=$<; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
-	$(V)$(CC) $(_REQFLAGS) $(OPTFLAGS) -c $< -o $@
 
 %.o: %.c
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
