@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -185,4 +186,29 @@ int memcmp(const void *s1, const void *s2, size_t n) {
 void explicit_bzero(void *s, size_t n) {
   memset(s, 0, n);
   __asm__ volatile("" : : "r"(s) : "memory");
+}
+
+char *strerror(int errnum) {
+  char *ret = NULL;
+  switch (errnum) {
+  case EPERM:
+    ret = "Operation not permitted";
+    break;
+  case ENOENT:
+    ret = "No such file or directory";
+    break;
+  case ESRCH:
+    ret = "No such process";
+    break;
+  case ENOMEM:
+    ret = "Out of memory";
+    break;
+  case EFAULT:
+    ret = "Bad address";
+    break;
+  default:
+    ret = "Unknown error";
+    break;
+  }
+  return ret;
 }

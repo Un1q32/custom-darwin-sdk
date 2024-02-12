@@ -5,27 +5,25 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#define MALLOC_MAGIC 0xdeadbeef
-
 void free(void *ptr) {
   if (ptr == NULL)
     return;
 
-  ptr = (char *)ptr - sizeof(size_t) - sizeof(int);
-  if (*(unsigned int *)ptr != MALLOC_MAGIC) {
-    puts("free(): invalid pointer");
-    return;
-  }
-  size_t size = *(size_t *)((char *)ptr + sizeof(int));
+  ptr = (char *)ptr - sizeof(size_t);
+  size_t size = *(size_t *)ptr;
 
-  munmap(ptr, size);
+  int ret = munmap(ptr, size);
+  if (ret == -1) {
+    perror("munmap");
+    exit(EXIT_FAILURE);
+  }
 }
 
 void *malloc(size_t size) {
   if (size == 0)
     return NULL;
 
-  size_t total_size = size + sizeof(size_t) + sizeof(int);
+  size_t total_size = size + sizeof(size_t);
   void *ptr = mmap(NULL, total_size, PROT_READ | PROT_WRITE,
                    MAP_PRIVATE | MAP_ANON, -1, 0);
   if (ptr == MAP_FAILED) {
@@ -33,10 +31,9 @@ void *malloc(size_t size) {
     return NULL;
   }
 
-  *(unsigned int *)ptr = MALLOC_MAGIC;
-  *(size_t *)((char *)ptr + sizeof(int)) = total_size;
+  *(size_t *)ptr = total_size;
 
-  return (char *)ptr + sizeof(size_t) + sizeof(int);
+  return (char *)ptr + sizeof(size_t);
 }
 
 void *realloc(void *ptr, size_t size) {

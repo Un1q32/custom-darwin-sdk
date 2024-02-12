@@ -1,6 +1,8 @@
 #include <ctype.h>
+#include <errno.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -318,4 +320,22 @@ int printf(const char *format, ...) {
   int ret = vprintf(format, ap);
   va_end(ap);
   return ret;
+}
+
+void perror(const char *str) {
+  char *errstr = strerror(errno);
+  size_t len = 0;
+  if (str != NULL)
+    len = strlen(str) + strlen(errstr) + 4;
+  else
+    len = strlen(errstr) + 2;
+  char buf[len];
+  buf[0] = '\0';
+  if (str != NULL) {
+    strcpy(buf, str);
+    strcat(buf, ": ");
+  }
+  strcat(buf, errstr);
+  strcat(buf, "\n");
+  write(STDERR_FILENO, buf, len);
 }
