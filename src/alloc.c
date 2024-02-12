@@ -1,4 +1,3 @@
-#include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,10 +25,8 @@ void *malloc(size_t size) {
   size_t total_size = size + sizeof(size_t);
   void *ptr = mmap(NULL, total_size, PROT_READ | PROT_WRITE,
                    MAP_PRIVATE | MAP_ANON, -1, 0);
-  if (ptr == MAP_FAILED) {
-    errno = ENOMEM;
+  if (ptr == MAP_FAILED)
     return NULL;
-  }
 
   *(size_t *)ptr = total_size;
 
