@@ -1,3 +1,4 @@
+#include "sys/errno.h"
 #include <errno.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -200,11 +201,47 @@ char *strerror(int errnum) {
   case ESRCH:
     ret = "No such process";
     break;
+  case EINTR:
+    ret = "Interrupted system call";
+    break;
+  case EIO:
+    ret = "I/O error";
+    break;
+  case ENXIO:
+    ret = "No such device or address";
+    break;
+  case E2BIG:
+    ret = "Argument list too long";
+    break;
+  case ENOEXEC:
+    ret = "Exec format error";
+    break;
+  case EBADF:
+    ret = "Bad file number";
+    break;
+  case ECHILD:
+    ret = "No child processes";
+    break;
+  case EDEADLK:
+    ret = "Resource deadlock would occur";
+    break;
   case ENOMEM:
     ret = "Out of memory";
     break;
+  case EACCES:
+    ret = "Permission denied";
+    break;
   case EFAULT:
     ret = "Bad address";
+    break;
+  case ENOTBLK:
+    ret = "Block device required";
+    break;
+  case EBUSY:
+    ret = "Device or resource busy";
+    break;
+  case EEXIST:
+    ret = "File exists";
     break;
   default:
     ret = "Unknown error";
