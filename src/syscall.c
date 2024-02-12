@@ -9,39 +9,28 @@
 #include <sys/syscall.h>
 #include <sys/syslimits.h>
 #include <sys/types.h>
+#include <unistd.h>
+
+extern long _syscall(long number, long args[6]);
+
+long _syscall_error(long err) {
+  errno = err;
+  return -1;
+}
 
 long syscall(long number, ...) {
-  long ret, args[6];
   va_list va_args;
   va_start(va_args, number);
+  long args[6];
   int i;
   for (i = 0; i < 6; i++)
     args[i] = va_arg(va_args, long);
   va_end(va_args);
-  __asm__ volatile(
-#if defined(__arm__)
-      "ldr r12, %[number];"
-      "ldm %[args], {r0-r5};"
-      "svc #0x80;"
-      "mov %[ret], r0;"
-      : [ret] "=r"(ret)
-      : [number] "m"(number), [args] "r"(args)
-      : "r0", "r1", "r2", "r3", "r4", "r5", "r12", "memory"
-#else
-      ""
-#error architecture not supported
-#endif
-  );
-  return ret;
+  return _syscall(number, args);
 }
 
 int access(const char *path, int mode) {
-  int ret = syscall(SYS_access, path, mode);
-  if (ret != 0) {
-    errno = ret;
-    return -1;
-  }
-  return 0;
+  return syscall(SYS_access, path, mode);
 }
 
 int open(const char *path, int flags, ...) {
@@ -86,12 +75,7 @@ int openat(int fd, const char *path, int flags, ...) {
 int close(int fd) { return syscall(SYS_close, fd); }
 
 int mkdir(const char *path, mode_t mode) {
-  int ret = syscall(SYS_mkdir, path, mode);
-  if (ret != 0) {
-    errno = ret;
-    return -1;
-  }
-  return 0;
+  return syscall(SYS_mkdir, path, mode);
 }
 
 int mkdirat(int fd, const char *path, mode_t mode) {
@@ -113,40 +97,16 @@ int mkdirat(int fd, const char *path, mode_t mode) {
 #endif
 }
 
-int rmdir(const char *path) {
-  int ret = syscall(SYS_rmdir, path);
-  if (ret != 0) {
-    errno = ret;
-    return -1;
-  }
-  return 0;
-}
+int rmdir(const char *path) { return syscall(SYS_rmdir, path); }
 
 int link(const char *oldpath, const char *newpath) {
-  int ret = syscall(SYS_link, oldpath, newpath);
-  if (ret != 0) {
-    errno = ret;
-    return -1;
-  }
-  return 0;
+  return syscall(SYS_link, oldpath, newpath);
 }
 
-int unlink(const char *path) {
-  int ret = syscall(SYS_unlink, path);
-  if (ret != 0) {
-    errno = ret;
-    return -1;
-  }
-  return 0;
-}
+int unlink(const char *path) { return syscall(SYS_unlink, path); }
 
 int symlink(const char *target, const char *linkpath) {
-  int ret = syscall(SYS_symlink, target, linkpath);
-  if (ret != 0) {
-    errno = ret;
-    return -1;
-  }
-  return 0;
+  return syscall(SYS_symlink, target, linkpath);
 }
 
 void *mmap(void *addr, size_t length, int prot, int flags, int fd,
@@ -162,12 +122,7 @@ void *mmap(void *addr, size_t length, int prot, int flags, int fd,
 }
 
 int munmap(void *addr, size_t length) {
-  int ret = syscall(SYS_munmap, addr, length);
-  if (ret != 0) {
-    errno = ret;
-    return -1;
-  }
-  return 0;
+  return syscall(SYS_munmap, addr, length);
 }
 
 ssize_t read(int fd, void *buf, size_t count) {
@@ -192,23 +147,9 @@ void _exit(int status) {
     ;
 }
 
-int chdir(const char *path) {
-  int ret = syscall(SYS_chdir, path);
-  if (ret != 0) {
-    errno = ret;
-    return -1;
-  }
-  return 0;
-}
+int chdir(const char *path) { return syscall(SYS_chdir, path); }
 
-int fchdir(int fd) {
-  int ret = syscall(SYS_fchdir, fd);
-  if (ret != 0) {
-    errno = ret;
-    return -1;
-  }
-  return 0;
-}
+int fchdir(int fd) { return syscall(SYS_fchdir, fd); }
 
 pid_t getpid(void) { return syscall(SYS_getpid); }
 
