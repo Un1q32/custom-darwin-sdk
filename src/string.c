@@ -315,6 +315,21 @@ char *strerror(int errnum) {
   case EPROTOTYPE:
     ret = "Protocol wrong type for socket";
     break;
+  case ENOPROTOOPT:
+    ret = "Protocol not available";
+    break;
+  case EPROTONOSUPPORT:
+    ret = "Protocol not supported";
+    break;
+  case ESOCKTNOSUPPORT:
+    ret = "Socket type not supported";
+    break;
+  case ENOTSUP:
+    ret = "Operation not supported";
+    break;
+  case EPFNOSUPPORT:
+    ret = "Protocol family not supported";
+    break;
   default:
     ret = "Unknown error";
     break;
