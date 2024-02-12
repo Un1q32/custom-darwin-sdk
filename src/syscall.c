@@ -12,6 +12,14 @@
 #include <unistd.h>
 
 extern long _syscall(long number, long args[6]);
+extern long _syscall_multiret(long number, long args[6]);
+
+long syscallret[1] = {0};
+
+long _syscall_multiret_helper(long ret, long ret2) {
+  *syscallret = ret2;
+  return ret;
+}
 
 long _syscall_error(long err) {
   errno = err;
@@ -27,6 +35,17 @@ long syscall(long number, ...) {
     args[i] = va_arg(va_args, long);
   va_end(va_args);
   return _syscall(number, args);
+}
+
+long syscall_multiret(long number, ...) {
+  va_list va_args;
+  va_start(va_args, number);
+  long args[6];
+  int i;
+  for (i = 0; i < 6; i++)
+    args[i] = va_arg(va_args, long);
+  va_end(va_args);
+  return _syscall_multiret(number, args);
 }
 
 int access(const char *path, int mode) {
@@ -174,8 +193,12 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage) {
 int gettimeofday(struct timeval *tv, void *tz) {
   long nothing = 0;
   if (tv != NULL) {
-    tv->tv_sec = syscall(SYS_gettimeofday, &nothing, NULL);
-    tv->tv_usec = 0;
+    long ret = syscall_multiret(SYS_gettimeofday, &nothing, NULL);
+    if (ret != -1) {
+      tv->tv_sec = ret;
+      tv->tv_usec = *(int *)syscallret;
+    } else
+      return -1;
   }
   if (tz != NULL) {
     struct timezone *tmp_tz = (struct timezone *)tz;
