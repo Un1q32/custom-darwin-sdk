@@ -22,27 +22,28 @@ long syscall(long number, ...) {
   for (i = 0; i < 6; i++)
     args[i] = va_arg(va_args, long);
   va_end(va_args);
+  bool error = false;
   __asm__ volatile(
 #if defined(__arm__)
       "ldr r12, %[number];"   /* load syscall number into r12 */
       "ldm %[args], {r0-r5};" /* load arguements into r0-r5 */
       "svc 0x80;"             /* make syscall */
-      "it cs;"                /* conditional set */
-      "strcs r0, %[errno];"   /* save errno if carry set */
-      "it cs;"                /* conditional set */
-      "movcs r0, #-1;"        /* set return value to -1 if carry set */
-      "it cc;"                /* conditional set */
-      "movcc %[ret], r0;"     /* save return value if carry clear */
-      "it cc;"                /* conditional set */
-      "movcc %[ret2], r1;"    /* save 2nd return value if carry clear */
-      : [ret] "=r"(ret), [ret2] "=r"(syscallret[0])
-      : [number] "m"(number), [args] "r"(args), [errno] "m"(errno)
+      "mov %[ret], r0;"       /* save return value if carry clear */
+      "mov %[ret2], r1;"      /* save 2nd return value if carry clear */
+      "it cs;"                /* if carry set */
+      "movcs %[error], #1;"   /* set error flag */
+      : [ret] "=r"(ret), [ret2] "=r"(syscallret[0]), [error] "+r"(error)
+      : [number] "m"(number), [args] "r"(args)
       : "r0", "r1", "r2", "r3", "r4", "r5", "r12", "memory", "cc"
 #else
       ""
 #error architecture not supported
 #endif
   );
+  if (error) {
+    errno = ret;
+    ret = -1;
+  }
   return ret;
 }
 
