@@ -29,10 +29,8 @@ long syscall(long number, ...) {
       "ldm %[args], {r0-r5};" /* load arguements into r0-r5 */
       "svc 0x80;"             /* make syscall */
       "mov %[ret], r0;"       /* save return value */
-      "mov %[ret2], r1;"      /* save return value */
-      "it cs;"                /* conditional set */
-      "movcs %[error], #1;"   /* save carry flag */
-      : [ret] "=r"(ret), [ret2] "=r"(syscallret[0]), [error] "=r"(error)
+      "mov %[ret2], r1;"      /* save 2nd return value */
+      : [ret] "=r"(ret), [ret2] "=r"(syscallret[0])
       : [number] "m"(number), [args] "r"(args)
       : "r0", "r1", "r2", "r3", "r4", "r5", "r12", "memory", "cc"
 #else
