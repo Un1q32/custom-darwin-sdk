@@ -4,8 +4,8 @@
 int main(int argc, const char *argv[]) {
   printf("num = %d\n", -123);
   printf("num2 = %d\n", 12345);
-  printf("num3 = %lld\n", 8589934592);
-  printf("num4 = %llu\n", 0xFFFFFFFFFFFFFFFF);
+  printf("num3 = %lld\n", 8589934592LL);
+  printf("num4 = %llu\n", 0xFFFFFFFFFFFFFFFFLLU);
   float num5 = 3.1415926535897932384;
   printf("num5 = %f\n", num5);
   printf("num5 = %.2f\n", num5);
