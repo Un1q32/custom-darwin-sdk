@@ -20,13 +20,13 @@ long syscall(long number, ...) {
   va_end(va_args);
   __asm__ volatile(
 #if defined(__arm__)
-      "mov r12, %[number];"
+      "ldr r12, %[number];"
       "ldm %[args], {r0-r5};"
       "svc #0x80;"
       "mov %[ret], r0;"
       : [ret] "=r"(ret)
-      : [number] "r"(number), [args] "r"(args)
-      : "r12", "r0", "r1", "r2", "r3", "r4", "r5"
+      : [number] "m"(number), [args] "r"(args)
+      : "r0", "r1", "r2", "r3", "r4", "r5", "r12", "memory"
 #else
       ""
 #error architecture not supported
