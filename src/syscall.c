@@ -237,11 +237,9 @@ int gettimeofday(struct timeval *tv, void *tz) {
     tv->tv_usec = 0;
   }
   if (tz != NULL) {
-    struct timezone tmp_tz = {
-        .tz_minuteswest = 0,
-        .tz_dsttime = 0,
-    };
-    memcpy(tz, &tmp_tz, sizeof(struct timezone));
+    struct timezone *tmp_tz = (struct timezone *)tz;
+    tmp_tz->tz_minuteswest = 0;
+    tmp_tz->tz_dsttime = 0;
   }
   return 0;
 }
