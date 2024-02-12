@@ -270,6 +270,51 @@ char *strerror(int errnum) {
   case ETXTBSY:
     ret = "Text file busy";
     break;
+  case EFBIG:
+    ret = "File too large";
+    break;
+  case ENOSPC:
+    ret = "No space left on device";
+    break;
+  case ESPIPE:
+    ret = "Illegal seek";
+    break;
+  case EROFS:
+    ret = "Read-only file system";
+    break;
+  case EMLINK:
+    ret = "Too many links";
+    break;
+  case EPIPE:
+    ret = "Broken pipe";
+    break;
+  case EDOM:
+    ret = "Math argument out of domain of func";
+    break;
+  case ERANGE:
+    ret = "Math result not representable";
+    break;
+  case EAGAIN:
+    ret = "Resource temporarily unavailable";
+    break;
+  case EINPROGRESS:
+    ret = "Operation now in progress";
+    break;
+  case EALREADY:
+    ret = "Operation already in progress";
+    break;
+  case ENOTSOCK:
+    ret = "Socket operation on non-socket";
+    break;
+  case EDESTADDRREQ:
+    ret = "Destination address required";
+    break;
+  case EMSGSIZE:
+    ret = "Message too long";
+    break;
+  case EPROTOTYPE:
+    ret = "Protocol wrong type for socket";
+    break;
   default:
     ret = "Unknown error";
     break;
