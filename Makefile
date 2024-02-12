@@ -59,7 +59,7 @@ src/libc.a: $(OBJS)
 
 src/_syscall.o: src/syscall.s
 	@src=$<; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
-	$(V)$(CC) $(_REQFLAGS) -c $< -o $@
+	$(V)$(CC) $(_REQFLAGS) $(OPTFLAGS) -c $< -o $@
 
 %.o: %.c
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
