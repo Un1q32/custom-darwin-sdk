@@ -243,6 +243,21 @@ char *strerror(int errnum) {
   case EEXIST:
     ret = "File exists";
     break;
+  case EXDEV:
+    ret = "Cross-device link";
+    break;
+  case ENODEV:
+    ret = "No such device";
+    break;
+  case ENOTDIR:
+    ret = "Not a directory";
+    break;
+  case EISDIR:
+    ret = "Is a directory";
+    break;
+  case EINVAL:
+    ret = "Invalid argument";
+    break;
   default:
     ret = "Unknown error";
     break;
