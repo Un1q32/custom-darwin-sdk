@@ -258,6 +258,18 @@ char *strerror(int errnum) {
   case EINVAL:
     ret = "Invalid argument";
     break;
+  case ENFILE:
+    ret = "File table overflow";
+    break;
+  case EMFILE:
+    ret = "Too many open files";
+    break;
+  case ENOTTY:
+    ret = "Not a tty";
+    break;
+  case ETXTBSY:
+    ret = "Text file busy";
+    break;
   default:
     ret = "Unknown error";
     break;
