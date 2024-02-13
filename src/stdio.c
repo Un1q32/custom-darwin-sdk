@@ -88,6 +88,14 @@ int fflush(FILE *stream) {
 
 int fcloseall(void) { return 0; }
 
+size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
+  return read(stream->_file, ptr, size * nmemb) / size;
+}
+
+size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) {
+  return write(stream->_file, ptr, size * nmemb) / size;
+}
+
 int puts(const char *str) {
   size_t len = strlen(str);
   char str2[len + 1];

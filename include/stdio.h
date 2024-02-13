@@ -55,5 +55,7 @@ extern int ferror(FILE *);
 extern int fflush(FILE *);
 extern int fcloseall(void);
 extern int fgetc(FILE *);
+extern size_t fread(void *, size_t, size_t, FILE *);
+extern size_t fwrite(const void *, size_t, size_t, FILE *);
 
 #endif
