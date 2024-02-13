@@ -137,6 +137,28 @@ char *ftoa(long double num, int percision) {
   return strdup(buf);
 }
 
+char *_utox(unsigned long long num, char len) {
+  static char buf[32];
+  char *p = buf + 31;
+  *p = '\0';
+  do {
+    char digit = num & 0xf;
+    *--p = digit < 10 ? '0' + digit : 'a' + digit - 10;
+    num >>= 4;
+  } while (num);
+  while (p >= buf + 32 - len)
+    *--p = '0';
+  return strdup(p);
+}
+
+char *ultox(unsigned long long num) { return _utox(num, 16); }
+
+char *utox(unsigned num) { return _utox(num, 8); }
+
+char *ustox(unsigned short num) { return _utox(num, 4); }
+
+char *uctox(unsigned char num) { return _utox(num, 2); }
+
 char *getenv(const char *name) {
   int i;
   for (i = 0; environ[i] != NULL; i++) {

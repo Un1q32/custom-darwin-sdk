@@ -196,6 +196,31 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
         ret = ftoa(va_arg(ap, double), percision);
       done = true;
       break;
+    case 'x':
+      if (flags & 1 << 4)
+        ret = ultox(va_arg(ap, uintmax_t));
+      else if (flags & 1 << 8)
+        ret = ultox(va_arg(ap, u_quad_t));
+      else if (flags & 1 << 1)
+        ret = ultox(va_arg(ap, unsigned long long));
+      else if (flags & 1 << 5 || flags & 1 << 6) {
+        if (sizeof(size_t) == 8)
+          ret = ultox(va_arg(ap, size_t));
+        else
+          ret = utox(va_arg(ap, size_t));
+      } else if (flags & 1 << 0) {
+        if (sizeof(long) == 8)
+          ret = ultox(va_arg(ap, unsigned long));
+        else
+          ret = utox(va_arg(ap, unsigned long));
+      } else if (flags & 1 << 2)
+        ret = ustox((unsigned short)va_arg(ap, unsigned int));
+      else if (flags & 1 << 3)
+        ret = uctox((unsigned char)va_arg(ap, unsigned int));
+      else
+        ret = utox(va_arg(ap, unsigned int));
+      done = true;
+      break;
     case 'n':
       if (flags & 1 << 4)
         *(va_arg(ap, intmax_t *)) = charssofar;
