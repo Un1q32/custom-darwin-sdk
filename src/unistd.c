@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ioctl.h>
 #include <sys/syslimits.h>
 #include <sys/types.h>
 #include <time.h>
@@ -82,4 +83,9 @@ unsigned int sleep(unsigned int seconds) {
   ts.tv_sec = seconds;
   ts.tv_nsec = 0;
   return nanosleep(&ts, NULL);
+}
+
+int isatty(int fd) {
+  (void)fd;
+  return 0;
 }
