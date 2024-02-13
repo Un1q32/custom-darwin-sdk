@@ -211,3 +211,11 @@ int gettimeofday(struct timeval *tv, void *tz) {
 off_t lseek(int fd, off_t offset, int whence) {
   return syscall(SYS_lseek, fd, offset, whence);
 }
+
+int ioctl(int fd, unsigned long request, ...) {
+  va_list va_args;
+  va_start(va_args, request);
+  long arg = va_arg(va_args, long);
+  va_end(va_args);
+  return syscall(SYS_ioctl, fd, request, arg);
+}
