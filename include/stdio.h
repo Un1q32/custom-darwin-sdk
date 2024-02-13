@@ -26,6 +26,8 @@ extern FILE *__stderrp;
 
 #define EOF (-1)
 
+#define getc(fp) fgetc(fp)
+
 extern int fputc(int, FILE *);
 extern int putc(int, FILE *);
 extern int putchar(int);
