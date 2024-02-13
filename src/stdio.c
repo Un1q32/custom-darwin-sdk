@@ -55,6 +55,12 @@ FILE *fopen(const char *filename, const char *mode) {
   return ret;
 }
 
+int fclose(FILE *stream) {
+  int ret = close(stream->_file);
+  free(stream);
+  return ret;
+}
+
 int puts(const char *str) {
   size_t len = strlen(str);
   char str2[len + 1];
