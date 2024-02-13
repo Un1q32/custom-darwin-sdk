@@ -30,5 +30,6 @@
 #define SYS_mkdir 136
 #define SYS_rmdir 137
 #define SYS_mmap 197
+#define SYS_lseek 199
 
 #endif

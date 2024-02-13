@@ -68,6 +68,10 @@ int fclose(FILE *stream) {
   return ret;
 }
 
+int fseek(FILE *stream, long offset, int whence) {
+  return lseek(stream->_file, offset, whence);
+}
+
 int ferror(FILE *stream) { return stream->_flags & __SERR; }
 
 int fflush(FILE *stream) {

@@ -9,6 +9,10 @@
 #define STDOUT_FILENO 1
 #define STDERR_FILENO 2
 
+#define SEEK_SET 0
+#define SEEK_CUR 1
+#define SEEK_END 2
+
 extern void _exit(int);
 extern int access(const char *, int);
 extern ssize_t read(int, void *, size_t);
@@ -30,5 +34,6 @@ extern int execl(const char *, const char *, ...);
 extern int execle(const char *, const char *, ...);
 extern int usleep(useconds_t);
 extern unsigned int sleep(unsigned int);
+extern off_t lseek(int, off_t, int);
 
 #endif
