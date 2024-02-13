@@ -49,6 +49,8 @@ extern FILE *fopen(const char *, const char *);
 extern FILE *fdopen(int, const char *);
 extern int fclose(FILE *);
 extern int ferror(FILE *);
+extern int fflush(FILE *);
+extern int fcloseall(void);
 extern int fgetc(FILE *);
 
 #endif

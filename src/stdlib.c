@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
@@ -198,7 +199,7 @@ int system(const char *command) {
 
 void exit(int status) {
   /* TODO: call functions registered with atexit() */
-  /* fcloseall(); */
+  fcloseall();
   /* TODO: unlink all files created with tmpfile() */
   _exit(status);
   while (1)
