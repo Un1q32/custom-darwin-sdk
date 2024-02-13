@@ -23,6 +23,7 @@ extern FILE *__stderrp;
 #define __SRD 0x0004
 #define __SWR 0x0008
 #define __SRW 0x0010
+#define __SERR 0x0040
 
 #define EOF (-1)
 
@@ -47,6 +48,7 @@ extern void perror(const char *);
 extern FILE *fopen(const char *, const char *);
 extern FILE *fdopen(int, const char *);
 extern int fclose(FILE *);
+extern int ferror(FILE *);
 extern int fgetc(FILE *);
 
 #endif

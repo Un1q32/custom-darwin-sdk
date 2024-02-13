@@ -77,6 +77,8 @@ int fclose(FILE *stream) {
   return ret;
 }
 
+int ferror(FILE *stream) { return stream->_flags & __SERR; }
+
 int puts(const char *str) {
   size_t len = strlen(str);
   char str2[len + 1];
