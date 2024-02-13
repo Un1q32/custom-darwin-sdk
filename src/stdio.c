@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -28,6 +29,31 @@ FILE __stdio[3] = {
 FILE *__stdinp = &__stdio[0];
 FILE *__stdoutp = &__stdio[1];
 FILE *__stderrp = &__stdio[2];
+
+FILE *fopen(const char *filename, const char *mode) {
+  int flags = 0;
+  if (strcmp(mode, "r") == 0)
+    flags = O_RDONLY;
+  else if (strcmp(mode, "w") == 0)
+    flags = O_WRONLY | O_CREAT | O_TRUNC;
+  else if (strcmp(mode, "a") == 0)
+    flags = O_WRONLY | O_CREAT | O_APPEND;
+  else if (strcmp(mode, "r+") == 0)
+    flags = O_RDWR;
+  else if (strcmp(mode, "w+") == 0)
+    flags = O_RDWR | O_CREAT | O_TRUNC;
+  else if (strcmp(mode, "a+") == 0)
+    flags = O_RDWR | O_CREAT | O_APPEND;
+  else
+    return NULL;
+  int fd = open(filename, flags, 0666);
+  if (fd < 0)
+    return NULL;
+  FILE *ret = malloc(sizeof(FILE));
+  ret->_file = fd;
+  ret->_flags = 0;
+  return ret;
+}
 
 int puts(const char *str) {
   size_t len = strlen(str);

@@ -42,5 +42,6 @@ extern int vdprintf(int, const char *, va_list);
 extern int vsprintf(char *, const char *, va_list);
 extern int vsnprintf(char *, size_t, const char *, va_list);
 extern void perror(const char *);
+extern FILE *fopen(const char *, const char *);
 
 #endif
