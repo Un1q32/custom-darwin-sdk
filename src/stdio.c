@@ -30,8 +30,8 @@ FILE *__stdinp = &__stdio[0];
 FILE *__stdoutp = &__stdio[1];
 FILE *__stderrp = &__stdio[2];
 
-FILE *fopen(const char *filename, const char *mode) {
-  int flags = 0;
+int _modestr_to_mode_t(const char *mode) {
+  mode_t flags = 0;
   if (strcmp(mode, "r") == 0)
     flags = O_RDONLY;
   else if (strcmp(mode, "w") == 0)
@@ -45,14 +45,30 @@ FILE *fopen(const char *filename, const char *mode) {
   else if (strcmp(mode, "a+") == 0)
     flags = O_RDWR | O_CREAT | O_APPEND;
   else
-    return NULL;
-  int fd = open(filename, flags, 0666);
-  if (fd < 0)
+    return -1;
+  return flags;
+}
+
+FILE *fdopen(int fd, const char *mode) {
+  int flags = _modestr_to_mode_t(mode);
+  if (flags == -1)
     return NULL;
   FILE *ret = malloc(sizeof(FILE));
+  if (ret == NULL)
+    return NULL;
   ret->_file = fd;
-  ret->_flags = 0;
+  ret->_flags = flags;
   return ret;
+}
+
+FILE *fopen(const char *filename, const char *mode) {
+  int flags = _modestr_to_mode_t(mode);
+  if (flags == -1)
+    return NULL;
+  int fd = open(filename, flags, 0666);
+  if (fd == -1)
+    return NULL;
+  return fdopen(fd, mode);
 }
 
 int fclose(FILE *stream) {

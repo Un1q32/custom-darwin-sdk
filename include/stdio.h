@@ -45,6 +45,7 @@ extern int vsprintf(char *, const char *, va_list);
 extern int vsnprintf(char *, size_t, const char *, va_list);
 extern void perror(const char *);
 extern FILE *fopen(const char *, const char *);
+extern FILE *fdopen(int, const char *);
 extern int fclose(FILE *);
 extern int fgetc(FILE *);
 
