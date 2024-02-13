@@ -6,6 +6,7 @@
 #include <sys/ioctl.h>
 #include <sys/syslimits.h>
 #include <sys/types.h>
+#include <termios.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -86,6 +87,6 @@ unsigned int sleep(unsigned int seconds) {
 }
 
 int isatty(int fd) {
-  (void)fd;
-  return 0;
+  struct termios dummy;
+  return tcgetattr(fd, &dummy) == 0;
 }
