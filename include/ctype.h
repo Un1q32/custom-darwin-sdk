@@ -1,18 +1,20 @@
 #ifndef _CTYPE_H_
 #define _CTYPE_H_
 
-extern int isalnum(int c);
-extern int isalpha(int c);
-extern int isascii(int c);
-extern int isblank(int c);
-extern int iscntrl(int c);
-extern int isdigit(int c);
-extern int isgraph(int c);
-extern int islower(int c);
-extern int isprint(int c);
-extern int ispunct(int c);
-extern int isspace(int c);
-extern int isupper(int c);
-extern int isxdigit(int c);
+extern int isalnum(int);
+extern int isalpha(int);
+extern int isascii(int);
+extern int isblank(int);
+extern int iscntrl(int);
+extern int isdigit(int);
+extern int isgraph(int);
+extern int islower(int);
+extern int isprint(int);
+extern int ispunct(int);
+extern int isspace(int);
+extern int isupper(int);
+extern int isxdigit(int);
+extern int toupper(int);
+extern int tolower(int);
 
 #endif

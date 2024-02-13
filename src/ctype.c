@@ -28,3 +28,7 @@ int isgraph(int c) { return c >= 33 && c <= 126; }
 int isprint(int c) { return c >= 32 && c <= 126; }
 
 int ispunct(int c) { return isgraph(c) && !isalnum(c); }
+
+int tolower(int c) { return isupper(c) ? c + 32 : c; }
+
+int toupper(int c) { return islower(c) ? c - 32 : c; }
