@@ -371,3 +371,10 @@ void perror(const char *str) {
   strcat(buf, "\n");
   write(STDERR_FILENO, buf, len);
 }
+
+int fgetc(FILE *stream) {
+  char c;
+  if (read(stream->_file, &c, 1) == 1)
+    return c;
+  return EOF;
+}
