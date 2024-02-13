@@ -63,8 +63,11 @@ FILE *fopen(const char *filename, const char *mode) {
 }
 
 int fclose(FILE *stream) {
-  int ret = close(stream->_file);
-  free(stream);
+  int ret = 0;
+  if (stream->_file >= 3)
+    ret = close(stream->_file);
+  if (stream != __stdinp && stream != __stdoutp && stream != __stderrp)
+    free(stream);
   return ret;
 }
 
