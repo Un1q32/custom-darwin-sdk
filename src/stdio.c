@@ -74,6 +74,8 @@ int fseek(FILE *stream, long offset, int whence) {
 
 void rewind(FILE *stream) { fseek(stream, 0, SEEK_SET); }
 
+long ftell(FILE *stream) { return lseek(stream->_file, 0, SEEK_CUR); }
+
 int ferror(FILE *stream) { return stream->_flags & __SERR; }
 
 int fflush(FILE *stream) {

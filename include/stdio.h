@@ -50,6 +50,7 @@ extern FILE *fdopen(int, const char *);
 extern int fclose(FILE *);
 extern int fseek(FILE *, long, int);
 extern void rewind(FILE *);
+extern long ftell(FILE *);
 extern int ferror(FILE *);
 extern int fflush(FILE *);
 extern int fcloseall(void);
