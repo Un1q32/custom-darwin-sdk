@@ -137,17 +137,14 @@ char *ftoa(long double num, int percision) {
   return strdup(buf);
 }
 
-char *utox(unsigned long long num, char len) {
-  static char buf[32];
-  char *p = buf + 31;
+char *utox(unsigned long long num, unsigned char len) {
+  char buf[len + 1];
+  char *p = buf + len;
   *p = '\0';
   do {
-    char digit = num & 0xf;
-    *--p = digit < 10 ? '0' + digit : 'a' + digit - 10;
+    *--p = "0123456789abcdef"[num & 0xf];
     num >>= 4;
-  } while (num);
-  while (p >= buf + 32 - len)
-    *--p = '0';
+  } while (p > buf);
   return strdup(p);
 }
 
