@@ -14,37 +14,32 @@
 
 long syscallret = 0;
 
-long syscall(long number, ...) {
-  va_list va_args;
-  va_start(va_args, number);
-  long ret, args[6];
-  int i;
-  for (i = 0; i < 6; i++)
-    args[i] = va_arg(va_args, long);
-  va_end(va_args);
-  bool error = false;
+long __attribute__((naked)) syscall(long number, ...) {
   __asm__ volatile(
 #if defined(__arm__)
-      "ldr r12, %[number];"   /* load syscall number into r12 */
-      "ldm %[args], {r0-r5};" /* load arguements into r0-r5 */
-      "svc 0x80;"             /* make syscall */
-      "mov %[ret], r0;"       /* save return value if carry clear */
-      "mov %[ret2], r1;"      /* save 2nd return value if carry clear */
-      "it cs;"                /* if carry set, set error flag */
-      "movcs %[error], #1;"   /* if carry set, set error flag */
-      : [ret] "=r"(ret), [ret2] "=r"(syscallret), [error] "=r"(error)
-      : [number] "m"(number), [args] "r"(args)
-      : "r0", "r1", "r2", "r3", "r4", "r5", "r12", "memory", "cc"
+      "mov r12, sp;"              /* save sp to r12 */
+      "stmdb sp!, {r4,r5,r6,r8};" /* save r4, r5, r6, r8 */
+      "ldmia r12, {r4,r5,r6};"    /* load r4, r5, r6 */
+      "mov r12, #0;"              /* clear r12 */
+      "svc 0x80;"                 /* make the syscall */
+      "mov %[ret2], r1;"          /* save the 2nd return value */
+      "ldmia sp!, {r4,r5,r6,r8};" /* restore r4, r5, r6, r8 */
+      "it cc;"                    /* if carry flag is set */
+      "bxcc lr;"                  /* return if no carry */
+      "b _cerror;"                /* call cerror */
+      : [ret2] "=r"(syscallret)
+      :
+      : "r0", "r1", "r2", "r3", "r12", "cc", "memory"
 #else
       ""
 #error architecture not supported
 #endif
   );
-  if (error) {
-    errno = ret;
-    ret = -1;
-  }
-  return ret;
+}
+
+long cerror(int err) {
+  errno = err;
+  return -1;
 }
 
 int access(const char *path, int mode) {
