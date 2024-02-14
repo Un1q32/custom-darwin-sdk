@@ -209,38 +209,72 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       break;
     case 'x':
       if (flags & 1 << 4)
-        ret = utox(va_arg(ap, uintmax_t), ((sizeof(uintmax_t) * 2) > percision)
+        ret = utox(va_arg(ap, uintmax_t), (sizeof(uintmax_t) * 2) > percision
                                               ? (sizeof(uintmax_t) * 2)
                                               : percision);
       else if (flags & 1 << 8)
-        ret = utox(va_arg(ap, u_quad_t), ((sizeof(u_quad_t) * 2) > percision)
+        ret = utox(va_arg(ap, u_quad_t), (sizeof(u_quad_t) * 2) > percision
                                              ? (sizeof(u_quad_t) * 2)
                                              : percision);
       else if (flags & 1 << 1)
-        ret =
-            utox(va_arg(ap, unsigned long long),
-                 ((sizeof(long long) * 2) > percision) ? (sizeof(long long) * 2)
+        ret = utox(va_arg(ap, unsigned long long),
+                   (sizeof(long long) * 2) > percision ? (sizeof(long long) * 2)
                                                        : percision);
       else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = utox(va_arg(ap, size_t), ((sizeof(size_t) * 2) > percision)
+        ret = utox(va_arg(ap, size_t), (sizeof(size_t) * 2) > percision
                                            ? (sizeof(size_t) * 2)
                                            : percision);
       else if (flags & 1 << 0)
-        ret = utox(va_arg(ap, unsigned long), ((sizeof(long) * 2) > percision)
+        ret = utox(va_arg(ap, unsigned long), (sizeof(long) * 2) > percision
                                                   ? (sizeof(long) * 2)
                                                   : percision);
       else if (flags & 1 << 2)
         ret = utox((unsigned short)va_arg(ap, unsigned int),
-                   ((sizeof(short) * 2) > percision) ? (sizeof(short) * 2)
-                                                     : percision);
+                   (sizeof(short) * 2) > percision ? (sizeof(short) * 2)
+                                                   : percision);
       else if (flags & 1 << 3)
         ret = utox((unsigned char)va_arg(ap, unsigned int),
-                   ((sizeof(char) * 2) > percision) ? (sizeof(char) * 2)
-                                                    : percision);
+                   (sizeof(char) * 2) > percision ? (sizeof(char) * 2)
+                                                  : percision);
       else
-        ret = utox(va_arg(ap, unsigned int), ((sizeof(int) * 2) > percision)
-                                                 ? (sizeof(int) * 2)
-                                                 : percision);
+        ret =
+            utox(va_arg(ap, unsigned int),
+                 (sizeof(int) * 2) > percision ? (sizeof(int) * 2) : percision);
+      done = true;
+      break;
+    case 'X':
+      if (flags & 1 << 4)
+        ret = utoX(va_arg(ap, uintmax_t), (sizeof(uintmax_t) * 2) > percision
+                                              ? (sizeof(uintmax_t) * 2)
+                                              : percision);
+      else if (flags & 1 << 8)
+        ret = utoX(va_arg(ap, u_quad_t), (sizeof(u_quad_t) * 2) > percision
+                                             ? (sizeof(u_quad_t) * 2)
+                                             : percision);
+      else if (flags & 1 << 1)
+        ret = utoX(va_arg(ap, unsigned long long),
+                   (sizeof(long long) * 2) > percision ? (sizeof(long long) * 2)
+                                                       : percision);
+      else if (flags & 1 << 5 || flags & 1 << 6)
+        ret = utoX(va_arg(ap, size_t), (sizeof(size_t) * 2) > percision
+                                           ? (sizeof(size_t) * 2)
+                                           : percision);
+      else if (flags & 1 << 0)
+        ret = utoX(va_arg(ap, unsigned long), (sizeof(long) * 2) > percision
+                                                  ? (sizeof(long) * 2)
+                                                  : percision);
+      else if (flags & 1 << 2)
+        ret = utoX((unsigned short)va_arg(ap, unsigned int),
+                   (sizeof(short) * 2) > percision ? (sizeof(short) * 2)
+                                                   : percision);
+      else if (flags & 1 << 3)
+        ret = utoX((unsigned char)va_arg(ap, unsigned int),
+                   (sizeof(char) * 2) > percision ? (sizeof(char) * 2)
+                                                  : percision);
+      else
+        ret =
+            utoX(va_arg(ap, unsigned int),
+                 (sizeof(int) * 2) > percision ? (sizeof(int) * 2) : percision);
       done = true;
       break;
     case 'n':

@@ -148,6 +148,17 @@ char *utox(unsigned long long num, unsigned char len) {
   return strdup(p);
 }
 
+char *utoX(unsigned long long num, unsigned char len) {
+  char buf[len + 1];
+  char *p = buf + len;
+  *p = '\0';
+  do {
+    *--p = "0123456789ABCDEF"[num & 0xf];
+    num >>= 4;
+  } while (p > buf);
+  return strdup(p);
+}
+
 char *getenv(const char *name) {
   int i;
   for (i = 0; environ[i] != NULL; i++) {

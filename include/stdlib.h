@@ -19,6 +19,7 @@ extern char *itoa(long long);
 extern char *utoa(unsigned long long);
 extern char *ftoa(long double, int);
 extern char *utox(unsigned long long, unsigned char);
+extern char *utoX(unsigned long long, unsigned char);
 extern char *getenv(const char *);
 extern int setenv(const char *, const char *, int);
 extern int system(const char *);
