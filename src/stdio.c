@@ -121,7 +121,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
   if (format == NULL)
     return NULL;
   char *ret = NULL;
-  int flags = 0, percision = 6, zerofill = 0;
+  unsigned int flags = 0, percision = 6, zerofill = 0;
   *formatlen = 1;
   bool done = false;
   while (!done) {
@@ -160,7 +160,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
         ret = itoa((char)va_arg(ap, int));
       else
         ret = itoa(va_arg(ap, int));
-      int len = strlen(ret);
+      unsigned int len = strlen(ret);
       if (len < zerofill) {
         char *ret2 = malloc(zerofill + 1);
         memset(ret2, '0', zerofill - len);
@@ -188,7 +188,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
         ret = utoa((unsigned char)va_arg(ap, unsigned int));
       else
         ret = utoa(va_arg(ap, unsigned int));
-      int len2 = strlen(ret);
+      unsigned int len2 = strlen(ret);
       if (len2 < zerofill) {
         char *ret2 = malloc(zerofill + 1);
         memset(ret2, '0', zerofill - len2);
@@ -209,27 +209,38 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       break;
     case 'x':
       if (flags & 1 << 4)
-        ret = ultox(va_arg(ap, uintmax_t));
+        ret = utox(va_arg(ap, uintmax_t), ((sizeof(uintmax_t) * 2) > percision)
+                                              ? (sizeof(uintmax_t) * 2)
+                                              : percision);
       else if (flags & 1 << 8)
-        ret = ultox(va_arg(ap, u_quad_t));
+        ret = utox(va_arg(ap, u_quad_t), ((sizeof(u_quad_t) * 2) > percision)
+                                             ? (sizeof(u_quad_t) * 2)
+                                             : percision);
       else if (flags & 1 << 1)
-        ret = ultox(va_arg(ap, unsigned long long));
-      else if (flags & 1 << 5 || flags & 1 << 6) {
-        if (sizeof(size_t) == 8)
-          ret = ultox(va_arg(ap, size_t));
-        else
-          ret = utox(va_arg(ap, size_t));
-      } else if (flags & 1 << 0) {
-        if (sizeof(long) == 8)
-          ret = ultox(va_arg(ap, unsigned long));
-        else
-          ret = utox(va_arg(ap, unsigned long));
-      } else if (flags & 1 << 2)
-        ret = ustox((unsigned short)va_arg(ap, unsigned int));
+        ret =
+            utox(va_arg(ap, unsigned long long),
+                 ((sizeof(long long) * 2) > percision) ? (sizeof(long long) * 2)
+                                                       : percision);
+      else if (flags & 1 << 5 || flags & 1 << 6)
+        ret = utox(va_arg(ap, size_t), ((sizeof(size_t) * 2) > percision)
+                                           ? (sizeof(size_t) * 2)
+                                           : percision);
+      else if (flags & 1 << 0)
+        ret = utox(va_arg(ap, unsigned long), ((sizeof(long) * 2) > percision)
+                                                  ? (sizeof(long) * 2)
+                                                  : percision);
+      else if (flags & 1 << 2)
+        ret = utox((unsigned short)va_arg(ap, unsigned int),
+                   ((sizeof(short) * 2) > percision) ? (sizeof(short) * 2)
+                                                     : percision);
       else if (flags & 1 << 3)
-        ret = uctox((unsigned char)va_arg(ap, unsigned int));
+        ret = utox((unsigned char)va_arg(ap, unsigned int),
+                   ((sizeof(char) * 2) > percision) ? (sizeof(char) * 2)
+                                                    : percision);
       else
-        ret = utox(va_arg(ap, unsigned int));
+        ret = utox(va_arg(ap, unsigned int), ((sizeof(int) * 2) > percision)
+                                                 ? (sizeof(int) * 2)
+                                                 : percision);
       done = true;
       break;
     case 'n':
