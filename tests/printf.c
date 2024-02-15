@@ -16,6 +16,8 @@ int main(int argc, const char *argv[]) {
   printf("1 with a width of 3 chars: %03d\n", 1);
   printf("hex: %x\n", 0xdeadbeef);
   printf("HEX: %X\n", 0xdeadbeef);
+  printf("small hex: %x\n", 0xabc);
+  printf("small hex zero padded: %08x\n", 0xabc);
   if (argc > 1) {
     int charcount = 0;
     printf("argv[1] = (%s)%n\n", argv[1], &charcount);

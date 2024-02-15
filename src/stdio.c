@@ -121,7 +121,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
   if (format == NULL)
     return NULL;
   char *ret = NULL;
-  unsigned int flags = 0, percision = 6, zerofill = 0;
+  unsigned int flags = 0, percision = 6, zerofill = 0, len = 0;
   *formatlen = 1;
   bool done = false;
   while (!done) {
@@ -145,22 +145,22 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
     case 'd':
     case 'i':
       if (flags & 1 << 4)
-        ret = itoa(va_arg(ap, intmax_t));
+        ret = strdup(itoa(va_arg(ap, intmax_t)));
       else if (flags & 1 << 8)
-        ret = itoa(va_arg(ap, quad_t));
+        ret = strdup(itoa(va_arg(ap, quad_t)));
       else if (flags & 1 << 1)
-        ret = itoa(va_arg(ap, long long));
+        ret = strdup(itoa(va_arg(ap, long long)));
       else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = itoa(va_arg(ap, ptrdiff_t));
+        ret = strdup(itoa(va_arg(ap, ptrdiff_t)));
       else if (flags & 1 << 0)
-        ret = itoa(va_arg(ap, long));
+        ret = strdup(itoa(va_arg(ap, long)));
       else if (flags & 1 << 2)
-        ret = itoa((short)va_arg(ap, int));
+        ret = strdup(itoa((short)va_arg(ap, int)));
       else if (flags & 1 << 3)
-        ret = itoa((char)va_arg(ap, int));
+        ret = strdup(itoa((char)va_arg(ap, int)));
       else
-        ret = itoa(va_arg(ap, int));
-      unsigned int len = strlen(ret);
+        ret = strdup(itoa(va_arg(ap, int)));
+      len = strlen(ret);
       if (len < zerofill) {
         char *ret2 = malloc(zerofill + 1);
         memset(ret2, '0', zerofill - len);
@@ -173,26 +173,26 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       break;
     case 'u':
       if (flags & 1 << 4)
-        ret = utoa(va_arg(ap, uintmax_t));
+        ret = strdup(utoa(va_arg(ap, uintmax_t)));
       else if (flags & 1 << 8)
-        ret = utoa(va_arg(ap, u_quad_t));
+        ret = strdup(utoa(va_arg(ap, u_quad_t)));
       else if (flags & 1 << 1)
-        ret = utoa(va_arg(ap, unsigned long long));
+        ret = strdup(utoa(va_arg(ap, unsigned long long)));
       else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = utoa(va_arg(ap, size_t));
+        ret = strdup(utoa(va_arg(ap, size_t)));
       else if (flags & 1 << 0)
-        ret = utoa(va_arg(ap, unsigned long));
+        ret = strdup(utoa(va_arg(ap, unsigned long)));
       else if (flags & 1 << 2)
-        ret = utoa((unsigned short)va_arg(ap, unsigned int));
+        ret = strdup(utoa((unsigned short)va_arg(ap, unsigned int)));
       else if (flags & 1 << 3)
-        ret = utoa((unsigned char)va_arg(ap, unsigned int));
+        ret = strdup(utoa((unsigned char)va_arg(ap, unsigned int)));
       else
-        ret = utoa(va_arg(ap, unsigned int));
-      unsigned int len2 = strlen(ret);
-      if (len2 < zerofill) {
+        ret = strdup(utoa(va_arg(ap, unsigned int)));
+      len = strlen(ret);
+      if (len < zerofill) {
         char *ret2 = malloc(zerofill + 1);
-        memset(ret2, '0', zerofill - len2);
-        memcpy(ret2 + zerofill - len2, ret, len2);
+        memset(ret2, '0', zerofill - len);
+        memcpy(ret2 + zerofill - len, ret, len);
         ret2[zerofill] = '\0';
         free(ret);
         ret = ret2;
@@ -202,79 +202,65 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
     case 'f':
     case 'F':
       if (flags & 1 << 7)
-        ret = ftoa(va_arg(ap, long double), percision);
+        ret = strdup(ftoa(va_arg(ap, long double), percision));
       else
-        ret = ftoa(va_arg(ap, double), percision);
+        ret = strdup(ftoa(va_arg(ap, double), percision));
       done = true;
       break;
     case 'x':
       if (flags & 1 << 4)
-        ret = utox(va_arg(ap, uintmax_t), (sizeof(uintmax_t) * 2) > percision
-                                              ? (sizeof(uintmax_t) * 2)
-                                              : percision);
+        ret = strdup(utox(va_arg(ap, uintmax_t)));
       else if (flags & 1 << 8)
-        ret = utox(va_arg(ap, u_quad_t), (sizeof(u_quad_t) * 2) > percision
-                                             ? (sizeof(u_quad_t) * 2)
-                                             : percision);
+        ret = strdup(utox(va_arg(ap, u_quad_t)));
       else if (flags & 1 << 1)
-        ret = utox(va_arg(ap, unsigned long long),
-                   (sizeof(long long) * 2) > percision ? (sizeof(long long) * 2)
-                                                       : percision);
+        ret = strdup(utox(va_arg(ap, unsigned long long)));
       else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = utox(va_arg(ap, size_t), (sizeof(size_t) * 2) > percision
-                                           ? (sizeof(size_t) * 2)
-                                           : percision);
+        ret = strdup(utox(va_arg(ap, size_t)));
       else if (flags & 1 << 0)
-        ret = utox(va_arg(ap, unsigned long), (sizeof(long) * 2) > percision
-                                                  ? (sizeof(long) * 2)
-                                                  : percision);
+        ret = strdup(utox(va_arg(ap, unsigned long)));
       else if (flags & 1 << 2)
-        ret = utox((unsigned short)va_arg(ap, unsigned int),
-                   (sizeof(short) * 2) > percision ? (sizeof(short) * 2)
-                                                   : percision);
+        ret = strdup(utox((unsigned short)va_arg(ap, unsigned int)));
       else if (flags & 1 << 3)
-        ret = utox((unsigned char)va_arg(ap, unsigned int),
-                   (sizeof(char) * 2) > percision ? (sizeof(char) * 2)
-                                                  : percision);
+        ret = strdup(utox((unsigned char)va_arg(ap, unsigned int)));
       else
-        ret =
-            utox(va_arg(ap, unsigned int),
-                 (sizeof(int) * 2) > percision ? (sizeof(int) * 2) : percision);
+        ret = strdup(utox(va_arg(ap, unsigned int)));
+      len = strlen(ret);
+      if (len < zerofill) {
+        char *ret2 = malloc(zerofill + 1);
+        memset(ret2, '0', zerofill - len);
+        memcpy(ret2 + zerofill - len, ret, len);
+        ret2[zerofill] = '\0';
+        free(ret);
+        ret = ret2;
+      }
       done = true;
       break;
     case 'X':
       if (flags & 1 << 4)
-        ret = utoX(va_arg(ap, uintmax_t), (sizeof(uintmax_t) * 2) > percision
-                                              ? (sizeof(uintmax_t) * 2)
-                                              : percision);
+        ret = strdup(utoX(va_arg(ap, uintmax_t)));
       else if (flags & 1 << 8)
-        ret = utoX(va_arg(ap, u_quad_t), (sizeof(u_quad_t) * 2) > percision
-                                             ? (sizeof(u_quad_t) * 2)
-                                             : percision);
+        ret = strdup(utoX(va_arg(ap, u_quad_t)));
       else if (flags & 1 << 1)
-        ret = utoX(va_arg(ap, unsigned long long),
-                   (sizeof(long long) * 2) > percision ? (sizeof(long long) * 2)
-                                                       : percision);
+        ret = strdup(utoX(va_arg(ap, unsigned long long)));
       else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = utoX(va_arg(ap, size_t), (sizeof(size_t) * 2) > percision
-                                           ? (sizeof(size_t) * 2)
-                                           : percision);
+        ret = strdup(utoX(va_arg(ap, size_t)));
       else if (flags & 1 << 0)
-        ret = utoX(va_arg(ap, unsigned long), (sizeof(long) * 2) > percision
-                                                  ? (sizeof(long) * 2)
-                                                  : percision);
+        ret = strdup(utoX(va_arg(ap, unsigned long)));
       else if (flags & 1 << 2)
-        ret = utoX((unsigned short)va_arg(ap, unsigned int),
-                   (sizeof(short) * 2) > percision ? (sizeof(short) * 2)
-                                                   : percision);
+        ret = strdup(utoX((unsigned short)va_arg(ap, unsigned int)));
       else if (flags & 1 << 3)
-        ret = utoX((unsigned char)va_arg(ap, unsigned int),
-                   (sizeof(char) * 2) > percision ? (sizeof(char) * 2)
-                                                  : percision);
+        ret = strdup(utoX((unsigned char)va_arg(ap, unsigned int)));
       else
-        ret =
-            utoX(va_arg(ap, unsigned int),
-                 (sizeof(int) * 2) > percision ? (sizeof(int) * 2) : percision);
+        ret = strdup(utoX(va_arg(ap, unsigned int)));
+      len = strlen(ret);
+      if (len < zerofill) {
+        char *ret2 = malloc(zerofill + 1);
+        memset(ret2, '0', zerofill - len);
+        memcpy(ret2 + zerofill - len, ret, len);
+        ret2[zerofill] = '\0';
+        free(ret);
+        ret = ret2;
+      }
       done = true;
       break;
     case 'n':

@@ -102,7 +102,7 @@ char *utoa(unsigned long long num) {
     *--p = '0' + num % 10;
     num /= 10;
   } while (num);
-  return strdup(p);
+  return p;
 }
 
 char *itoa(long long num) {
@@ -110,7 +110,7 @@ char *itoa(long long num) {
     char *ret = utoa(-num);
     char *p = ret - 1;
     *p = '-';
-    return strdup(p);
+    return p;
   } else
     return utoa(num);
 }
@@ -134,29 +134,29 @@ char *ftoa(long double num, int percision) {
     num -= (int)num;
   }
   *p = '\0';
-  return strdup(buf);
+  return buf;
 }
 
-char *utox(unsigned long long num, unsigned char len) {
-  char buf[len + 1];
-  char *p = buf + len;
+char *utox(unsigned long long num) {
+  static char buf[32];
+  char *p = buf + 31;
   *p = '\0';
   do {
     *--p = "0123456789abcdef"[num & 0xf];
     num >>= 4;
-  } while (p > buf);
-  return strdup(p);
+  } while (num);
+  return p;
 }
 
-char *utoX(unsigned long long num, unsigned char len) {
-  char buf[len + 1];
-  char *p = buf + len;
+char *utoX(unsigned long long num) {
+  static char buf[32];
+  char *p = buf + 31;
   *p = '\0';
   do {
     *--p = "0123456789ABCDEF"[num & 0xf];
     num >>= 4;
-  } while (p > buf);
-  return strdup(p);
+  } while (num);
+  return p;
 }
 
 char *getenv(const char *name) {
