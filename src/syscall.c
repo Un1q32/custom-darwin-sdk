@@ -17,6 +17,13 @@ long syscallret = 0;
 long __attribute__((naked)) syscall(long number, ...) {
   __asm__ volatile(
 #if defined(__arm__)
+      /*
+       * arm32 syscall convention:
+       * r12: syscall number
+       * r0-r6: arguments
+       * r0: return value
+       * r1: 2nd return value (sometimes)
+       */
       "mov r12, sp;"              /* save sp to r12 */
       "stmdb sp!, {r4,r5,r6,r8};" /* save r4, r5, r6, r8 */
       "ldmia r12, {r4,r5,r6};"    /* load r4, r5, r6 */
