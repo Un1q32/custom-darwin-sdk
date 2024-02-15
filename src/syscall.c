@@ -14,7 +14,7 @@
 
 long syscallret = 0;
 
-long __attribute__((naked)) syscall(long number, ...) {
+long __attribute__((naked)) syscall(__attribute__((unused)) long number, ...) {
   __asm__ volatile(
 #if defined(__arm__)
       /*
