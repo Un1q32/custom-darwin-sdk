@@ -24,16 +24,16 @@ long __attribute__((naked)) syscall(__attribute__((unused)) long number, ...) {
        * r0: return value
        * r1: 2nd return value (sometimes)
        */
-      "mov r12, sp;"              /* save sp to r12 */
-      "stmdb sp!, {r4,r5,r6,r8};" /* save r4, r5, r6, r8 */
-      "ldmia r12, {r4,r5,r6};"    /* load r4, r5, r6 */
-      "mov r12, #0;"              /* clear r12 */
-      "svc 0x80;"                 /* make the syscall */
-      "mov %[ret2], r1;"          /* save the 2nd return value */
-      "ldmia sp!, {r4,r5,r6,r8};" /* restore r4, r5, r6, r8 */
-      "it cc;"                    /* if carry flag is set */
-      "bxcc lr;"                  /* return if no carry */
-      "b _cerror;"                /* call cerror */
+      "mov r12, sp\n"              /* save sp to r12 */
+      "stmdb sp!, {r4,r5,r6,r8}\n" /* save r4, r5, r6, r8 */
+      "ldmia r12, {r4,r5,r6}\n"    /* load r4, r5, r6 */
+      "mov r12, #0\n"              /* clear r12 */
+      "svc 0x80\n"                 /* make the syscall */
+      "mov %[ret2], r1\n"          /* save the 2nd return value */
+      "ldmia sp!, {r4,r5,r6,r8}\n" /* restore r4, r5, r6, r8 */
+      "it cc\n"                    /* if carry flag is set */
+      "bxcc lr\n"                  /* return if no carry */
+      "b _cerror\n"                /* call cerror */
       : [ret2] "=r"(syscallret)
       :
       : "r0", "r1", "r2", "r3", "r12", "cc", "memory"
