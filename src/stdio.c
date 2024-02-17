@@ -436,9 +436,9 @@ int vsprintf(char *str, const char *format, va_list ap) {
         free(tmp);
       } else {
         if (str != NULL)
-          strcpy(str + j, "(null)");
-        j += 6;
-        i += formatlen + 1;
+          str[j] = format[i];
+        j++;
+        i++;
       }
     } else {
       if (str != NULL)
