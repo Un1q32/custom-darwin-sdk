@@ -262,6 +262,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
         ret = ret2;
       }
       if (altform) {
+        len = strlen(ret);
         char *ret2 = malloc(len + 3);
         if (ret2 == NULL) {
           free(ret);
@@ -309,6 +310,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
         ret = ret2;
       }
       if (altform) {
+        len = strlen(ret);
         char *ret2 = malloc(len + 3);
         if (ret2 == NULL) {
           free(ret);
