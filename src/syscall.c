@@ -12,7 +12,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-long syscallret = 0;
+long syscallret2 = 0;
 
 long __attribute__((naked)) syscall(__attribute__((unused)) long number, ...) {
   __asm__ volatile(
@@ -29,12 +29,12 @@ long __attribute__((naked)) syscall(__attribute__((unused)) long number, ...) {
       "ldmia r12, {r4,r5,r6}\n"    /* load r4, r5, r6 */
       "mov r12, #0\n"              /* clear r12 */
       "svc 0x80\n"                 /* make the syscall */
-      "mov %[ret2], r1\n"          /* save the 2nd return value */
+      "str r1, %[ret2]\n"          /* save 2nd return value */
       "ldmia sp!, {r4,r5,r6,r8}\n" /* restore r4, r5, r6, r8 */
       "it cc\n"                    /* if carry flag is set */
       "bxcc lr\n"                  /* return if no carry */
       "b _cerror\n"                /* call cerror */
-      : [ret2] "=r"(syscallret)
+      : [ret2] "=m"(syscallret2)
       :
       : "r0", "r1", "r2", "r3", "r12", "cc", "memory"
 #else
@@ -197,13 +197,12 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage) {
 }
 
 int gettimeofday(struct timeval *tv, void *tz) {
-  long nothing = 0;
   if (tv != NULL) {
-    long ret = syscall(SYS_gettimeofday, &nothing, NULL);
+    long ret = syscall(SYS_gettimeofday, tv, tz);
     if (ret == -1)
       return -1;
     tv->tv_sec = ret;
-    tv->tv_usec = syscallret;
+    tv->tv_usec = syscallret2;
   }
   if (tz != NULL) {
     struct timezone *tmp_tz = (struct timezone *)tz;
