@@ -176,6 +176,8 @@ pid_t getpid(void) { return syscall(SYS_getpid); }
 
 pid_t fork(void) {
   pid_t child = syscall(SYS_fork);
+  if (child == -1)
+    return -1;
   pid_t me = getpid();
   if (me == child)
     return 0;
@@ -188,6 +190,8 @@ int execve(const char *filename, char *const argv[], char *const envp[]) {
 
 pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage) {
   long ret = syscall(SYS_wait4, pid, status, options, rusage);
+  if (ret == -1)
+    return -1;
   *status >>= 8;
   return ret;
 }
@@ -196,11 +200,10 @@ int gettimeofday(struct timeval *tv, void *tz) {
   long nothing = 0;
   if (tv != NULL) {
     long ret = syscall(SYS_gettimeofday, &nothing, NULL);
-    if (ret != -1) {
-      tv->tv_sec = ret;
-      tv->tv_usec = syscallret;
-    } else
+    if (ret == -1)
       return -1;
+    tv->tv_sec = ret;
+    tv->tv_usec = syscallret;
   }
   if (tz != NULL) {
     struct timezone *tmp_tz = (struct timezone *)tz;
