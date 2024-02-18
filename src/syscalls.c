@@ -14,39 +14,14 @@
 
 long syscallret2 = 0;
 
-long __attribute__((naked)) syscall(__attribute__((unused)) long number, ...) {
-  __asm__ volatile(
-#if defined(__arm__)
-      /*
-       * arm32 syscall convention:
-       * r12: syscall number
-       * r0-r6: arguments
-       * r0: return value
-       * r1: 2nd return value (sometimes)
-       */
-      "mov r12, sp\n"              /* save sp to r12 */
-      "stmdb sp!, {r4,r5,r6,r8}\n" /* save r4, r5, r6, r8 */
-      "ldmia r12, {r4,r5,r6}\n"    /* load r4, r5, r6 */
-      "mov r12, #0\n"              /* clear r12 */
-      "svc 0x80\n"                 /* make the syscall */
-      "str r1, %[ret2]\n"          /* save 2nd return value */
-      "ldmia sp!, {r4,r5,r6,r8}\n" /* restore r4, r5, r6, r8 */
-      "it cc\n"                    /* if carry flag is set */
-      "bxcc lr\n"                  /* return if no carry */
-      "b _cerror\n"                /* call cerror */
-      : [ret2] "=m"(syscallret2)
-      :
-      : "r0", "r1", "r2", "r3", "r12", "cc", "memory"
-#else
-      ""
-#error architecture not supported
-#endif
-  );
-}
-
-long cerror(int err) {
+long _syscall_error(int err) {
   errno = err;
   return -1;
+}
+
+long _syscall_success(long ret, long ret2) {
+  syscallret2 = ret2;
+  return ret;
 }
 
 int access(const char *path, int mode) {
