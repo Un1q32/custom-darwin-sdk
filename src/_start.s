@@ -12,6 +12,20 @@ start:
   bl __start
   .long 0xe1200070
 
+#elif defined(__x86_64__)
+
+start: pushq $0
+  movq %rsp,%rbp
+  andq $-16,%rsp
+  movq 8(%rbp),%rdi
+  leaq 16(%rbp),%rsi
+  movl %edi,%edx
+  addl $1,%edx
+  sall $3,%edx
+  addq %rsi,%rdx
+  call __start
+  hlt
+
 #else
 #error architecture not supported
 #endif
