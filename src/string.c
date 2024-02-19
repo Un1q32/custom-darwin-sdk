@@ -34,11 +34,15 @@ char *strdup(const char *str) {
 }
 
 size_t strlen(const char *s) {
-  int n;
+  size_t len = 0;
+  while (s[len])
+    len++;
+  return len;
+}
 
-  for (n = 0; *s != '\0'; s++)
-    n++;
-  return n;
+size_t strnlen(const char *s, size_t maxlen) {
+  size_t ret = strlen(s);
+  return ret > maxlen ? maxlen : ret;
 }
 
 char *strchr(const char *s, int c) {

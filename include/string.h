@@ -8,6 +8,7 @@ extern char *strcpy(char *, const char *);
 extern char *stpcpy(char *, const char *);
 extern char *strdup(const char *);
 extern size_t strlen(const char *);
+extern size_t strnlen(const char *, size_t);
 extern char *strchr(const char *, int);
 extern char *strrchr(const char *, int);
 extern int strcmp(const char *, const char *);
