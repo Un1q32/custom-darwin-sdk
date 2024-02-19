@@ -1,8 +1,7 @@
-#if defined(__arm__)
-
-.align 4
-
 .global _syscall
+.align 2
+
+#if defined(__arm__)
 
 /*
  * XNU arm32 syscall convention:
@@ -21,13 +20,7 @@ _syscall:
   bcc __syscall_success
   b __syscall_error
 
-.subsections_via_symbols
-
 #elif defined(__x86_64__)
-
-.align 4
-
-.global _syscall
 
 _syscall:
   movl $0x2000000, %eax
@@ -37,8 +30,8 @@ _syscall:
   jmp __syscall_error
   retq
 
-.subsections_via_symbols
-
 #else
 #error architecture not supported
 #endif
+
+.subsections_via_symbols

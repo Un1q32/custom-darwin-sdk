@@ -1,8 +1,7 @@
-#if defined(__arm__)
-
-.align 4
-
 .global start
+.align 2
+
+#if defined(__arm__)
 
 start:
   ldr r0, [sp]
@@ -13,8 +12,8 @@ start:
   bl __start
   bkpt 0
 
-.subsections_via_symbols
-
 #else
 #error architecture not supported
 #endif
+
+.subsections_via_symbols
