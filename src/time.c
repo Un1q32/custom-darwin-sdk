@@ -1,7 +1,6 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/time.h>
-#include <time.h>
 
 int nanosleep(const struct timespec *req, struct timespec *rem) {
   if (req->tv_nsec < 0 || req->tv_nsec >= 1000000000) {
