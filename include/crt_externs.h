@@ -4,5 +4,6 @@
 extern char ***_NSGetArgv(void);
 extern int *_NSGetArgc(void);
 extern char ***_NSGetEnviron(void);
+extern char **_NSGetProgname(void);
 
 #endif
