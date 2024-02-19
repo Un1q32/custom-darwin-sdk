@@ -131,6 +131,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       break;
     case 'S':
       flags |= 1 << 0;
+      /* fall through */
     case 's':
       ret = strdup(va_arg(ap, char *));
       if (ret == NULL)
@@ -139,6 +140,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       break;
     case 'C':
       flags |= 1 << 0;
+      /* fall through */
     case 'c':
       ret = malloc(2);
       if (ret == NULL)
