@@ -23,6 +23,22 @@ _syscall:
 
 .subsections_via_symbols
 
+#elif defined(__x86_64__)
+
+.align 4
+
+.global _syscall
+
+_syscall:
+  movl $0x2000000, %eax
+  movq %rcx, %r10
+  syscall
+  jb __syscall_success
+  jmp __syscall_error
+  retq
+
+.subsections_via_symbols
+
 #else
 #error architecture not supported
 #endif
