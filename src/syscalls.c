@@ -2,14 +2,11 @@
 #include <fcntl.h>
 #include <machine/param.h>
 #include <stdarg.h>
-#include <stdbool.h>
-#include <stddef.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/resource.h>
 #include <sys/syscall.h>
 #include <sys/syslimits.h>
-#include <sys/types.h>
 #include <unistd.h>
 
 long syscallret2 = 0;
