@@ -37,20 +37,20 @@ sdk/usr/include: $(HEADERS)
 	@mkdir -p sdk/usr
 	@cp -r include sdk/usr
 
-sdk/usr/lib: crt/crt1.o src/libc.a
+sdk/usr/lib: src/libc.a
 	@printf "Installing libraries...\n"
 	@rm -rf sdk/usr/lib
 	@mkdir -p sdk/usr/lib
 	@cp src/libc.a sdk/usr/lib
-	@cp crt/crt1.o sdk/usr/lib
 	@ln -sf libc.a sdk/usr/lib/libSystem.a
 	@ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
+	@printf '' | $(CC) $(_REQFLAGS) -x c - -c -o sdk/usr/lib/crt1.o
 	@ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
 
 tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
 	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
-	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -lcrt1.o tests/$*.o -o $@
+	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc tests/$*.o -o $@
 	$(V)ldid -Sentitlements.xml $@
 
 src/libc.a: $(OBJS)
@@ -67,7 +67,7 @@ src/syscall.o: src/syscall.s
 
 clean:
 	@printf "Cleaning up...\n"
-	$(V)rm -rf sdk/* src/*.o crt/*.o tests/*.o tests/bin/* src/libc.a
+	$(V)rm -rf sdk/* src/*.o tests/*.o tests/bin/* src/libc.a
 
 clangd:
 	@printf "Generating clangd config...\n"

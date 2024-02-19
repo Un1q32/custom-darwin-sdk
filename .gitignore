@@ -3,5 +3,4 @@ libc.a
 *.dSYM
 /sdk/usr
 a.out
-/tests/bin
 .clangd

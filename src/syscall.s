@@ -1,6 +1,6 @@
 #if defined(__arm__)
 
-.align 2
+.align 4
 
 .global _syscall
 
