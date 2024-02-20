@@ -135,6 +135,8 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
     case 's':
       ret = strdup(va_arg(ap, char *));
       if (ret == NULL)
+        ret = strdup("(null)");
+      if (ret == NULL)
         return NULL;
       done = true;
       break;
