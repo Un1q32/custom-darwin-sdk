@@ -26,8 +26,9 @@ _syscall:
   movl $0x2000000, %eax
   movq %rcx, %r10
   syscall
-  jb __syscall_success
-  jmp __syscall_error
+  movq %rax, %rdi
+  jb __syscall_error
+  jmp __syscall_success
   retq
 
 #else
