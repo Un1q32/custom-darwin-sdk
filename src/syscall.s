@@ -28,6 +28,7 @@ _syscall:
   syscall
   movq %rax, %rdi
   jb __syscall_error
+  movq %rdx, %rsi
   jmp __syscall_success
   retq
 
