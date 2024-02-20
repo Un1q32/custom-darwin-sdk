@@ -1,6 +1,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 
 char *strcat(char *dest, const char *src) {
   char *p = dest;
@@ -189,7 +190,7 @@ int memcmp(const void *s1, const void *s2, size_t n) {
 }
 
 void explicit_bzero(void *s, size_t n) {
-  memset(s, 0, n);
+  bzero(s, n);
   __asm__ volatile("" : : "r"(s) : "memory");
 }
 
