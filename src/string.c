@@ -26,6 +26,8 @@ char *stpcpy(char *dest, const char *src) {
 }
 
 char *strdup(const char *str) {
+  if (!str)
+    return NULL;
   size_t len = strlen(str) + 1;
   char *dup = malloc(len);
   if (dup)
