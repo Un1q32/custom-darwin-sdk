@@ -170,11 +170,13 @@ pid_t wait4(pid_t pid, int *status, int options, struct rusage *rusage) {
 
 int gettimeofday(struct timeval *tv, void *tz) {
   if (tv != NULL) {
-    long ret = syscall(SYS_gettimeofday, tv, tz);
+    long ret = syscall(SYS_gettimeofday, tv, 0);
     if (ret == -1)
       return -1;
-    tv->tv_sec = ret;
-    tv->tv_usec = syscallret2;
+    else if (ret != 0) {
+      tv->tv_sec = ret;
+      tv->tv_usec = syscallret2;
+    }
   }
   if (tz != NULL) {
     struct timezone *tmp_tz = (struct timezone *)tz;
