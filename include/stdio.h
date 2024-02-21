@@ -27,7 +27,7 @@ extern FILE *__stderrp;
 
 #define EOF (-1)
 
-#define getc(fp) fgetc(fp)
+#define getc(fp) getc(fp)
 
 extern int fputc(int, FILE *);
 extern int putc(int, FILE *);
@@ -55,6 +55,7 @@ extern int ferror(FILE *);
 extern int fflush(FILE *);
 extern int fcloseall(void);
 extern int fgetc(FILE *);
+extern int getc(FILE *);
 extern size_t fread(void *, size_t, size_t, FILE *);
 extern size_t fwrite(const void *, size_t, size_t, FILE *);
 
