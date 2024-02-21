@@ -1,6 +1,6 @@
-# Custom XNU SDK
+# Custom Darwin SDK
 
-> An alternative to Apple's offical SDKs for XNU
+> An alternative to Apple's offical SDKs for Darwin
 
 > Currently supports x86_64 and arm32
 
@@ -20,7 +20,7 @@ make
 To build an SDK for another architecture
 
 ```sh
-make CC='clang -target armv7-apple-ios'
+make CC='clang -target armv6-apple-darwin'
 ```
 
 To build the tests
