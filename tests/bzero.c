@@ -10,8 +10,11 @@ int main() {
   str[2] = 's';
   str[3] = 's';
   str[4] = '\0';
-  puts(itoa(*str));
   bzero(str, 4);
-  puts(itoa(*str));
+  if (str[0] == 0 && str[1] == 0 && str[2] == 0 && str[3] == 0) {
+    puts("bzero works");
+  } else {
+    puts("bzero does not work");
+  }
   return 0;
 }
