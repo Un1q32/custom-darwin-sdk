@@ -3,13 +3,6 @@
 
 #if defined(__arm__)
 
-/*
- * XNU arm32 syscall convention:
- * r12: syscall number
- * r0-r6: arguements
- * r0-r1: return values
- */
-
 _syscall:
   mov r12, sp
   push {r4,r5,r6,r8}
