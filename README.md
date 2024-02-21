@@ -1,6 +1,8 @@
-# Custom iOS SDK
+# Custom XNU SDK
 
-> An alternative to Apple's offical iOS SDK for 32-bit devices
+> An alternative to Apple's offical SDKs for XNU
+
+> Currently supports x86_64 and arm32
 
 ## Requirements:
 
@@ -9,7 +11,7 @@
 
 ## Building:
 
-To build an SDK for armv7
+To build an SDK for x86_64
 
 ```sh
 make
@@ -18,7 +20,7 @@ make
 To build an SDK for another architecture
 
 ```sh
-make CC='clang -target armv7s-apple-ios'
+make CC='clang -target armv7-apple-ios'
 ```
 
 To build the tests
