@@ -32,5 +32,6 @@ int main() {
     printf("errno was %d\n", errno);
     return 1;
   }
+  puts("mkdir test passed");
   return 0;
 }
