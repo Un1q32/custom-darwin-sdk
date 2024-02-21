@@ -47,11 +47,12 @@ sdk/usr/lib: src/libc.a
 	@ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
 	@printf '' | $(CC) $(_REQFLAGS) -x c - -c -o sdk/usr/lib/crt1.o
 	@ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
+	@ln -sf crt1.o sdk/usr/lib/crt0.o
 
 tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
 	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
-	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc tests/$*.o -o $@
+	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -static tests/$*.o -o $@
 	$(V)ldid -S $@
 
 src/libc.a: $(OBJS)
