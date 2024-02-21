@@ -521,7 +521,7 @@ int printf(const char *format, ...) {
 }
 
 void perror(const char *str) {
-  char *errstr = strerror(errno);
+  const char *errstr = strerror(errno);
   size_t len = 0;
   if (str != NULL)
     len = strlen(str) + strlen(errstr) + 4;
