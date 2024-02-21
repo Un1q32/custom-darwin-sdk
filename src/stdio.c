@@ -544,3 +544,5 @@ int fgetc(FILE *stream) {
     return c;
   return EOF;
 }
+
+int getc(FILE *stream) { return fgetc(stream); }
