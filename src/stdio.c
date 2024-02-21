@@ -118,309 +118,296 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
   if (format == NULL)
     return NULL;
   char *ret = NULL;
+  const char *format2 = format;
   unsigned int flags = 0, percision = 6, zerofill = 0, len = 0;
-  *formatlen = 1;
   bool done = false, altform = false;
+  if (*format == '#') {
+    altform = true;
+    format++;
+  }
+  if (*format == '.') {
+    format++;
+    const char *tmp = format;
+    while (isdigit(*tmp))
+      tmp++;
+    char percisionstr[tmp - format + 1];
+    memcpy(percisionstr, format, tmp - format);
+    percisionstr[tmp - format] = '\0';
+    percision = atoi(percisionstr);
+    format = tmp;
+  } else if (*format == '0') {
+    format++;
+    const char *tmp = format;
+    while (isdigit(*tmp))
+      tmp++;
+    char zerofillstr[tmp - format + 1];
+    memcpy(zerofillstr, format, tmp - format);
+    zerofillstr[tmp - format] = '\0';
+    zerofill = atoi(zerofillstr);
+    format = tmp;
+  }
   while (!done) {
-    switch (format[*formatlen - 1]) {
-    case '%':
-      ret = strdup("%");
-      if (ret == NULL)
-        return NULL;
-      done = true;
-      break;
-    case 'S':
-      flags |= 1 << 0;
-      /* fall through */
-    case 's':
-      ret = strdup(va_arg(ap, char *));
-      if (ret == NULL)
-        ret = strdup("(null)");
-      if (ret == NULL)
-        return NULL;
-      done = true;
-      break;
-    case 'C':
-      flags |= 1 << 0;
-      /* fall through */
-    case 'c':
-      ret = malloc(2);
-      if (ret == NULL)
-        return NULL;
-      ret[0] = (unsigned char)va_arg(ap, int);
-      ret[1] = '\0';
-      done = true;
-      break;
-    case 'd':
-    case 'i':
-      if (flags & 1 << 4)
-        ret = strdup(itoa(va_arg(ap, intmax_t)));
-      else if (flags & 1 << 8)
-        ret = strdup(itoa(va_arg(ap, quad_t)));
-      else if (flags & 1 << 1)
-        ret = strdup(itoa(va_arg(ap, long long)));
-      else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = strdup(itoa(va_arg(ap, ptrdiff_t)));
-      else if (flags & 1 << 0)
-        ret = strdup(itoa(va_arg(ap, long)));
-      else if (flags & 1 << 2)
-        ret = strdup(itoa((short)va_arg(ap, int)));
-      else if (flags & 1 << 3)
-        ret = strdup(itoa((char)va_arg(ap, int)));
-      else
-        ret = strdup(itoa(va_arg(ap, int)));
-      if (ret == NULL)
-        return NULL;
-      len = strlen(ret);
-      if (len < zerofill) {
-        char *ret2 = malloc(zerofill + 1);
-        if (ret2 == NULL) {
-          free(ret);
-          return NULL;
-        }
-        memset(ret2, '0', zerofill - len);
-        memcpy(ret2 + zerofill - len, ret, len);
-        ret2[zerofill] = '\0';
-        free(ret);
-        ret = ret2;
-      }
-      done = true;
-      break;
-    case 'u':
-      if (flags & 1 << 4)
-        ret = strdup(utoa(va_arg(ap, uintmax_t)));
-      else if (flags & 1 << 8)
-        ret = strdup(utoa(va_arg(ap, u_quad_t)));
-      else if (flags & 1 << 1)
-        ret = strdup(utoa(va_arg(ap, unsigned long long)));
-      else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = strdup(utoa(va_arg(ap, size_t)));
-      else if (flags & 1 << 0)
-        ret = strdup(utoa(va_arg(ap, unsigned long)));
-      else if (flags & 1 << 2)
-        ret = strdup(utoa((unsigned short)va_arg(ap, unsigned int)));
-      else if (flags & 1 << 3)
-        ret = strdup(utoa((unsigned char)va_arg(ap, unsigned int)));
-      else
-        ret = strdup(utoa(va_arg(ap, unsigned int)));
-      if (ret == NULL)
-        return NULL;
-      len = strlen(ret);
-      if (len < zerofill) {
-        char *ret2 = malloc(zerofill + 1);
-        if (ret2 == NULL) {
-          free(ret);
-          return NULL;
-        }
-        memset(ret2, '0', zerofill - len);
-        memcpy(ret2 + zerofill - len, ret, len);
-        ret2[zerofill] = '\0';
-        free(ret);
-        ret = ret2;
-      }
-      done = true;
-      break;
-    case 'f':
-    case 'F':
-      if (flags & 1 << 7)
-        ret = strdup(ftoa(va_arg(ap, long double), percision));
-      else
-        ret = strdup(ftoa(va_arg(ap, double), percision));
-      if (ret == NULL)
-        return NULL;
-      done = true;
-      break;
-    case 'x':
-      if (flags & 1 << 4)
-        ret = strdup(utox(va_arg(ap, uintmax_t)));
-      else if (flags & 1 << 8)
-        ret = strdup(utox(va_arg(ap, u_quad_t)));
-      else if (flags & 1 << 1)
-        ret = strdup(utox(va_arg(ap, unsigned long long)));
-      else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = strdup(utox(va_arg(ap, size_t)));
-      else if (flags & 1 << 0)
-        ret = strdup(utox(va_arg(ap, unsigned long)));
-      else if (flags & 1 << 2)
-        ret = strdup(utox((unsigned short)va_arg(ap, unsigned int)));
-      else if (flags & 1 << 3)
-        ret = strdup(utox((unsigned char)va_arg(ap, unsigned int)));
-      else
-        ret = strdup(utox(va_arg(ap, unsigned int)));
-      if (ret == NULL)
-        return NULL;
-      len = strlen(ret);
-      if (len < zerofill) {
-        char *ret2 = malloc(zerofill + 1);
-        if (ret2 == NULL) {
-          free(ret);
-          return NULL;
-        }
-        memset(ret2, '0', zerofill - len);
-        memcpy(ret2 + zerofill - len, ret, len);
-        ret2[zerofill] = '\0';
-        free(ret);
-        ret = ret2;
-      }
-      if (altform) {
-        len = strlen(ret);
-        char *ret2 = malloc(len + 3);
-        if (ret2 == NULL) {
-          free(ret);
-          return NULL;
-        }
-        ret2[0] = '0';
-        ret2[1] = 'x';
-        memcpy(ret2 + 2, ret, len);
-        ret2[len + 2] = '\0';
-        free(ret);
-        ret = ret2;
-      }
-      done = true;
-      break;
-    case 'X':
-      if (flags & 1 << 4)
-        ret = strdup(utoX(va_arg(ap, uintmax_t)));
-      else if (flags & 1 << 8)
-        ret = strdup(utoX(va_arg(ap, u_quad_t)));
-      else if (flags & 1 << 1)
-        ret = strdup(utoX(va_arg(ap, unsigned long long)));
-      else if (flags & 1 << 5 || flags & 1 << 6)
-        ret = strdup(utoX(va_arg(ap, size_t)));
-      else if (flags & 1 << 0)
-        ret = strdup(utoX(va_arg(ap, unsigned long)));
-      else if (flags & 1 << 2)
-        ret = strdup(utoX((unsigned short)va_arg(ap, unsigned int)));
-      else if (flags & 1 << 3)
-        ret = strdup(utoX((unsigned char)va_arg(ap, unsigned int)));
-      else
-        ret = strdup(utoX(va_arg(ap, unsigned int)));
-      if (ret == NULL)
-        return NULL;
-      len = strlen(ret);
-      if (len < zerofill) {
-        char *ret2 = malloc(zerofill + 1);
-        if (ret2 == NULL) {
-          free(ret);
-          return NULL;
-        }
-        memset(ret2, '0', zerofill - len);
-        memcpy(ret2 + zerofill - len, ret, len);
-        ret2[zerofill] = '\0';
-        free(ret);
-        ret = ret2;
-      }
-      if (altform) {
-        len = strlen(ret);
-        char *ret2 = malloc(len + 3);
-        if (ret2 == NULL) {
-          free(ret);
-          return NULL;
-        }
-        ret2[0] = '0';
-        ret2[1] = 'X';
-        memcpy(ret2 + 2, ret, len);
-        ret2[len + 2] = '\0';
-        free(ret);
-        ret = ret2;
-      }
-      done = true;
-      break;
-    case 'n':
-      if (flags & 1 << 4)
-        *(va_arg(ap, intmax_t *)) = charssofar;
-      else if (flags & 1 << 8)
-        *(va_arg(ap, quad_t *)) = charssofar;
-      else if (flags & 1 << 1)
-        *(va_arg(ap, long long *)) = charssofar;
-      else if (flags & 1 << 5 || flags & 1 << 6)
-        *(va_arg(ap, ptrdiff_t *)) = charssofar;
-      else if (flags & 1 << 0)
-        *(va_arg(ap, long *)) = charssofar;
-      else if (flags & 1 << 2)
-        *(va_arg(ap, short *)) = charssofar;
-      else if (flags & 1 << 3)
-        *(va_arg(ap, char *)) = charssofar;
-      else
-        *(va_arg(ap, int *)) = charssofar;
-      ret = malloc(1);
-      if (ret == NULL)
-        return NULL;
-      ret[0] = '\0';
-      done = true;
-      break;
+    switch (*format++) {
     case 'l':
-      *formatlen += 1;
       if (flags & 1 << 0)
         flags |= 1 << 1;
       else
         flags |= 1 << 0;
       break;
     case 'h':
-      *formatlen += 1;
       if (flags & 1 << 2)
         flags |= 1 << 3;
       else
         flags |= 1 << 2;
       break;
     case 'j':
-      *formatlen += 1;
       flags |= 1 << 4;
       break;
     case 't':
-      *formatlen += 1;
       flags |= 1 << 5;
       break;
     case 'z':
-      *formatlen += 1;
       flags |= 1 << 6;
       break;
     case 'L':
-      *formatlen += 1;
       flags |= 1 << 7;
       break;
     case 'q':
-      *formatlen += 1;
       flags |= 1 << 8;
       break;
-    case '.':
-      *formatlen += 1;
-      while (isdigit(format[*formatlen - 1]))
-        *formatlen += 1;
-      char *percisionstr = malloc(*formatlen - 1);
-      if (percisionstr == NULL)
-        return NULL;
-      memcpy(percisionstr, format + 1, *formatlen - 2);
-      percisionstr[*formatlen - 1] = '\0';
-      percision = atoi(percisionstr);
-      free(percisionstr);
-      break;
-    case '0':
-      *formatlen += 1;
-      while (isdigit(format[*formatlen - 1]))
-        *formatlen += 1;
-      char *zerofillstr = malloc(*formatlen - 1);
-      if (zerofillstr == NULL)
-        return NULL;
-      memcpy(zerofillstr, format + 1, *formatlen - 2);
-      zerofillstr[*formatlen - 1] = '\0';
-      zerofill = atoi(zerofillstr);
-      free(zerofillstr);
-      break;
-    case '#':
-      *formatlen += 1;
-      altform = true;
-      break;
     default:
-      *formatlen -= 1;
-      ret = malloc(1);
-      if (ret == NULL)
-        return NULL;
-      ret[0] = '\0';
+      format--;
       done = true;
       break;
     }
   }
+  switch (*format) {
+  case '%':
+    ret = strdup("%");
+    if (ret == NULL)
+      return NULL;
+    break;
+  case 'S':
+    flags |= 1 << 0;
+    /* fall through */
+  case 's':
+    ret = strdup(va_arg(ap, char *));
+    if (ret == NULL)
+      ret = strdup("(null)");
+    if (ret == NULL)
+      return NULL;
+    break;
+  case 'C':
+    flags |= 1 << 0;
+    /* fall through */
+  case 'c':
+    ret = malloc(2);
+    if (ret == NULL)
+      return NULL;
+    ret[0] = (unsigned char)va_arg(ap, int);
+    ret[1] = '\0';
+    break;
+  case 'd':
+  case 'i':
+    if (flags & 1 << 4)
+      ret = strdup(itoa(va_arg(ap, intmax_t)));
+    else if (flags & 1 << 8)
+      ret = strdup(itoa(va_arg(ap, quad_t)));
+    else if (flags & 1 << 1)
+      ret = strdup(itoa(va_arg(ap, long long)));
+    else if (flags & 1 << 5 || flags & 1 << 6)
+      ret = strdup(itoa(va_arg(ap, ptrdiff_t)));
+    else if (flags & 1 << 0)
+      ret = strdup(itoa(va_arg(ap, long)));
+    else if (flags & 1 << 2)
+      ret = strdup(itoa((short)va_arg(ap, int)));
+    else if (flags & 1 << 3)
+      ret = strdup(itoa((char)va_arg(ap, int)));
+    else
+      ret = strdup(itoa(va_arg(ap, int)));
+    if (ret == NULL)
+      return NULL;
+    len = strlen(ret);
+    if (len < zerofill) {
+      char *ret2 = malloc(zerofill + 1);
+      if (ret2 == NULL) {
+        free(ret);
+        return NULL;
+      }
+      memset(ret2, '0', zerofill - len);
+      memcpy(ret2 + zerofill - len, ret, len);
+      ret2[zerofill] = '\0';
+      free(ret);
+      ret = ret2;
+    }
+    break;
+  case 'u':
+    if (flags & 1 << 4)
+      ret = strdup(utoa(va_arg(ap, uintmax_t)));
+    else if (flags & 1 << 8)
+      ret = strdup(utoa(va_arg(ap, u_quad_t)));
+    else if (flags & 1 << 1)
+      ret = strdup(utoa(va_arg(ap, unsigned long long)));
+    else if (flags & 1 << 5 || flags & 1 << 6)
+      ret = strdup(utoa(va_arg(ap, size_t)));
+    else if (flags & 1 << 0)
+      ret = strdup(utoa(va_arg(ap, unsigned long)));
+    else if (flags & 1 << 2)
+      ret = strdup(utoa((unsigned short)va_arg(ap, unsigned int)));
+    else if (flags & 1 << 3)
+      ret = strdup(utoa((unsigned char)va_arg(ap, unsigned int)));
+    else
+      ret = strdup(utoa(va_arg(ap, unsigned int)));
+    if (ret == NULL)
+      return NULL;
+    len = strlen(ret);
+    if (len < zerofill) {
+      char *ret2 = malloc(zerofill + 1);
+      if (ret2 == NULL) {
+        free(ret);
+        return NULL;
+      }
+      memset(ret2, '0', zerofill - len);
+      memcpy(ret2 + zerofill - len, ret, len);
+      ret2[zerofill] = '\0';
+      free(ret);
+      ret = ret2;
+    }
+    break;
+  case 'f':
+  case 'F':
+    if (flags & 1 << 7)
+      ret = strdup(ftoa(va_arg(ap, long double), percision));
+    else
+      ret = strdup(ftoa(va_arg(ap, double), percision));
+    if (ret == NULL)
+      return NULL;
+    break;
+  case 'x':
+    if (flags & 1 << 4)
+      ret = strdup(utox(va_arg(ap, uintmax_t)));
+    else if (flags & 1 << 8)
+      ret = strdup(utox(va_arg(ap, u_quad_t)));
+    else if (flags & 1 << 1)
+      ret = strdup(utox(va_arg(ap, unsigned long long)));
+    else if (flags & 1 << 5 || flags & 1 << 6)
+      ret = strdup(utox(va_arg(ap, size_t)));
+    else if (flags & 1 << 0)
+      ret = strdup(utox(va_arg(ap, unsigned long)));
+    else if (flags & 1 << 2)
+      ret = strdup(utox((unsigned short)va_arg(ap, unsigned int)));
+    else if (flags & 1 << 3)
+      ret = strdup(utox((unsigned char)va_arg(ap, unsigned int)));
+    else
+      ret = strdup(utox(va_arg(ap, unsigned int)));
+    if (ret == NULL)
+      return NULL;
+    len = strlen(ret);
+    if (len < zerofill) {
+      char *ret2 = malloc(zerofill + 1);
+      if (ret2 == NULL) {
+        free(ret);
+        return NULL;
+      }
+      memset(ret2, '0', zerofill - len);
+      memcpy(ret2 + zerofill - len, ret, len);
+      ret2[zerofill] = '\0';
+      free(ret);
+      ret = ret2;
+    }
+    if (altform) {
+      len = strlen(ret);
+      char *ret2 = malloc(len + 3);
+      if (ret2 == NULL) {
+        free(ret);
+        return NULL;
+      }
+      ret2[0] = '0';
+      ret2[1] = 'x';
+      memcpy(ret2 + 2, ret, len);
+      ret2[len + 2] = '\0';
+      free(ret);
+      ret = ret2;
+    }
+    break;
+  case 'X':
+    if (flags & 1 << 4)
+      ret = strdup(utoX(va_arg(ap, uintmax_t)));
+    else if (flags & 1 << 8)
+      ret = strdup(utoX(va_arg(ap, u_quad_t)));
+    else if (flags & 1 << 1)
+      ret = strdup(utoX(va_arg(ap, unsigned long long)));
+    else if (flags & 1 << 5 || flags & 1 << 6)
+      ret = strdup(utoX(va_arg(ap, size_t)));
+    else if (flags & 1 << 0)
+      ret = strdup(utoX(va_arg(ap, unsigned long)));
+    else if (flags & 1 << 2)
+      ret = strdup(utoX((unsigned short)va_arg(ap, unsigned int)));
+    else if (flags & 1 << 3)
+      ret = strdup(utoX((unsigned char)va_arg(ap, unsigned int)));
+    else
+      ret = strdup(utoX(va_arg(ap, unsigned int)));
+    if (ret == NULL)
+      return NULL;
+    len = strlen(ret);
+    if (len < zerofill) {
+      char *ret2 = malloc(zerofill + 1);
+      if (ret2 == NULL) {
+        free(ret);
+        return NULL;
+      }
+      memset(ret2, '0', zerofill - len);
+      memcpy(ret2 + zerofill - len, ret, len);
+      ret2[zerofill] = '\0';
+      free(ret);
+      ret = ret2;
+    }
+    if (altform) {
+      len = strlen(ret);
+      char *ret2 = malloc(len + 3);
+      if (ret2 == NULL) {
+        free(ret);
+        return NULL;
+      }
+      ret2[0] = '0';
+      ret2[1] = 'X';
+      memcpy(ret2 + 2, ret, len);
+      ret2[len + 2] = '\0';
+      free(ret);
+      ret = ret2;
+    }
+    break;
+  case 'n':
+    if (flags & 1 << 4)
+      *(va_arg(ap, intmax_t *)) = charssofar;
+    else if (flags & 1 << 8)
+      *(va_arg(ap, quad_t *)) = charssofar;
+    else if (flags & 1 << 1)
+      *(va_arg(ap, long long *)) = charssofar;
+    else if (flags & 1 << 5 || flags & 1 << 6)
+      *(va_arg(ap, ptrdiff_t *)) = charssofar;
+    else if (flags & 1 << 0)
+      *(va_arg(ap, long *)) = charssofar;
+    else if (flags & 1 << 2)
+      *(va_arg(ap, short *)) = charssofar;
+    else if (flags & 1 << 3)
+      *(va_arg(ap, char *)) = charssofar;
+    else
+      *(va_arg(ap, int *)) = charssofar;
+    ret = malloc(1);
+    if (ret == NULL)
+      return NULL;
+    ret[0] = '\0';
+    break;
+  default:
+    format--;
+    ret = malloc(1);
+    if (ret == NULL)
+      return NULL;
+    ret[0] = '\0';
+    break;
+  }
+  *formatlen = format - format2 + 2;
   return ret;
 }
 
@@ -435,7 +422,7 @@ int vsprintf(char *str, const char *format, va_list ap) {
         if (str != NULL)
           strcpy(str + j, tmp);
         j += strlen(tmp);
-        i += formatlen + 1;
+        i += formatlen;
         free(tmp);
       } else {
         if (str != NULL)
