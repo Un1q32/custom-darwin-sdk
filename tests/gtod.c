@@ -4,6 +4,6 @@
 int main() {
   struct timeval tv;
   gettimeofday(&tv, NULL);
-  printf("Unix Epoch: %ld.%d\n", tv.tv_sec, tv.tv_usec);
+  printf("Unix Epoch: %ld.%06d\n", tv.tv_sec, tv.tv_usec);
   return 0;
 }
