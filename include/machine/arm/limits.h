@@ -1,6 +1,8 @@
 #ifndef _MACHINE_ARM_LIMITS_H_
 #define _MACHINE_ARM_LIMITS_H_
 
+#define CHAR_BIT 8
+
 #define UINT_MAX 0xFFFFFFFF
 #define ULONG_MAX 0xFFFFFFFFUL
 
