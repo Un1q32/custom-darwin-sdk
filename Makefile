@@ -13,7 +13,9 @@ _REQFLAGS := -isysroot sdk -Iinclude -std=c89
 
 SRCS := $(wildcard src/*.c)
 ASMS := $(wildcard src/*.s)
-OBJS := $(SRCS:.c=.o) $(ASMS:.s=.o)
+_BUILTINS := divsi3 udivsi3 udivdi3 modsi3 umoddi3 umodsi3 fixunsdfdi floatundidf
+BUILTINS := $(addprefix llvm-project/compiler-rt/lib/builtins/,$(addsuffix .c,$(_BUILTINS)))
+OBJS := $(BUILTINS:.c=.o) $(SRCS:.c=.o) $(ASMS:.s=.o)
 TESTSRCS := $(wildcard tests/*.c)
 TESTEXES := $(TESTSRCS:tests/%.c=tests/bin/%)
 
@@ -60,6 +62,10 @@ src/libc.a: $(OBJS)
 	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
 	@$(AR) rcs $@ $^
 
+$(BUILTINS:.c=.o): %.o: %.c
+	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
+	$(V)$(CC) -isysroot sdk -Iinclude -std=c99 $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+
 $(ASMS:.s=.o): %.o: %.s
 	@src=$<; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
 	$(V)$(CC) $(_REQFLAGS) $(OPTFLAGS) -c $< -o $@
@@ -70,7 +76,7 @@ $(ASMS:.s=.o): %.o: %.s
 
 clean:
 	@printf "Cleaning up...\n"
-	$(V)rm -rf sdk/* src/*.o tests/*.o tests/bin/* src/libc.a
+	$(V)rm -rf sdk/* tests/*.o tests/bin/* src/libc.a $(OBJS)
 
 clangd:
 	@printf "Generating clangd config...\n"
