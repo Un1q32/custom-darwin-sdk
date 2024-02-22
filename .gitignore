@@ -4,3 +4,4 @@ libc.a
 /sdk/usr
 a.out
 .clangd
+/compiler-rt

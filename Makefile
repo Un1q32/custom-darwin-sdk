@@ -6,6 +6,8 @@ else
 AR := llvm-ar
 endif
 
+COMPILER_RT_VERSION := 17.0.6
+
 CFLAGS := -Wall -Wextra -Werror
 OPTFLAGS := -O2
 LDFLAGS := -mlinker-version=907 -fuse-ld=ld
@@ -14,7 +16,7 @@ _REQFLAGS := -isysroot sdk -Iinclude -std=c89
 SRCS := $(wildcard src/*.c)
 ASMS := $(wildcard src/*.s)
 _BUILTINS := divsi3 udivsi3 udivdi3 modsi3 umoddi3 umodsi3 fixunsdfdi floatundidf
-BUILTINS := $(addprefix llvm-project/compiler-rt/lib/builtins/,$(addsuffix .c,$(_BUILTINS)))
+BUILTINS := $(addprefix compiler-rt/lib/builtins/,$(addsuffix .c,$(_BUILTINS)))
 OBJS := $(BUILTINS:.c=.o) $(SRCS:.c=.o) $(ASMS:.s=.o)
 TESTSRCS := $(wildcard tests/*.c)
 TESTEXES := $(TESTSRCS:tests/%.c=tests/bin/%)
@@ -61,6 +63,12 @@ tests/bin/%: tests/%.c sdk/usr/lib
 src/libc.a: $(OBJS)
 	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
 	@$(AR) rcs $@ $^
+
+$(BUILTINS): compiler-rt
+compiler-rt:
+	@printf "Downloading compiler-rt...\n"
+	$(V)curl -# -L https://github.com/llvm/llvm-project/releases/download/llvmorg-$(COMPILER_RT_VERSION)/compiler-rt-$(COMPILER_RT_VERSION).src.tar.xz | tar -xJ
+	$(V)mv compiler-rt-$(COMPILER_RT_VERSION).src compiler-rt
 
 $(BUILTINS:.c=.o): %.o: %.c
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
