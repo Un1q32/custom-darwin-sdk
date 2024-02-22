@@ -31,6 +31,7 @@
 #endif
 
 #define INT64_C(c) (c##LL)
+#define UINT32_C(c) (c##U)
 #define UINT64_C(c) (c##ULL)
 
 typedef signed char int8_t;
