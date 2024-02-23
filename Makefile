@@ -11,7 +11,7 @@ COMPILER_RT_VERSION := 17.0.6
 CFLAGS := -Wall -Wextra -Werror
 OPTFLAGS := -O2
 LDFLAGS := -mlinker-version=907 -fuse-ld=ld
-_REQFLAGS := -isysroot sdk -Iinclude -std=c89
+_REQFLAGS := -isysroot sdk -Iinclude -std=c99
 
 SRCS := $(wildcard src/*.c)
 ASMS := $(wildcard src/*.s)
@@ -72,7 +72,7 @@ compiler-rt:
 
 $(BUILTINS:.c=.o): %.o: %.c
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) -isysroot sdk -Iinclude -std=c99 $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 $(ASMS:.s=.o): %.o: %.s
 	@src=$<; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
