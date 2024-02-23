@@ -103,18 +103,13 @@
 #define ENOSTR 99
 #define EPROTO 100
 #define ETIME 101
+#define EOPNOTSUPP 102
 #define ENOPOLICY 103
 #define ENOTRECOVERABLE 104
 #define EOWNERDEAD 105
 #define EQFULL 106
 #define ELAST 106
 
-#if __DARWIN_UNIX03 || defined(KERNEL)
-#define EOPNOTSUPP 102
-else
-#define EOPNOTSUPP ENOTSUP
-#endif
-
-    extern int errno;
+extern int errno;
 
 #endif
