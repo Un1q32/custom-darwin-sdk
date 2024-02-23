@@ -411,8 +411,8 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
   return ret;
 }
 
-int vsprintf(char *str, const char *format, va_list ap) {
-  int i = 0, j = 0;
+int vsnprintf(char *str, size_t size, const char *format, va_list ap) {
+  size_t i = 0, j = 0;
   while (format[i]) {
     if (format[i] == '%') {
       int formatlen;
@@ -421,34 +421,37 @@ int vsprintf(char *str, const char *format, va_list ap) {
       va_arg(ap, void *);
 #endif
       if (tmp != NULL) {
-        if (str != NULL)
-          strcpy(str + j, tmp);
-        j += strlen(tmp);
+        size_t k = 0;
+        while (tmp[k]) {
+          if (j < size)
+            str[j] = tmp[k];
+          j++;
+          k++;
+        }
         i += formatlen;
         free(tmp);
       } else {
-        if (str != NULL)
+        if (j < size)
           str[j] = format[i];
         j++;
         i++;
       }
     } else {
-      if (str != NULL)
+      if (j < size)
         str[j] = format[i];
       j++;
       i++;
     }
   }
-  if (str != NULL)
+  if (j < size)
     str[j] = '\0';
+  else if (size > 0)
+    str[size - 1] = '\0';
   return j;
 }
 
-int vsnprintf(char *str, size_t size, const char *format, va_list ap) {
-  int ret = vsprintf(str, format, ap);
-  if (ret >= (int)size && str != NULL)
-    str[size - 1] = '\0';
-  return ret;
+int vsprintf(char *str, const char *format, va_list ap) {
+  return vsnprintf(str, SIZE_MAX, format, ap);
 }
 
 int snprintf(char *str, size_t size, const char *format, ...) {
@@ -470,7 +473,8 @@ int sprintf(char *str, const char *format, ...) {
 int vdprintf(int fd, const char *format, va_list ap) {
   va_list ap2;
   va_copy(ap2, ap);
-  char buf[vsprintf(NULL, format, ap2) + 1];
+  char nothing[1];
+  char buf[vsnprintf(nothing, 0, format, ap2) + 1];
   va_end(ap2);
   int ret = vsprintf(buf, format, ap);
   write(fd, buf, ret);
