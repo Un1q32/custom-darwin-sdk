@@ -528,7 +528,7 @@ void perror(const char *str) {
 }
 
 int fgetc(FILE *stream) {
-  short c;
+  unsigned char c;
   if (read(stream->_file, &c, 1) == 1)
     return c;
   return EOF;
