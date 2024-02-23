@@ -197,6 +197,9 @@ void explicit_bzero(void *s, size_t n) {
 char *strerror(int errnum) {
   char *ret = NULL;
   switch (errnum) {
+  case 0:
+    ret = "No error";
+    break;
   case EPERM:
     ret = "Operation not permitted";
     break;
