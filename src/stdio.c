@@ -417,7 +417,9 @@ int vsprintf(char *str, const char *format, va_list ap) {
     if (format[i] == '%') {
       int formatlen;
       char *tmp = __tostr(format + i + 1, j, ap, &formatlen);
+#ifdef __arm__
       va_arg(ap, void *);
+#endif
       if (tmp != NULL) {
         if (str != NULL)
           strcpy(str + j, tmp);
