@@ -171,11 +171,11 @@ void *memcpy(void *dest, const void *src, size_t n) {
   return dest;
 }
 
-void *memset(void *s, int c, size_t n) {
-  char *s2 = s;
-  while (n--)
-    *s2++ = (unsigned char)c;
-  return s;
+void *memset(void *buf, int byte, size_t size) {
+  unsigned char *p = buf;
+  while (size--)
+    *p++ = (unsigned char)byte;
+  return buf;
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {

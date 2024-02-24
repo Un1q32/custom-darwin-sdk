@@ -80,7 +80,7 @@ $(ASMS:.S=.o): %.o: %.S
 
 %.o: %.c
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) -ffreestanding $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
 	@printf "Cleaning up...\n"
