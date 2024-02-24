@@ -14,10 +14,10 @@ LDFLAGS := -mlinker-version=907 -fuse-ld=ld
 _REQFLAGS := -isysroot sdk -Iinclude -std=c99
 
 SRCS := $(wildcard src/*.c)
-ASMS := $(wildcard src/*.s)
+ASMS := $(wildcard src/*.S)
 _BUILTINS := divsi3 udivsi3 udivdi3 modsi3 umoddi3 umodsi3 fixunsdfdi floatundidf
 BUILTINS := $(addprefix compiler-rt/lib/builtins/,$(addsuffix .c,$(_BUILTINS)))
-OBJS := $(BUILTINS:.c=.o) $(SRCS:.c=.o) $(ASMS:.s=.o)
+OBJS := $(BUILTINS:.c=.o) $(SRCS:.c=.o) $(ASMS:.S=.o)
 TESTSRCS := $(wildcard tests/*.c)
 TESTEXES := $(TESTSRCS:tests/%.c=tests/bin/%)
 
@@ -74,7 +74,7 @@ $(BUILTINS:.c=.o): %.o: %.c
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
 	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
-$(ASMS:.s=.o): %.o: %.s
+$(ASMS:.S=.o): %.o: %.S
 	@src=$<; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
 	$(V)$(CC) $(_REQFLAGS) $(OPTFLAGS) -c $< -o $@
 
