@@ -29,8 +29,7 @@ char *stpcpy(char *dst, const char *src) {
 char *strdup(const char *str) {
   if (str == NULL)
     return NULL;
-  size_t len = strlen(str) + 1;
-  char *dup = malloc(len);
+  char *dup = malloc(strlen(str) + 1);
   if (dup)
     strcpy(dup, str);
   return dup;
