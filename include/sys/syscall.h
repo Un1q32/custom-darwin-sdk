@@ -32,5 +32,6 @@
 #define SYS_rmdir 137
 #define SYS_mmap 197
 #define SYS_lseek 199
+#define SYS_stat64 338
 
 #endif
