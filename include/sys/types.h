@@ -11,5 +11,10 @@ typedef int pid_t;
 typedef int suseconds_t;
 typedef unsigned int useconds_t;
 typedef unsigned long clock_t;
+typedef int dev_t;
+typedef unsigned int uid_t;
+typedef unsigned int gid_t;
+typedef int blksize_t;
+typedef long long blkcnt_t;
 
 #endif

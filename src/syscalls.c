@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/resource.h>
+#include <sys/stat.h>
 #include <sys/syscall.h>
 #include <sys/syslimits.h>
 #include <unistd.h>
@@ -196,4 +197,12 @@ int ioctl(int fd, unsigned long request, ...) {
   long arg = va_arg(va_args, long);
   va_end(va_args);
   return syscall(SYS_ioctl, fd, request, arg);
+}
+
+int stat(const char *path, struct stat *buf) {
+  return syscall(SYS_stat64, path, buf);
+}
+
+int stat64(const char *path, struct stat64 *buf) {
+  return syscall(SYS_stat64, path, buf);
 }
