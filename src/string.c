@@ -3,27 +3,27 @@
 #include <string.h>
 #include <strings.h>
 
-char *strcat(char *dest, const char *src) {
-  char *p = dest;
+char *strcat(char *dst, const char *src) {
+  char *p = dst;
   while (*p)
     p++;
   while (*src)
     *p++ = *src++;
   *p = '\0';
-  return dest;
+  return dst;
 }
 
-char *strcpy(char *dest, const char *src) {
-  char *ret = dest;
-  while ((*dest++ = *src++) != '\0')
+char *strcpy(char *dst, const char *src) {
+  char *ret = dst;
+  while ((*dst++ = *src++) != '\0')
     ;
   return ret;
 }
 
-char *stpcpy(char *dest, const char *src) {
-  while ((*dest++ = *src++) != '\0')
+char *stpcpy(char *dst, const char *src) {
+  while ((*dst++ = *src++) != '\0')
     ;
-  return dest - 1;
+  return dst - 1;
 }
 
 char *strdup(const char *str) {
@@ -36,40 +36,40 @@ char *strdup(const char *str) {
   return dup;
 }
 
-size_t strlen(const char *s) {
+size_t strlen(const char *str) {
   size_t len = 0;
-  while (s[len])
+  while (str[len])
     len++;
   return len;
 }
 
-size_t strnlen(const char *s, size_t maxlen) {
-  size_t ret = strlen(s);
+size_t strnlen(const char *str, size_t maxlen) {
+  size_t ret = strlen(str);
   return ret > maxlen ? maxlen : ret;
 }
 
-char *strchr(const char *s, int c) {
-  while (*s != (char)c) {
-    if (*s == '\0')
+char *strchr(const char *str, int ch) {
+  while (*str != (char)ch) {
+    if (*str == '\0')
       return NULL;
-    s++;
+    str++;
   }
-  return (char *)s;
+  return (char *)str;
 }
 
-char *strrchr(const char *s, int c) {
+char *strrchr(const char *str, int ch) {
   char *last = NULL;
   do {
-    if (*s == (char)c)
-      last = (char *)s;
-  } while (*s++);
+    if (*str == (char)ch)
+      last = (char *)str;
+  } while (*str++);
   return last;
 }
 
-int strcmp(const char *s1, const char *s2) {
-  while (*s1 && (*s1 == *s2))
-    s1++, s2++;
-  return *(const unsigned char *)s1 - *(const unsigned char *)s2;
+int strcmp(const char *str1, const char *str2) {
+  while (*str1 && (*str1 == *str2))
+    str1++, str2++;
+  return *(const unsigned char *)str1 - *(const unsigned char *)str2;
 }
 
 int strncmp(const char *s1, const char *s2, size_t n) {
@@ -135,40 +135,40 @@ char *strtok_r(char *str, const char *delim, char **saveptr) {
   return ret;
 }
 
-size_t strspn(const char *s, const char *accept) {
+size_t strspn(const char *str, const char *accept) {
   size_t ret = 0;
-  while (*s && strchr(accept, *s++))
+  while (*str && strchr(accept, *str++))
     ret++;
   return ret;
 }
 
-size_t strcspn(const char *s, const char *reject) {
+size_t strcspn(const char *str, const char *reject) {
   size_t ret = 0;
-  while (*s) {
-    if (strchr(reject, *s))
+  while (*str) {
+    if (strchr(reject, *str))
       return ret;
     else
-      s++, ret++;
+      str++, ret++;
   }
   return ret;
 }
 
-char *strpbrk(const char *s, const char *accept) {
-  while (*s) {
-    if (strchr(accept, *s))
-      return (char *)s;
+char *strpbrk(const char *str, const char *accept) {
+  while (*str) {
+    if (strchr(accept, *str))
+      return (char *)str;
     else
-      s++;
+      str++;
   }
   return NULL;
 }
 
-void *memcpy(void *dest, const void *src, size_t n) {
-  char *d = dest;
+void *memcpy(void *dst, const void *src, size_t size) {
+  char *d = dst;
   const char *s = src;
-  while (n--)
+  while (size--)
     *d++ = *s++;
-  return dest;
+  return dst;
 }
 
 void *memset(void *buf, int byte, size_t size) {
