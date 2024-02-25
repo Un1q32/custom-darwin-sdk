@@ -17,7 +17,7 @@ SRCS := $(wildcard src/*.c)
 ASMS := $(wildcard src/*.S)
 _BUILTINS := divsi3 udivsi3 udivdi3 modsi3 umoddi3 umodsi3 fixunsdfdi floatundidf
 BUILTINS := $(addprefix compiler-rt/lib/builtins/,$(addsuffix .c,$(_BUILTINS)))
-OBJS := $(BUILTINS:.c=.o) $(SRCS:.c=.o) $(ASMS:.S=.o)
+OBJS := $(ASMS:.S=.o) $(BUILTINS:.c=.o) $(SRCS:.c=.o)
 TESTSRCS := $(wildcard tests/*.c)
 TESTEXES := $(TESTSRCS:tests/%.c=tests/bin/%)
 
@@ -43,21 +43,20 @@ sdk/usr/include: $(HEADERS)
 	@mkdir -p sdk/usr
 	@cp -r include sdk/usr
 
-sdk/usr/lib: src/libc.a
+sdk/usr/lib: crt/start.o src/libc.a
 	@printf "Installing libraries...\n"
 	@rm -rf sdk/usr/lib
 	@mkdir -p sdk/usr/lib
 	@cp src/libc.a sdk/usr/lib
 	@ln -sf libc.a sdk/usr/lib/libSystem.a
 	@ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
-	@printf '' | $(CC) $(_REQFLAGS) -x c - -c -o sdk/usr/lib/crt1.o
-	@ln -sf crt1.o sdk/usr/lib/crt1.3.1.o
-	@ln -sf crt1.o sdk/usr/lib/crt0.o
+	@cp crt/start.o sdk/usr/lib
+	@for obj in crt0.o crt1.o crt1.3.1.o crt1.10.6.o; do ln -sf start.o sdk/usr/lib/$$obj; done
 
 tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
 	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
-	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -static tests/$*.o -o $@
+	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -lstart.o -static tests/$*.o -o $@
 	$(V)ldid -S $@
 
 src/libc.a: $(OBJS)
@@ -74,6 +73,10 @@ $(BUILTINS:.c=.o): %.o: %.c
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
 	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
+crt/start.o: crt/start.S
+	@src=$<; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
+	$(V)$(CC) $(_REQFLAGS) $(OPTFLAGS) -c $< -o $@
+
 $(ASMS:.S=.o): %.o: %.S
 	@src=$<; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
 	$(V)$(CC) $(_REQFLAGS) $(OPTFLAGS) -c $< -o $@
@@ -84,7 +87,7 @@ $(ASMS:.S=.o): %.o: %.S
 
 clean:
 	@printf "Cleaning up...\n"
-	$(V)rm -rf sdk/* tests/*.o tests/bin/* src/libc.a $(OBJS)
+	$(V)rm -rf sdk/* tests/*.o tests/bin/* src/libc.a crt/*.o $(OBJS)
 
 clangd:
 	@printf "Generating clangd config...\n"
