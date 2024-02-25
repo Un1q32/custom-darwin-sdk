@@ -5,11 +5,11 @@
 
 _syscall:
   mov r12, sp
-  push {r4,r5,r6,r8}
-  ldm r12, {r4,r5,r6}
+  stmdb sp!, {r4,r5,r6,r8}
+  ldmia r12, {r4,r5,r6}
   mov r12, #0
-  svc 0x80
-  pop {r4,r5,r6,r8}
+  swi 0x80
+  ldmia sp!, {r4,r5,r6,r8}
   bcc __syscall_success
   b __syscall_error
 
