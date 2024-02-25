@@ -10,7 +10,7 @@ COMPILER_RT_VERSION := 17.0.6
 
 CFLAGS := -Wall -Wextra -Werror
 OPTFLAGS := -O2
-LDFLAGS := -mlinker-version=907 -fuse-ld=ld
+LDFLAGS := -mlinker-version=907 -fuse-ld=ld -static
 _REQFLAGS := -isysroot sdk -Iinclude -std=c99
 
 SRCS := $(wildcard src/*.c)
@@ -56,7 +56,7 @@ sdk/usr/lib: crt/start.o src/libc.a
 tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
 	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
-	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -lstart.o -static tests/$*.o -o $@
+	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -lstart.o tests/$*.o -o $@
 	$(V)ldid -S $@
 
 src/libc.a: $(OBJS)
