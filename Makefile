@@ -15,7 +15,7 @@ _REQFLAGS := -isysroot sdk -Iinclude -std=c99
 
 SRCS := $(wildcard src/*.c)
 ASMS := $(wildcard src/*.S)
-_BUILTINS := divsi3 udivsi3 udivdi3 modsi3 umoddi3 umodsi3 fixunsdfdi floatundidf
+_BUILTINS := divsi3 udivsi3 udivdi3 modsi3 umoddi3 umodsi3 fixunsdfdi floatundidf clzdi2
 BUILTINS := $(addprefix compiler-rt/lib/builtins/,$(addsuffix .c,$(_BUILTINS)))
 OBJS := $(ASMS:.S=.o) $(BUILTINS:.c=.o) $(SRCS:.c=.o)
 TESTSRCS := $(wildcard tests/*.c)
