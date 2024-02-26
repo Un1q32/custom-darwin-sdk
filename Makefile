@@ -48,9 +48,8 @@ sdk/usr/lib: crt/start.o src/libc.a
 	@rm -rf sdk/usr/lib
 	@mkdir -p sdk/usr/lib
 	@cp src/libc.a sdk/usr/lib
-	@ln -sf libc.a sdk/usr/lib/libSystem.a
-	@ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
 	@cp crt/start.o sdk/usr/lib
+	@for lib in libSystem.a libgcc_s.1.a libm.a; do ln -sf libc.a sdk/usr/lib/$$lib; done
 	@for obj in crt0.o crt1.o crt1.3.1.o crt1.10.5.o crt1.10.6.o; do ln -sf start.o sdk/usr/lib/$$obj; done
 
 tests/bin/%: tests/%.c sdk/usr/lib
