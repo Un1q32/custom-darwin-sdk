@@ -51,7 +51,7 @@ sdk/usr/lib: crt/start.o src/libc.a
 	@ln -sf libc.a sdk/usr/lib/libSystem.a
 	@ln -sf libc.a sdk/usr/lib/libgcc_s.1.a
 	@cp crt/start.o sdk/usr/lib
-	@for obj in crt0.o crt1.o crt1.3.1.o crt1.10.6.o; do ln -sf start.o sdk/usr/lib/$$obj; done
+	@for obj in crt0.o crt1.o crt1.3.1.o crt1.10.5.o crt1.10.6.o; do ln -sf start.o sdk/usr/lib/$$obj; done
 
 tests/bin/%: tests/%.c sdk/usr/lib
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
