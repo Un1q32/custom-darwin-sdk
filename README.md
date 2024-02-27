@@ -20,7 +20,7 @@ make
 To build an SDK for another architecture
 
 ```sh
-make CC='clang -target armv6-apple-darwin'
+make TARGET=armv7-apple-ios
 ```
 
 To build the tests

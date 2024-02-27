@@ -10,7 +10,10 @@ COMPILER_RT_VERSION := 17.0.6
 
 CFLAGS := -Wall -Wextra -Werror
 OPTFLAGS := -O2
-LDFLAGS := -mlinker-version=907 -fuse-ld=ld -static
+LDFLAGS := -mlinker-version=907 -static
+ifneq ($(shell uname),Darwin)
+LDFLAGS += -fuse-ld=ld64
+endif
 _REQFLAGS := -isysroot sdk -Iinclude -std=c99
 
 SRCS := $(wildcard src/*.c)
