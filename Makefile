@@ -1,5 +1,4 @@
-TARGET := x86_64-apple-darwin10
-CC := clang -target $(TARGET)
+CC := clang -target darwin10 -arch x86_64 -arch armv6 -arch armv7 -arch armv7s
 ifeq ($(shell uname),Darwin)
 AR := ar
 else
@@ -93,4 +92,4 @@ clean:
 
 clangd:
 	@printf "Generating clangd config...\n"
-	$(V)printf 'CompileFlags:\n  Add: [-I$(PWD)/include, --target=$(TARGET)]\n' > .clangd
+	$(V)printf 'CompileFlags:\n  Add: [-I$(PWD)/include, --target=x86_64-apple-darwin10]\n' > .clangd

@@ -7,20 +7,20 @@
 ## Requirements:
 
 - LLVM+Clang
-- [ld64](https://github.com/tpoechtrager/cctools-port) (On Linux, ld64 should be in path as `ld64.ld64`)
+- [cctools/ld64](https://github.com/tpoechtrager/cctools-port) (On Linux, ld64 should be in path as `ld64.ld64`)
 
 ## Building:
 
-To build an SDK for x86_64
+To build a universal SDK
 
 ```sh
 make
 ```
 
-To build an SDK for another architecture
+To build an SDK for a single architecture
 
 ```sh
-make TARGET=armv7-apple-ios
+make CC='clang -target armv7-apple-darwin10'
 ```
 
 To build the tests
