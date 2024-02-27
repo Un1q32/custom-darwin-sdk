@@ -3,7 +3,7 @@ CC := clang -target $(TARGET)
 ifeq ($(shell uname),Darwin)
 AR := ar
 else
-AR := llvm-ar
+AR := cctools-ar
 endif
 
 COMPILER_RT_VERSION := 17.0.6
