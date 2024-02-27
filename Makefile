@@ -62,7 +62,7 @@ tests/bin/%: tests/%.c sdk/usr/lib
 
 src/libc.a: $(OBJS)
 	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
-	@$(AR) rcs $@ $^
+	@$(AR) rcs $@ $^ 2>/dev/null
 
 $(BUILTINS): compiler-rt
 compiler-rt:
