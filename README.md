@@ -7,7 +7,7 @@
 ## Requirements:
 
 - LLVM+Clang
-- [ld64](https://github.com/tpoechtrager/cctools-port)
+- [ld64](https://github.com/tpoechtrager/cctools-port) (On Linux, ld64 should be in path as `ld64.ld64`)
 
 ## Building:
 
