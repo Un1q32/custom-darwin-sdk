@@ -1,4 +1,4 @@
-CC := clang -target darwin10 -arch x86_64 -arch armv6 -arch armv7 -arch armv7s
+CC := clang -target darwin -arch x86_64 -arch armv6 -arch armv7 -arch armv7s
 ifeq ($(shell uname),Darwin)
 AR := ar
 else
