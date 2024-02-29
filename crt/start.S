@@ -16,14 +16,14 @@ start:
 
 start:
   pushq $0
-  movq %rsp,%rbp
-  andq $-16,%rsp
-  movq 8(%rbp),%rdi
-  leaq 16(%rbp),%rsi
-  movl %edi,%edx
-  addl $1,%edx
-  sall $3,%edx
-  addq %rsi,%rdx
+  movq %rsp, %rbp
+  andq $-16, %rsp
+  movq 8(%rbp), %rdi
+  leaq 16(%rbp), %rsi
+  movl %edi, %edx
+  addl $1, %edx
+  sall $3, %edx
+  addq %rsi, %rdx
   call __start
   hlt
 
