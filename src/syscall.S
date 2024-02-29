@@ -1,4 +1,4 @@
-.global _syscall
+.globl _syscall
 .align 2
 
 #if defined(__arm__)

@@ -1,4 +1,4 @@
-.global start
+.globl start
 .align 2
 
 #if defined(__arm__)
