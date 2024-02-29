@@ -14,7 +14,8 @@ start:
 
 #elif defined(__x86_64__)
 
-start: pushq $0
+start:
+  pushq $0
   movq %rsp,%rbp
   andq $-16,%rsp
   movq 8(%rbp),%rdi
