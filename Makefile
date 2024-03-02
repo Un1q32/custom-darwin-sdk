@@ -4,7 +4,7 @@ CLANG := clang
 CC := $(CLANG) -target darwin $(_ARCHS)
 BUILTIN_CC = $(CLANG) -target darwin -arch $(_ARCH)
 ifeq ($(shell uname),Darwin)
-LIBTOOL := libtool
+LIBTOOL := /usr/bin/libtool
 else
 LIBTOOL := llvm-libtool-darwin
 endif
