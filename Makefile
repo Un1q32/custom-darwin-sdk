@@ -79,7 +79,7 @@ src/libc.a: $(ARCHS) $(OBJS)
 
 compiler-rt:
 	@printf "Downloading compiler-rt...\n"
-	$(V)curl -# -L https://github.com/llvm/llvm-project/releases/download/llvmorg-$(COMPILER_RT_VERSION)/compiler-rt-$(COMPILER_RT_VERSION).src.tar.xz | tar -xJ
+	$(V)curl -# -L https://github.com/llvm/llvm-project/releases/download/llvmorg-$(COMPILER_RT_VERSION)/compiler-rt-$(COMPILER_RT_VERSION).src.tar.xz | xz -d | tar -x
 	$(V)mv compiler-rt-$(COMPILER_RT_VERSION).src compiler-rt
 
 x86_64: _ARCH := x86_64
