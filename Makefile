@@ -26,8 +26,13 @@ TESTSRCS := $(wildcard tests/*.c)
 TESTEXES := $(TESTSRCS:tests/%.c=tests/bin/%)
 
 X86_64_BUILTINS :=
+ifdef NOASM
+ARMV7S_BUILTINS := fixunsdfdi.c floatundidf.c udivdi3.c umoddi3.c umodsi3.c modsi3.c
+ARMV7_BUILTINS := $(ARMV7S_BUILTINS) udivsi3.c divsi3.c
+else
 ARMV7S_BUILTINS := fixunsdfdi.c floatundidf.c udivdi3.c umoddi3.c arm/umodsi3.S arm/modsi3.S
 ARMV7_BUILTINS := $(ARMV7S_BUILTINS) arm/udivsi3.S arm/divsi3.S
+endif
 ARMV6_BUILTINS := $(ARMV7_BUILTINS)
 
 HEADERS := $(wildcard include/*.h) $(wildcard include/*/*.h)
