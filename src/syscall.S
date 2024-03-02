@@ -25,13 +25,6 @@ _syscall:
   jmp __syscall_success
   retq
 
-#elif defined(__ppc__)
-
-_syscall:
-  li r0, 0x0
-  sc
-  blr
-
 #else
 #error architecture not supported
 #endif
