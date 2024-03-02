@@ -29,7 +29,7 @@ _syscall:
 
 _syscall:
   li r0, 0x0
-  sc 0x0
+  sc
   blr
 
 #else
