@@ -21,7 +21,7 @@ _REQFLAGS := -isysroot sdk -Iinclude -std=c99
 
 SRCS := $(wildcard src/*.c)
 ASMS := $(wildcard src/*.S)
-OBJS := $(ASMS:.S=.o) $(SRCS:.c=.o)
+OBJS := $(SRCS:.c=.o) $(ASMS:.S=.o)
 TESTSRCS := $(wildcard tests/*.c)
 TESTEXES := $(TESTSRCS:tests/%.c=tests/bin/%)
 
@@ -52,7 +52,7 @@ sdk/usr/include: $(HEADERS)
 	$(V)mkdir -p sdk/usr
 	$(V)cp -r include sdk/usr
 
-sdk/usr/lib: crt/start.o src/libc.a
+sdk/usr/lib: src/libc.a crt/start.o
 	@printf "Installing libraries...\n"
 	$(V)rm -rf sdk/usr/lib
 	$(V)mkdir -p sdk/usr/lib
@@ -67,7 +67,7 @@ tests/bin/%: tests/%.c sdk/usr/lib
 	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -lstart.o tests/$*.o -o $@
 	$(V)ldid -S $@
 
-src/libc.a: $(OBJS) $(ARCHS)
+src/libc.a: $(ARCHS) $(OBJS)
 	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
 	$(V)$(LIBTOOL) -static -o $@ src/*.o
 
