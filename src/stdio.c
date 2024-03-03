@@ -114,9 +114,11 @@ int fputc(int ch, FILE *stream) {
   return ch;
 }
 
-char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
-  if (format == NULL)
+char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
+              int *vaargs) {
+  if (format == NULL || vaargs == NULL || formatlen == NULL)
     return NULL;
+  *vaargs = 0;
   char *ret = NULL;
   const char *format2 = format;
   unsigned int flags = 0, percision = 6, zerofill = 0, len = 0;
@@ -192,6 +194,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
     /* fall through */
   case 's':
     ret = strdup(va_arg(ap, char *));
+    *vaargs += 1;
     if (ret == NULL)
       ret = strdup("(null)");
     if (ret == NULL)
@@ -206,6 +209,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       return NULL;
     ret[0] = (unsigned char)va_arg(ap, int);
     ret[1] = '\0';
+    *vaargs += 1;
     break;
   case 'd':
   case 'i':
@@ -225,6 +229,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       ret = strdup(itoa((char)va_arg(ap, int)));
     else
       ret = strdup(itoa(va_arg(ap, int)));
+    *vaargs += 1;
     if (ret == NULL)
       return NULL;
     len = strlen(ret);
@@ -258,6 +263,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       ret = strdup(utoa((unsigned char)va_arg(ap, unsigned int)));
     else
       ret = strdup(utoa(va_arg(ap, unsigned int)));
+    *vaargs += 1;
     if (ret == NULL)
       return NULL;
     len = strlen(ret);
@@ -280,6 +286,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       ret = strdup(ftoa(va_arg(ap, long double), percision));
     else
       ret = strdup(ftoa(va_arg(ap, double), percision));
+    *vaargs += 1;
     if (ret == NULL)
       return NULL;
     break;
@@ -300,6 +307,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       ret = strdup(utox((unsigned char)va_arg(ap, unsigned int)));
     else
       ret = strdup(utox(va_arg(ap, unsigned int)));
+    *vaargs += 1;
     if (ret == NULL)
       return NULL;
     len = strlen(ret);
@@ -347,6 +355,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       ret = strdup(utoX((unsigned char)va_arg(ap, unsigned int)));
     else
       ret = strdup(utoX(va_arg(ap, unsigned int)));
+    *vaargs += 1;
     if (ret == NULL)
       return NULL;
     len = strlen(ret);
@@ -394,6 +403,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen) {
       *(va_arg(ap, char *)) = charssofar;
     else
       *(va_arg(ap, int *)) = charssofar;
+    *vaargs += 1;
     ret = malloc(1);
     if (ret == NULL)
       return NULL;
@@ -415,10 +425,11 @@ int vsnprintf(char *str, size_t size, const char *format, va_list ap) {
   size_t i = 0, j = 0;
   while (format[i]) {
     if (format[i] == '%') {
-      int formatlen;
-      char *tmp = __tostr(format + i + 1, j, ap, &formatlen);
+      int formatlen, vaargs;
+      char *tmp = __tostr(format + i + 1, j, ap, &formatlen, &vaargs);
 #ifdef __arm__
-      va_arg(ap, void *);
+      while (vaargs--)
+        va_arg(ap, int);
 #endif
       if (tmp != NULL) {
         size_t k = 0;
