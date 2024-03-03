@@ -219,6 +219,22 @@ int system(const char *command) {
   return -1;
 }
 
+unsigned int random_seed;
+
+void srand(unsigned int seed) { random_seed = seed; }
+
+int rand(void) {
+  long hi, lo, x;
+  if (random_seed == 0)
+    random_seed = 123459876;
+  hi = random_seed / 127773;
+  lo = random_seed % 127773;
+  x = 16807 * lo - 2836 * hi;
+  if (x < 0)
+    x += 0x7FFFFFFF;
+  return (random_seed = x) % ((unsigned long)RAND_MAX + 1);
+}
+
 void exit(int status) {
   /* TODO: call functions registered with atexit() */
   fcloseall();

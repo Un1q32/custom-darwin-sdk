@@ -6,6 +6,8 @@
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE 1
 
+#define RAND_MAX 0x7FFFFFFF
+
 extern void exit(int);
 extern void *malloc(size_t);
 extern void free(void *);
@@ -23,5 +25,7 @@ extern char *utoX(unsigned long long);
 extern char *getenv(const char *);
 extern int setenv(const char *, const char *, int);
 extern int system(const char *);
+extern void srand(unsigned int);
+extern int rand(void);
 
 #endif
