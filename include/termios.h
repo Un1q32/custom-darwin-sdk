@@ -12,5 +12,6 @@ struct termios {
 };
 
 extern int tcgetattr(int, struct termios *);
+extern int tcsetattr(int, int, const struct termios *);
 
 #endif
