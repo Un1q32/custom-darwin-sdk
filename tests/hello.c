@@ -1,5 +1,6 @@
-#include <stdio.h>
+#include <unistd.h>
+
 int main() {
-  printf("Hello, world!\n");
-  return 0;
+    write(STDOUT_FILENO, "Hello, world!\n", 14);
+    return 0;
 }
