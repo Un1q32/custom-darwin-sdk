@@ -1,6 +1,12 @@
 #ifndef __TERMIOS_H__
 #define __TERMIOS_H__
 
+#define TCSANOW 0
+
+#define ICANON 0x00000100
+
+#define ECHO 0x00000008
+
 struct termios {
   unsigned long c_iflag;
   unsigned long c_oflag;
