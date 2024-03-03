@@ -539,3 +539,5 @@ int fgetc(FILE *stream) {
 }
 
 int getc(FILE *stream) { return fgetc(stream); }
+
+int getchar(void) { return getc(stdin); }
