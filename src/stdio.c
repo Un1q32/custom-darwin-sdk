@@ -129,14 +129,20 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
   }
   if (*format == '.') {
     format++;
-    const char *tmp = format;
-    while (isdigit(*tmp))
-      tmp++;
-    char percisionstr[tmp - format + 1];
-    memcpy(percisionstr, format, tmp - format);
-    percisionstr[tmp - format] = '\0';
-    percision = atoi(percisionstr);
-    format = tmp;
+    if (*format == '*') {
+      percision = va_arg(ap, int);
+      *vaargs += 1;
+      format++;
+    } else {
+      const char *tmp = format;
+      while (isdigit(*tmp))
+        tmp++;
+      char percisionstr[tmp - format + 1];
+      memcpy(percisionstr, format, tmp - format);
+      percisionstr[tmp - format] = '\0';
+      percision = atoi(percisionstr);
+      format = tmp;
+    }
   } else if (*format == '0') {
     format++;
     const char *tmp = format;
