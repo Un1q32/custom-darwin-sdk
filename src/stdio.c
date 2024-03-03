@@ -119,41 +119,49 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
   if (format == NULL || vaargs == NULL || formatlen == NULL)
     return NULL;
   *vaargs = 0;
-  char *ret = NULL;
+  char *ret = NULL, fillchar = ' ', type = '\0';
   const char *format2 = format;
-  unsigned int flags = 0, percision = 6, zerofill = 0, len = 0;
+  unsigned int flags = 0, percision = 6, fill = 0;
   bool done = false, altform = false;
-  if (*format == '#') {
-    altform = true;
-    format++;
-  }
-  if (*format == '.') {
-    format++;
-    if (*format == '*') {
-      percision = va_arg(ap, int);
-      *vaargs += 1;
-      format++;
-    } else {
+  while (!done) {
+    if (*format == '#') {
+      altform = true;
+    } else if (*format == '.') {
+      if (*(format + 1) == '*') {
+        percision = va_arg(ap, int);
+        *vaargs += 1;
+        format++;
+      } else {
+        const char *tmp = format + 1;
+        while (isdigit(*tmp))
+          tmp++;
+        char percisionstr[tmp - format];
+        memcpy(percisionstr, format + 1, tmp - format);
+        percisionstr[tmp - format - 1] = '\0';
+        percision = atoi(percisionstr);
+        format = tmp - 1;
+      }
+    } else if (*format == '0') {
+      fillchar = '0';
+    } else if (isdigit(*format)) {
       const char *tmp = format;
       while (isdigit(*tmp))
         tmp++;
-      char percisionstr[tmp - format + 1];
-      memcpy(percisionstr, format, tmp - format);
-      percisionstr[tmp - format] = '\0';
-      percision = atoi(percisionstr);
-      format = tmp;
+      char fillstr[tmp - format];
+      memcpy(fillstr, format, tmp - format);
+      fillstr[tmp - format] = '\0';
+      fill = atoi(fillstr);
+      format = tmp - 1;
+    } else if (*format == '*') {
+      fill = va_arg(ap, int);
+      *vaargs += 1;
+    } else {
+      format--;
+      done = true;
     }
-  } else if (*format == '0') {
     format++;
-    const char *tmp = format;
-    while (isdigit(*tmp))
-      tmp++;
-    char zerofillstr[tmp - format + 1];
-    memcpy(zerofillstr, format, tmp - format);
-    zerofillstr[tmp - format] = '\0';
-    zerofill = atoi(zerofillstr);
-    format = tmp;
   }
+  done = false;
   while (!done) {
     switch (*format++) {
     case 'l':
@@ -238,19 +246,6 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
     *vaargs += 1;
     if (ret == NULL)
       return NULL;
-    len = strlen(ret);
-    if (len < zerofill) {
-      char *ret2 = malloc(zerofill + 1);
-      if (ret2 == NULL) {
-        free(ret);
-        return NULL;
-      }
-      memset(ret2, '0', zerofill - len);
-      memcpy(ret2 + zerofill - len, ret, len);
-      ret2[zerofill] = '\0';
-      free(ret);
-      ret = ret2;
-    }
     break;
   case 'u':
     if (flags & 1 << 4)
@@ -272,22 +267,10 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
     *vaargs += 1;
     if (ret == NULL)
       return NULL;
-    len = strlen(ret);
-    if (len < zerofill) {
-      char *ret2 = malloc(zerofill + 1);
-      if (ret2 == NULL) {
-        free(ret);
-        return NULL;
-      }
-      memset(ret2, '0', zerofill - len);
-      memcpy(ret2 + zerofill - len, ret, len);
-      ret2[zerofill] = '\0';
-      free(ret);
-      ret = ret2;
-    }
     break;
   case 'f':
   case 'F':
+    type = 'f';
     if (flags & 1 << 7)
       ret = strdup(ftoa(va_arg(ap, long double), percision));
     else
@@ -297,6 +280,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
       return NULL;
     break;
   case 'x':
+    type = 'x';
     if (flags & 1 << 4)
       ret = strdup(utox(va_arg(ap, uintmax_t)));
     else if (flags & 1 << 8)
@@ -316,35 +300,9 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
     *vaargs += 1;
     if (ret == NULL)
       return NULL;
-    len = strlen(ret);
-    if (len < zerofill) {
-      char *ret2 = malloc(zerofill + 1);
-      if (ret2 == NULL) {
-        free(ret);
-        return NULL;
-      }
-      memset(ret2, '0', zerofill - len);
-      memcpy(ret2 + zerofill - len, ret, len);
-      ret2[zerofill] = '\0';
-      free(ret);
-      ret = ret2;
-    }
-    if (altform) {
-      len = strlen(ret);
-      char *ret2 = malloc(len + 3);
-      if (ret2 == NULL) {
-        free(ret);
-        return NULL;
-      }
-      ret2[0] = '0';
-      ret2[1] = 'x';
-      memcpy(ret2 + 2, ret, len);
-      ret2[len + 2] = '\0';
-      free(ret);
-      ret = ret2;
-    }
     break;
   case 'X':
+    type = 'X';
     if (flags & 1 << 4)
       ret = strdup(utoX(va_arg(ap, uintmax_t)));
     else if (flags & 1 << 8)
@@ -364,33 +322,6 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
     *vaargs += 1;
     if (ret == NULL)
       return NULL;
-    len = strlen(ret);
-    if (len < zerofill) {
-      char *ret2 = malloc(zerofill + 1);
-      if (ret2 == NULL) {
-        free(ret);
-        return NULL;
-      }
-      memset(ret2, '0', zerofill - len);
-      memcpy(ret2 + zerofill - len, ret, len);
-      ret2[zerofill] = '\0';
-      free(ret);
-      ret = ret2;
-    }
-    if (altform) {
-      len = strlen(ret);
-      char *ret2 = malloc(len + 3);
-      if (ret2 == NULL) {
-        free(ret);
-        return NULL;
-      }
-      ret2[0] = '0';
-      ret2[1] = 'X';
-      memcpy(ret2 + 2, ret, len);
-      ret2[len + 2] = '\0';
-      free(ret);
-      ret = ret2;
-    }
     break;
   case 'n':
     if (flags & 1 << 4)
@@ -424,6 +355,33 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
     break;
   }
   *formatlen = format - format2 + 2;
+  unsigned int retlen = strlen(ret);
+  if (fill > retlen) {
+    char *ret2 = malloc(fill + 1);
+    if (ret2 == NULL) {
+      free(ret);
+      return NULL;
+    }
+    memset(ret2, fillchar, fill - retlen);
+    strcpy(ret2 + fill - retlen, ret);
+    free(ret);
+    ret = ret2;
+  }
+  if (altform) {
+    if (type == 'x' || type == 'X') {
+      retlen = strlen(ret);
+      char *ret2 = malloc(retlen + 3);
+      if (ret2 == NULL) {
+        free(ret);
+        return NULL;
+      }
+      ret2[0] = '0';
+      ret2[1] = type;
+      strcpy(ret2 + 2, ret);
+      free(ret);
+      ret = ret2;
+    }
+  }
   return ret;
 }
 

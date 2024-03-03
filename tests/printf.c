@@ -21,6 +21,8 @@ int main(int argc, const char *argv[]) {
   printf("small hex: %x\n", 0xabc);
   printf("small hex zero padded: %08x\n", 0xabc);
   printf("small hex zero padded alt: %#08x\n", 0xabc);
+  printf("padded string:%10s\n", "hello");
+  printf("dynamicly padded string:%*s\n", 10, "hello");
   if (argc > 1) {
     int charcount = 0;
     printf("argv[1] = (%s)%n\n", argv[1], &charcount);
