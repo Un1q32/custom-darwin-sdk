@@ -119,10 +119,10 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
   if (format == NULL || vaargs == NULL || formatlen == NULL)
     return NULL;
   *vaargs = 0;
-  char *ret = NULL, fillchar = ' ', type = '\0';
+  char *ret = NULL, type = '\0';
   const char *format2 = format;
   unsigned int flags = 0, percision = 6, fill = 0;
-  bool done = false, altform = false;
+  bool done = false, altform = false, fillzero = false;
   while (!done) {
     if (*format == '#') {
       altform = true;
@@ -142,7 +142,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
         format = tmp - 1;
       }
     } else if (*format == '0') {
-      fillchar = '0';
+      fillzero = true;
     } else if (isdigit(*format)) {
       const char *tmp = format;
       while (isdigit(*tmp))
@@ -362,7 +362,7 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
       free(ret);
       return NULL;
     }
-    memset(ret2, fillchar, fill - retlen);
+    memset(ret2, fillzero ? '0' : ' ', fill - retlen);
     strcpy(ret2 + fill - retlen, ret);
     free(ret);
     ret = ret2;
