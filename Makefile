@@ -25,7 +25,6 @@ OBJS := $(SRCS:.c=.o) $(ASMS:.S=.o)
 TESTSRCS := $(wildcard tests/*.c)
 TESTEXES := $(TESTSRCS:tests/%.c=tests/bin/%)
 
-X86_64_BUILTINS :=
 ifdef NOASM
 ARMV7S_BUILTINS := fixunsdfdi.c floatundidf.c udivdi3.c umoddi3.c umodsi3.c modsi3.c
 ARMV7_BUILTINS := $(ARMV7S_BUILTINS) udivsi3.c divsi3.c
@@ -82,13 +81,7 @@ compiler-rt:
 	$(V)curl -# -L https://github.com/llvm/llvm-project/releases/download/llvmorg-$(COMPILER_RT_VERSION)/compiler-rt-$(COMPILER_RT_VERSION).src.tar.xz | xz -d | tar -x
 	$(V)mv compiler-rt-$(COMPILER_RT_VERSION).src compiler-rt
 
-x86_64: _ARCH := x86_64
-x86_64: compiler-rt
-	@printf "Building x86_64 builtins...\n"
-	$(V)for src in $(X86_64_BUILTINS); do \
-		_src=$${src##*/}; _src=$${_src%.*}; \
-		$(BUILTIN_CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c compiler-rt/lib/builtins/$$src -o src/$(_ARCH)-$$_src.o; \
-	done
+x86_64:
 
 armv6: _ARCH := armv6
 armv6: compiler-rt
