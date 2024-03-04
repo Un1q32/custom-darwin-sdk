@@ -1,7 +1,6 @@
 ARCHS := x86_64 armv6 armv7 armv7s
-_ARCHS := $(addprefix -arch ,$(ARCHS))
 CLANG := clang
-CC := $(CLANG) -target darwin $(_ARCHS)
+CC := $(CLANG) -target darwin $(addprefix -arch ,$(ARCHS))
 BUILTIN_CC = $(CLANG) -target darwin -arch $(_ARCH)
 ifeq ($(shell uname),Darwin)
 LIBTOOL := /usr/bin/libtool
@@ -17,7 +16,6 @@ LDFLAGS := -mlinker-version=907 -static
 ifneq ($(shell uname),Darwin)
 LDFLAGS += -fuse-ld=ld64
 endif
-_REQFLAGS := -isysroot sdk -Iinclude -std=c99
 
 SRCS := $(wildcard src/*.c)
 ASMS := $(wildcard src/*.S)
@@ -43,13 +41,13 @@ endif
 
 .PHONY: all debug tests clean clangd
 
-all: sdk/usr/lib sdk/usr/include
+all: sdk/usr/include sdk/usr/lib
 
 debug: OPTFLAGS := -g
 debug: all
 
 tests: OPTFLAGS := -g
-tests: all $(TESTEXES)
+tests: $(TESTEXES)
 
 sdk/usr/include: $(HEADERS)
 	@printf "Installing headers...\n"
@@ -66,10 +64,10 @@ sdk/usr/lib: src/libc.a crt/start.o
 	$(V)for lib in libSystem.a libgcc_s.1.a libm.a; do ln -sf libc.a sdk/usr/lib/$$lib; done
 	$(V)for obj in crt0.o crt1.o crt1.3.1.o crt1.10.5.o crt1.10.6.o; do ln -sf start.o sdk/usr/lib/$$obj; done
 
-tests/bin/%: tests/%.c sdk/usr/lib
+tests/bin/%: tests/%.c all
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
-	$(V)$(CC) $(_REQFLAGS) $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -lstart.o tests/$*.o -o $@
+	$(V)$(CC) -isysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
+	$(V)$(CC) -isysroot sdk $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -lstart.o tests/$*.o -o $@
 	$(V)ldid -S $@
 
 src/libc.a: $(ARCHS) $(OBJS)
@@ -84,36 +82,36 @@ compiler-rt:
 x86_64:
 
 armv6: _ARCH := armv6
-armv6: compiler-rt
+armv6: compiler-rt sdk/usr/include
 	@printf "Building armv6 builtins...\n"
 	$(V)for src in $(ARMV6_BUILTINS); do \
 		_src=$${src##*/}; _src=$${_src%.*}; \
-		$(BUILTIN_CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c compiler-rt/lib/builtins/$$src -o src/$(_ARCH)-$$_src.o; \
+		$(BUILTIN_CC) -isysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c compiler-rt/lib/builtins/$$src -o src/$(_ARCH)-$$_src.o; \
 	done
 
 armv7: _ARCH := armv7
-armv7: compiler-rt
+armv7: compiler-rt sdk/usr/include
 	@printf "Building armv7 builtins...\n"
 	$(V)for src in $(ARMV7_BUILTINS); do \
 		_src=$${src##*/}; _src=$${_src%.*}; \
-		$(BUILTIN_CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c compiler-rt/lib/builtins/$$src -o src/$(_ARCH)-$$_src.o; \
+		$(BUILTIN_CC) -isysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c compiler-rt/lib/builtins/$$src -o src/$(_ARCH)-$$_src.o; \
 	done
 
 armv7s: _ARCH := armv7s
-armv7s: compiler-rt
+armv7s: compiler-rt sdk/usr/include
 	@printf "Building armv7s builtins...\n"
 	$(V)for src in $(ARMV7S_BUILTINS); do \
 		_src=$${src##*/}; _src=$${_src%.*}; \
-		$(BUILTIN_CC) $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c compiler-rt/lib/builtins/$$src -o src/$(_ARCH)-$$_src.o; \
+		$(BUILTIN_CC) -isysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c compiler-rt/lib/builtins/$$src -o src/$(_ARCH)-$$_src.o; \
 	done
 
 crt/start.o $(ASMS:.S=.o): %.o: %.S
 	@src=$<; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
-	$(V)$(CC) -ffreestanding $(_REQFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) -ffreestanding -isysroot sdk $(OPTFLAGS) -c $< -o $@
 
-%.o: %.c
+%.o: %.c sdk/usr/include
 	@src=$<; src=$${src##*/}; printf " \033[1;32mCC\033[0m %s\n" "$$src"
-	$(V)$(CC) -ffreestanding $(_REQFLAGS) $(CFLAGS) $(OPTFLAGS) -c $< -o $@
+	$(V)$(CC) -ffreestanding -isysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c $< -o $@
 
 clean:
 	@printf "Cleaning up...\n"
