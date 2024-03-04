@@ -279,6 +279,10 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
     if (ret == NULL)
       return NULL;
     break;
+  case 'p':
+    altform = true;
+    flags = 1 << 0;
+    /* fall through */
   case 'x':
     type = 'x';
     if (flags & 1 << 4)
@@ -356,6 +360,8 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
   }
   *formatlen = format - format2 + 2;
   unsigned int retlen = strlen(ret);
+  if (altform && (type == 'x' || type == 'X'))
+    retlen += 2;
   if (fill > retlen) {
     char *ret2 = malloc(fill + 1);
     if (ret2 == NULL) {
@@ -368,8 +374,8 @@ char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
     ret = ret2;
   }
   if (altform) {
+    retlen = strlen(ret);
     if (type == 'x' || type == 'X') {
-      retlen = strlen(ret);
       char *ret2 = malloc(retlen + 3);
       if (ret2 == NULL) {
         free(ret);
