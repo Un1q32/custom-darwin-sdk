@@ -1,4 +1,4 @@
-ARCHS := x86_64 armv6 armv7 armv7s
+ARCHS := x86_64 x86_64h armv6 armv7 armv7s
 CLANG := clang
 CC := $(CLANG) -target darwin $(addprefix -arch ,$(ARCHS))
 BUILTIN_CC = $(CLANG) -target darwin -arch $(_ARCH)
@@ -80,6 +80,8 @@ compiler-rt:
 	$(V)mv compiler-rt-$(COMPILER_RT_VERSION).src compiler-rt
 
 x86_64:
+
+x86_64h:
 
 armv6: _ARCH := armv6
 armv6: compiler-rt sdk/usr/include
