@@ -3,7 +3,10 @@
 
 #define TCSANOW 0
 
+#define IGNBRK 0x00000001
+
 #define ICANON 0x00000100
+#define IEXTEN 0x00000400
 
 #define ECHO 0x00000008
 

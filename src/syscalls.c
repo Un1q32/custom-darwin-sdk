@@ -1,6 +1,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <machine/param.h>
+#include <poll.h>
 #include <stdarg.h>
 #include <string.h>
 #include <sys/mman.h>
@@ -205,4 +206,8 @@ int stat(const char *path, struct stat *buf) {
 
 int stat64(const char *path, struct stat64 *buf) {
   return syscall(SYS_stat64, path, buf);
+}
+
+int poll(struct pollfd *fds, nfds_t nfds, int timeout) {
+  return syscall(SYS_poll, fds, nfds, timeout);
 }
