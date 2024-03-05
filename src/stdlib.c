@@ -235,8 +235,29 @@ int rand(void) {
   return (random_seed = x) % ((unsigned long)RAND_MAX + 1);
 }
 
+static void (*atexit_funcs[32])(void);
+static void (**atexit_funcs_extra)(void);
+static int atexit_count = 0;
+
+int atexit(void (*func)(void)) {
+  if (atexit_count < 32)
+    atexit_funcs[atexit_count++] = func;
+  else {
+    void (**tmp)(void) =
+        realloc(atexit_funcs_extra, (atexit_count - 32 + 1) * sizeof(void *));
+    if (tmp == NULL)
+      return -1;
+    atexit_funcs_extra = tmp;
+    atexit_funcs_extra[atexit_count++ - 32] = func;
+  }
+  return 0;
+}
+
 void exit(int status) {
-  /* TODO: call functions registered with atexit() */
+  while (atexit_count > 32)
+    atexit_funcs_extra[--atexit_count - 32]();
+  while (atexit_count > 0)
+    atexit_funcs[--atexit_count]();
   fcloseall();
   /* TODO: unlink all files created with tmpfile() */
   _exit(status);

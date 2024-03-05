@@ -28,5 +28,6 @@ extern int setenv(const char *, const char *, int);
 extern int system(const char *);
 extern void srand(unsigned int);
 extern int rand(void);
+extern int atexit(void (*)(void));
 
 #endif
