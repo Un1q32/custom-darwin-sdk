@@ -30,7 +30,7 @@ ARMV6_BUILTINS := $(ARMV7_BUILTINS) clzdi2.c
 else
 ARMV7S_BUILTINS := fixunsdfdi.c floatundidf.c udivdi3.c umoddi3.c arm/umodsi3.S arm/modsi3.S
 ARMV7_BUILTINS := $(ARMV7S_BUILTINS) arm/udivsi3.S arm/divsi3.S
-ARMV6_BUILTINS := $(ARMV7_BUILTINS)
+ARMV6_BUILTINS := $(ARMV7_BUILTINS) arm/clzdi2.S
 endif
 
 HEADERS := $(wildcard include/*.h) $(wildcard include/*/*.h)
