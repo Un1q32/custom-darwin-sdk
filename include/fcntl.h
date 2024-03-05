@@ -9,6 +9,7 @@
 #define O_TRUNC 0x0400
 #define O_EXCL 0x0800
 #define O_NOFOLLOW 0x0100
+#define O_NONBLOCK 0x0004
 
 #define AT_FDCWD -2
 
