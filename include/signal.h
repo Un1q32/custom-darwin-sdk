@@ -4,6 +4,7 @@
 #include <sys/types.h>
 
 #define SIGINT 2
+#define SIGTERM 15
 
 #define SIG_ERR ((void (*)(int)) - 1)
 
