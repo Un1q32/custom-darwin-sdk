@@ -48,3 +48,13 @@ void *realloc(void *ptr, size_t size) {
   free(ptr);
   return new_ptr;
 }
+
+void *calloc(size_t count, size_t size) {
+  size_t total_size = count * size;
+  void *ptr = malloc(total_size);
+  if (ptr == NULL)
+    return NULL;
+
+  memset(ptr, 0, total_size);
+  return ptr;
+}

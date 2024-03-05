@@ -12,6 +12,7 @@ extern void exit(int);
 extern void *malloc(size_t);
 extern void free(void *);
 extern void *realloc(void *, size_t);
+extern void *calloc(size_t, size_t);
 extern long strtol(const char *, char **, int);
 extern long long strtoll(const char *, char **, int);
 extern unsigned long strtoul(const char *, char **, int);
