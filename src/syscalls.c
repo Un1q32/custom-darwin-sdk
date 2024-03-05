@@ -3,6 +3,7 @@
 #include <machine/param.h>
 #include <poll.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/resource.h>
@@ -35,8 +36,15 @@ int open(const char *path, int flags, ...) {
     mode = va_arg(va_args, int);
     va_end(va_args);
   }
-
-  return syscall(SYS_open, path, flags, mode);
+  bool cloexec = false;
+  if (flags & O_CLOEXEC) {
+    flags &= ~O_CLOEXEC;
+    cloexec = true;
+  }
+  int fd = syscall(SYS_open, path, flags, mode);
+  if (cloexec && fd != -1)
+    fcntl(fd, F_SETFD, FD_CLOEXEC);
+  return fd;
 }
 
 int openat(int fd, const char *path, int flags, ...) {
@@ -48,9 +56,6 @@ int openat(int fd, const char *path, int flags, ...) {
     va_end(va_args);
   }
 
-#ifdef SYS_openat
-  return syscall(SYS_openat, fd, path, flags, mode);
-#else
   if (fd == AT_FDCWD || path[0] == '/')
     return open(path, flags, mode);
 
@@ -63,7 +68,6 @@ int openat(int fd, const char *path, int flags, ...) {
   strcat(new_path, "/");
   strcat(new_path, path);
   return syscall(SYS_open, new_path, flags, mode);
-#endif
 }
 
 int close(int fd) { return syscall(SYS_close, fd); }
@@ -73,9 +77,6 @@ int mkdir(const char *path, mode_t mode) {
 }
 
 int mkdirat(int fd, const char *path, mode_t mode) {
-#ifdef SYS_mkdirat
-  return syscall(SYS_mkdirat, fd, path, mode);
-#else
   if (fd == AT_FDCWD || path[0] == '/')
     return mkdir(path, mode);
 
@@ -88,7 +89,6 @@ int mkdirat(int fd, const char *path, mode_t mode) {
   strcat(new_path, "/");
   strcat(new_path, path);
   return mkdir(new_path, mode);
-#endif
 }
 
 int rmdir(const char *path) { return syscall(SYS_rmdir, path); }
