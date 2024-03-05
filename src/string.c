@@ -188,6 +188,21 @@ int memcmp(const void *s1, const void *s2, size_t n) {
   return 0;
 }
 
+void *memmove(void *dst, const void *src, size_t n) {
+  char *d = dst;
+  const char *s = src;
+  if (d < s)
+    while (n--)
+      *d++ = *s++;
+  else {
+    d += n;
+    s += n;
+    while (n--)
+      *--d = *--s;
+  }
+  return dst;
+}
+
 void explicit_bzero(void *s, size_t n) {
   bzero(s, n);
   __asm__ volatile("" : : "r"(s) : "memory");
