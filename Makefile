@@ -86,6 +86,10 @@ armv7s: ARCH := armv7s
 armv7s: compiler-rt sdk/usr/include
 	@$(MAKE) -f make/$(ARCH).mk NOASM=$(NOASM) _BUILTIN_CC="$(_BUILTIN_CC)" V=$(V)
 
+armv7k: ARCH := armv7k
+armv7k: compiler-rt sdk/usr/include
+	@$(MAKE) -f make/$(ARCH).mk NOASM=$(NOASM) _BUILTIN_CC="$(_BUILTIN_CC)" V=$(V)
+
 crt/start.o $(ASMS:.S=.o): %.o: %.S
 	@src=$@; src=$${src##*/}; printf " \033[1;33mAS\033[0m %s\n" "$$src"
 	$(V)$(CC) -ffreestanding -isysroot sdk $(OPTFLAGS) -c $< -o $@
