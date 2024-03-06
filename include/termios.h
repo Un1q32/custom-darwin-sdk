@@ -1,5 +1,5 @@
-#ifndef __TERMIOS_H__
-#define __TERMIOS_H__
+#ifndef _TERMIOS_H_
+#define _TERMIOS_H_
 
 #define VMIN 16
 #define VTIME 17
