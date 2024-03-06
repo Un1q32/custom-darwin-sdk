@@ -56,7 +56,7 @@ sdk/usr/lib: src/libc.a crt/start.o
 	$(V)for obj in crt0.o crt1.o crt1.3.1.o crt1.10.5.o crt1.10.6.o; do ln -sf start.o sdk/usr/lib/$$obj; done
 
 tests/bin/%: tests/%.c all
-	@printf " \033[1;32mCC\033[0m $<\n"
+	@printf " \033[1;32mCC\033[0m $@\n"
 	$(V)$(CC) -isysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
 	$(V)$(CC) -isysroot sdk $(LDFLAGS) $(OPTFLAGS) -nostdlib -lc -lstart.o tests/$*.o -o $@
 	$(V)ldid -S $@
