@@ -13,7 +13,7 @@ char ***_NSGetArgv(void) { return &NXArgv; }
 char ***_NSGetEnviron(void) { return &environ; }
 char **_NSGetProgname(void) { return &__progname; }
 
-void _start(int argc, char **argv, char **envp) {
+void _start(int argc, char *argv[], char *envp[]) {
   NXArgc = argc;
   NXArgv = argv;
   environ = envp;
