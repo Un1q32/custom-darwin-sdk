@@ -2,7 +2,7 @@
 
 > An alternative to Apple's offical SDKs for Darwin
 
-> Currently supports x86_64, x86_64h, armv6, armv7, and armv7s
+> Currently supports x86_64, x86_64h, armv6, armv7, armv7s, and armv7k
 
 ## Requirements:
 
@@ -20,7 +20,7 @@ make
 To build an SDK for a single architecture
 
 ```sh
-make ARCHS='armv7'
+make ARCHS='x86_64'
 ```
 
 To build the tests
