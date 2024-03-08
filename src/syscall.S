@@ -23,7 +23,6 @@ _syscall:
   jb __syscall_error
   movq %rdx, %rsi
   jmp __syscall_success
-  retq
 
 #else
 #error architecture not supported
