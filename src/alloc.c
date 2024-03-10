@@ -49,6 +49,13 @@ void *realloc(void *ptr, size_t size) {
   return new_ptr;
 }
 
+void *reallocf(void *ptr, size_t size) {
+  void *new_ptr = realloc(ptr, size);
+  if (new_ptr == NULL)
+    free(ptr);
+  return new_ptr;
+}
+
 void *calloc(size_t count, size_t size) {
   size_t total_size = count * size;
   void *ptr = malloc(total_size);
