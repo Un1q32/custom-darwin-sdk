@@ -304,10 +304,7 @@ char *strerror(int errnum) {
     return "Operation not supported";
   case EPFNOSUPPORT:
     return "Protocol family not supported";
+  default:
+    return "Unknown error";
   }
-  char *errstr = itoa(errnum);
-  char buf[strlen(errstr) + 15];
-  strcpy(buf, "Unknown error ");
-  strcat(buf, errstr);
-  return buf;
 }

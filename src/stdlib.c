@@ -95,28 +95,32 @@ unsigned long strtoul(const char *nptr, char **endptr, int base) {
 int atoi(const char *nptr) { return (int)strtol(nptr, NULL, 10); }
 
 char *utoa(unsigned long long num) {
-  static char buf[32];
+  char buf[32];
   char *p = buf + 31;
   *p = '\0';
   do {
     *--p = '0' + num % 10;
     num /= 10;
   } while (num);
-  return p;
+  return strdup(p);
 }
 
 char *itoa(long long num) {
   if (num < 0) {
     char *ret = utoa(-num);
-    char *p = ret - 1;
-    *p = '-';
-    return p;
+    char *ret2 = malloc(strlen(ret) + 2);
+    if (ret2) {
+      ret2[0] = '-';
+      strcpy(ret2 + 1, ret);
+    }
+    free(ret);
+    return ret2;
   } else
     return utoa(num);
 }
 
 char *ftoa(long double num, int percision) {
-  static char buf[32];
+  char buf[32];
   char *p = buf;
   if (num < 0) {
     *p++ = '-';
@@ -127,6 +131,7 @@ char *ftoa(long double num, int percision) {
   char *int_str = utoa(integer);
   strcpy(p, int_str);
   p += strlen(int_str);
+  free(int_str);
   *p++ = '.';
   while (percision--) {
     num *= 10;
@@ -134,29 +139,29 @@ char *ftoa(long double num, int percision) {
     num -= (int)num;
   }
   *p = '\0';
-  return buf;
+  return strdup(buf);
 }
 
 char *utox(unsigned long long num) {
-  static char buf[32];
+  char buf[32];
   char *p = buf + 31;
   *p = '\0';
   do {
     *--p = "0123456789abcdef"[num & 0xf];
     num >>= 4;
   } while (num);
-  return p;
+  return strdup(p);
 }
 
 char *utoX(unsigned long long num) {
-  static char buf[32];
+  char buf[32];
   char *p = buf + 31;
   *p = '\0';
   do {
     *--p = "0123456789ABCDEF"[num & 0xf];
     num >>= 4;
   } while (num);
-  return p;
+  return strdup(p);
 }
 
 char *getenv(const char *name) {
