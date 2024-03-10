@@ -209,152 +209,105 @@ void explicit_bzero(void *s, size_t n) {
 }
 
 char *strerror(int errnum) {
-  char *ret = NULL;
   switch (errnum) {
   case 0:
-    ret = "No error";
-    break;
+    return "No error";
   case EPERM:
-    ret = "Operation not permitted";
-    break;
+    return "Operation not permitted";
   case ENOENT:
-    ret = "No such file or directory";
-    break;
+    return "No such file or directory";
   case ESRCH:
-    ret = "No such process";
-    break;
+    return "No such process";
   case EINTR:
-    ret = "Interrupted system call";
-    break;
+    return "Interrupted system call";
   case EIO:
-    ret = "I/O error";
-    break;
+    return "I/O error";
   case ENXIO:
-    ret = "No such device or address";
-    break;
+    return "No such device or address";
   case E2BIG:
-    ret = "Argument list too long";
-    break;
+    return "Argument list too long";
   case ENOEXEC:
-    ret = "Exec format error";
-    break;
+    return "Exec format error";
   case EBADF:
-    ret = "Bad file number";
-    break;
+    return "Bad file number";
   case ECHILD:
-    ret = "No child processes";
-    break;
+    return "No child processes";
   case EDEADLK:
-    ret = "Resource deadlock would occur";
-    break;
+    return "Resource deadlock would occur";
   case ENOMEM:
-    ret = "Out of memory";
-    break;
+    return "Out of memory";
   case EACCES:
-    ret = "Permission denied";
-    break;
+    return "Permission denied";
   case EFAULT:
-    ret = "Bad address";
-    break;
+    return "Bad address";
   case ENOTBLK:
-    ret = "Block device required";
-    break;
+    return "Block device required";
   case EBUSY:
-    ret = "Device or resource busy";
-    break;
+    return "Device or resource busy";
   case EEXIST:
-    ret = "File exists";
-    break;
+    return "File exists";
   case EXDEV:
-    ret = "Cross-device link";
-    break;
+    return "Cross-device link";
   case ENODEV:
-    ret = "No such device";
-    break;
+    return "No such device";
   case ENOTDIR:
-    ret = "Not a directory";
-    break;
+    return "Not a directory";
   case EISDIR:
-    ret = "Is a directory";
-    break;
+    return "Is a directory";
   case EINVAL:
-    ret = "Invalid argument";
-    break;
+    return "Invalid argument";
   case ENFILE:
-    ret = "File table overflow";
-    break;
+    return "File table overflow";
   case EMFILE:
-    ret = "Too many open files";
-    break;
+    return "Too many open files";
   case ENOTTY:
-    ret = "Not a tty";
-    break;
+    return "Not a tty";
   case ETXTBSY:
-    ret = "Text file busy";
-    break;
+    return "Text file busy";
   case EFBIG:
-    ret = "File too large";
-    break;
+    return "File too large";
   case ENOSPC:
-    ret = "No space left on device";
-    break;
+    return "No space left on device";
   case ESPIPE:
-    ret = "Illegal seek";
-    break;
+    return "Illegal seek";
   case EROFS:
-    ret = "Read-only file system";
-    break;
+    return "Read-only file system";
   case EMLINK:
-    ret = "Too many links";
-    break;
+    return "Too many links";
   case EPIPE:
-    ret = "Broken pipe";
-    break;
+    return "Broken pipe";
   case EDOM:
-    ret = "Math argument out of domain of func";
-    break;
+    return "Math argument out of domain of func";
   case ERANGE:
-    ret = "Math result not representable";
-    break;
+    return "Math result not representable";
   case EAGAIN:
-    ret = "Resource temporarily unavailable";
-    break;
+    return "Resource temporarily unavailable";
   case EINPROGRESS:
-    ret = "Operation now in progress";
-    break;
+    return "Operation now in progress";
   case EALREADY:
-    ret = "Operation already in progress";
-    break;
+    return "Operation already in progress";
   case ENOTSOCK:
-    ret = "Socket operation on non-socket";
-    break;
+    return "Socket operation on non-socket";
   case EDESTADDRREQ:
-    ret = "Destination address required";
-    break;
+    return "Destination address required";
   case EMSGSIZE:
-    ret = "Message too long";
-    break;
+    return "Message too long";
   case EPROTOTYPE:
-    ret = "Protocol wrong type for socket";
-    break;
+    return "Protocol wrong type for socket";
   case ENOPROTOOPT:
-    ret = "Protocol not available";
-    break;
+    return "Protocol not available";
   case EPROTONOSUPPORT:
-    ret = "Protocol not supported";
-    break;
+    return "Protocol not supported";
   case ESOCKTNOSUPPORT:
-    ret = "Socket type not supported";
-    break;
+    return "Socket type not supported";
   case ENOTSUP:
-    ret = "Operation not supported";
-    break;
+    return "Operation not supported";
   case EPFNOSUPPORT:
-    ret = "Protocol family not supported";
-    break;
-  default:
-    ret = "Unknown error";
-    break;
+    return "Protocol family not supported";
   }
-  return ret;
+  char *errstr = itoa(errnum);
+  char buf[strlen(errstr) + 15];
+  strcpy(buf, "Unknown error ");
+  strcat(buf, errstr);
+  return buf;
 }

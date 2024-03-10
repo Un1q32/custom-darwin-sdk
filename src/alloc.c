@@ -11,7 +11,7 @@ void free(void *ptr) {
 
   int ret = munmap(ptr, size);
   if (ret == -1) {
-    perror("munmap");
+    perror("free()");
     return;
   }
 }
