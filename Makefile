@@ -9,7 +9,7 @@ else
 LIBTOOL := llvm-libtool-darwin
 endif
 
-COMPILER_RT_VERSION := 18.1.0
+COMPILER_RT_VERSION := 18.1.1
 
 CFLAGS := -Wall -Wextra -Werror
 OPTFLAGS := -O2
