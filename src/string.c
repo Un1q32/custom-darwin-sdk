@@ -304,6 +304,24 @@ char *strerror(int errnum) {
     return "Operation not supported";
   case EPFNOSUPPORT:
     return "Protocol family not supported";
+  case EAFNOSUPPORT:
+    return "Address family not supported by protocol";
+  case EADDRINUSE:
+    return "Address already in use";
+  case EADDRNOTAVAIL:
+    return "Cannot assign requested address";
+  case ENETDOWN:
+    return "Network is down";
+  case ENETUNREACH:
+    return "Network is unreachable";
+  case ENETRESET:
+    return "Network dropped connection on reset";
+  case ECONNABORTED:
+    return "Software caused connection abort";
+  case ECONNRESET:
+    return "Connection reset by peer";
+  case ENOBUFS:
+    return "No buffer space available";
   default:
     return "Unknown error";
   }
