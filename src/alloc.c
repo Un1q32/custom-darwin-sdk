@@ -17,9 +17,6 @@ void free(void *ptr) {
 }
 
 void *malloc(size_t size) {
-  if (size == 0)
-    return NULL;
-
   size_t total_size = size + sizeof(size_t);
   void *ptr = mmap(NULL, total_size, PROT_READ | PROT_WRITE,
                    MAP_PRIVATE | MAP_ANON, -1, 0);
