@@ -30,5 +30,8 @@ extern int system(const char *);
 extern void srand(unsigned int);
 extern int rand(void);
 extern int atexit(void (*)(void));
+extern long double strtold(const char *, char **);
+extern double strtod(const char *, char **);
+extern float strtof(const char *, char **);
 
 #endif
