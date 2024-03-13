@@ -32,9 +32,13 @@ _syscall:
   pushl %ecx
   int $0x80
   movl %eax, (%esp)
+  jc 2f
+  movl %edx, 4(%esp)
   pushl %ecx
-  jc __syscall_error
-  retl
+  jmp __syscall_success
+2:
+  pushl %ecx
+  jmp __syscall_error
 
 #else
 #error architecture not supported
