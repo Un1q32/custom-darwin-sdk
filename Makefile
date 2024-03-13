@@ -74,6 +74,10 @@ x86_64:
 
 x86_64h:
 
+i386: ARCH := i386
+i386: compiler-rt sdk/usr/include
+	@$(MAKE) -f make/$(ARCH).mk NOASM=$(NOASM) _BUILTIN_CC="$(_BUILTIN_CC)" V=$(V)
+
 armv6: ARCH := armv6
 armv6: compiler-rt sdk/usr/include
 	@$(MAKE) -f make/$(ARCH).mk NOASM=$(NOASM) _BUILTIN_CC="$(_BUILTIN_CC)" V=$(V)

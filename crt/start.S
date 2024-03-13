@@ -47,6 +47,24 @@ start:
   call __start
   hlt
 
+#elif defined(__i386__)
+
+start:
+  pushl $0
+  movl %esp, %ebp
+  andl $-16, %esp
+  subl $16, %esp
+  movl 4(%ebp), %ebx
+  movl %ebx, 0(%esp)
+  lea 8(%ebp), %ecx
+  movl %ecx, 4(%esp)
+  addl $1, %ebx
+  sall $2, %ebx
+  addl %ecx, %ebx
+  movl %ebx, 8(%esp)
+  call __start
+  hlt
+
 #else
 #error architecture not supported
 #endif

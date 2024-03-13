@@ -24,6 +24,19 @@ _syscall:
   movq %rdx, %rsi
   jmp __syscall_success
 
+#elif defined(__i386__)
+
+_syscall:
+  popl %ecx
+  popl %eax
+  pushl %ecx
+  int $-0x80
+  movl (%esp), %edx
+  pushl %ecx
+  jc __syscall_error
+  pushl %edx
+  jmp __syscall_success
+
 #else
 #error architecture not supported
 #endif
