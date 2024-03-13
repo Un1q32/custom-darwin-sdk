@@ -30,12 +30,11 @@ _syscall:
   popl %ecx
   popl %eax
   pushl %ecx
-  int $-0x80
+  int $0x80
   movl (%esp), %edx
   pushl %ecx
   jc __syscall_error
-  pushl %edx
-  jmp __syscall_success
+  retl
 
 #else
 #error architecture not supported
