@@ -31,7 +31,7 @@ _syscall:
   popl %eax
   pushl %ecx
   int $0x80
-  movl (%esp), %edx
+  movl %eax, (%esp)
   pushl %ecx
   jc __syscall_error
   retl
