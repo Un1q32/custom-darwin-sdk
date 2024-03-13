@@ -397,7 +397,7 @@ int vsnprintf(char *str, size_t size, const char *format, va_list ap) {
     if (format[i] == '%') {
       int formatlen, vaargs;
       char *tmp = __tostr(format + i + 1, j, ap, &formatlen, &vaargs);
-#ifdef __arm__
+#ifndef __x86_64__
       while (vaargs--)
         va_arg(ap, int);
 #endif
