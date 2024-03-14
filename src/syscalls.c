@@ -14,8 +14,9 @@
 
 long syscallret2 = 0;
 
-long _syscall_error(int err) {
+long _syscall_error(long err, long ret2) {
   errno = err;
+  syscallret2 = ret2;
   return -1;
 }
 

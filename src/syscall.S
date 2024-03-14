@@ -20,8 +20,8 @@ _syscall:
   movq %rcx, %r10
   syscall
   movq %rax, %rdi
-  jb __syscall_error
   movq %rdx, %rsi
+  jb __syscall_error
   jmp __syscall_success
 
 #elif defined(__i386__)
@@ -32,13 +32,10 @@ _syscall:
   pushl %ecx
   int $0x80
   movl %eax, (%esp)
-  jc 2f
   movl %edx, 4(%esp)
   pushl %ecx
+  jc __syscall_error
   jmp __syscall_success
-2:
-  pushl %ecx
-  jmp __syscall_error
 
 #else
 #error architecture not supported
