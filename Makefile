@@ -4,7 +4,7 @@ CC := $(CLANG) -target darwin $(addprefix -arch ,$(ARCHS))
 BUILTIN_CC = $(CLANG) -target darwin -arch $(ARCH)
 _BUILTIN_CC = $(BUILTIN_CC) -isysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c -o
 ifeq ($(shell uname),Darwin)
-LIBTOOL := /usr/bin/libtool
+LIBTOOL := libtool
 else
 LIBTOOL := llvm-libtool-darwin
 endif
