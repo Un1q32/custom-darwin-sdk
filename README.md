@@ -2,7 +2,7 @@
 
 > An alternative to Apple's offical SDKs for Darwin
 
-> Currently supports x86_64, x86_64h, armv6, armv7, armv7s, and armv7k
+> Currently supports i386, x86_64, x86_64h, armv6, armv7, armv7s, and armv7k
 
 ## Requirements:
 
