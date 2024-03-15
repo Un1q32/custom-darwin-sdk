@@ -1,4 +1,4 @@
-ARCHS := i386 x86_64 x86_64h armv6 armv7 armv7s armv7k
+ARCHS := x86_64 x86_64h armv6 armv7 armv7s armv7k
 CLANG := clang
 CC := $(CLANG) -target darwin $(addprefix -arch ,$(ARCHS))
 BUILTIN_CC = $(CLANG) -target darwin -arch $(ARCH)
