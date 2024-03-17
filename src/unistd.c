@@ -1,6 +1,9 @@
 #include <errno.h>
 #include <fcntl.h>
+#include <paths.h>
 #include <stdarg.h>
+#include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/syslimits.h>
@@ -87,4 +90,60 @@ unsigned int sleep(unsigned int seconds) {
 int isatty(int fd) {
   struct termios dummy;
   return tcgetattr(fd, &dummy) == 0;
+}
+
+bool _search_path(const char *path, const char *filename, char *buf) {
+  if (path == NULL || filename == NULL)
+    return false;
+
+  char *p = strtok((char *)path, ":");
+  while (p != NULL) {
+    snprintf(buf, PATH_MAX, "%s/%s", p, filename);
+    if (access(buf, F_OK) == 0)
+      return true;
+    p = strtok(NULL, ":");
+  }
+  return false;
+}
+
+int execvPe(const char *filename, const char *path, char *const argv[],
+            char *const envp[]) {
+  char buf[PATH_MAX];
+  if (!_search_path(path, filename, buf)) {
+    errno = ENOENT;
+    return -1;
+  }
+
+  return execve(buf, argv, envp);
+}
+
+int execvP(const char *filename, const char *path, char *const argv[]) {
+  return execvPe(filename, path, argv, NULL);
+}
+
+int execvpe(const char *filename, char *const argv[], char *const envp[]) {
+  char *path = getenv("PATH");
+  if (path == NULL)
+    path = _PATH_DEFPATH;
+
+  return execvPe(filename, path, argv, envp);
+}
+
+int execvp(const char *filename, char *const argv[]) {
+  return execvpe(filename, argv, NULL);
+}
+
+int execlp(const char *filename, const char *arg, ...) {
+  va_list va_args;
+  va_start(va_args, arg);
+  char *argv[1024];
+  argv[0] = (char *)arg;
+  int i;
+  for (i = 1; i < 1024; i++) {
+    argv[i] = va_arg(va_args, char *);
+    if (argv[i] == NULL)
+      break;
+  }
+  va_end(va_args);
+  return execvp(filename, argv);
 }
