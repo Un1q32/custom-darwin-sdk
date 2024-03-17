@@ -108,4 +108,4 @@ clean:
 
 clangd:
 	@printf "Generating clangd config...\n"
-	$(V)printf 'CompileFlags:\n  Add: [-I$(PWD)/include, --target=x86_64-apple-darwin10]\n' > .clangd
+	$(V)printf 'CompileFlags:\n  Add: [-I$(PWD)/include, --target=x86_64-apple-darwin]\n' > .clangd
