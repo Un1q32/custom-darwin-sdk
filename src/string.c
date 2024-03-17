@@ -177,6 +177,44 @@ void *memset(void *buf, int byte, size_t size) {
   return buf;
 }
 
+void memset_pattern4(void *b, const void *pattern, size_t len) {
+  unsigned int *p = b;
+  unsigned int pat = *(unsigned int *)pattern;
+  while (len >= 4) {
+    *p++ = pat;
+    len -= 4;
+  }
+  unsigned char *q = (unsigned char *)p;
+  while (len--)
+    *q++ = *(unsigned char *)pattern;
+}
+
+void memset_pattern8(void *b, const void *pattern, size_t len) {
+  unsigned long long *p = b;
+  unsigned long long pat = *(unsigned long long *)pattern;
+  while (len >= 8) {
+    *p++ = pat;
+    len -= 8;
+  }
+  unsigned char *q = (unsigned char *)p;
+  while (len--)
+    *q++ = *(unsigned char *)pattern;
+}
+
+void memset_pattern16(void *b, const void *pattern, size_t len) {
+  unsigned long long *p = b;
+  unsigned long long pat1 = *(unsigned long long *)pattern;
+  unsigned long long pat2 = *((unsigned long long *)pattern + 1);
+  while (len >= 16) {
+    *p++ = pat1;
+    *p++ = pat2;
+    len -= 16;
+  }
+  unsigned char *q = (unsigned char *)p;
+  while (len--)
+    *q++ = *(unsigned char *)pattern;
+}
+
 int memcmp(const void *s1, const void *s2, size_t n) {
   const unsigned char *p1 = s1, *p2 = s2;
   while (n-- > 0) {
