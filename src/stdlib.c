@@ -332,3 +332,10 @@ double strtod(const char *nptr, char **endptr) {
 float strtof(const char *nptr, char **endptr) {
   return (float)strtold(nptr, endptr);
 }
+
+int abs(int num) {
+  if (num < 0)
+    return -num;
+  else
+    return num;
+}

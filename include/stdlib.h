@@ -33,5 +33,6 @@ extern int atexit(void (*)(void));
 extern long double strtold(const char *, char **);
 extern double strtod(const char *, char **);
 extern float strtof(const char *, char **);
+extern int abs(int);
 
 #endif

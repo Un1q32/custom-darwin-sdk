@@ -5,6 +5,7 @@
 
 #define SIGINT 2
 #define SIGTERM 15
+#define SIGSTOP 17
 #define SIGWINCH 28
 
 #define SIG_ERR ((void (*)(int)) - 1)
