@@ -13,10 +13,14 @@
     uid_t st_uid;                                                              \
     gid_t st_gid;                                                              \
     dev_t st_rdev;                                                             \
-    struct timespec st_atimespec;                                              \
-    struct timespec st_mtimespec;                                              \
-    struct timespec st_ctimespec;                                              \
-    struct timespec st_birthtimespec;                                          \
+    time_t st_atime;                                                           \
+    long st_atimensec;                                                         \
+    time_t st_mtime;                                                           \
+    long st_mtimensec;                                                         \
+    time_t st_ctime;                                                           \
+    long st_ctimensec;                                                         \
+    time_t st_birthtime;                                                       \
+    long st_birthtimensec;                                                     \
     off_t st_size;                                                             \
     blkcnt_t st_blocks;                                                        \
     blksize_t st_blksize;                                                      \

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+case "$0" in *++) cc='clang++' ;; esac
+
+target="${0##*/}"
+target="${target%-*}"
+
+exec ${cc:-clang} \
+    -target "$target" \
+    --no-default-config \
+    -isysroot "${0%/*}/../sdk" \
+    -Wno-unused-command-line-argument \
+    -mlinker-version=907 \
+    -static \
+    "$@"
