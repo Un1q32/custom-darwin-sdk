@@ -42,5 +42,6 @@ struct sigaction {
 };
 
 extern void (*signal(int, void (*)(int)))(int);
+extern int kill(pid_t, int);
 
 #endif

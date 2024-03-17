@@ -212,3 +212,5 @@ int stat64(const char *path, struct stat64 *buf) {
 int poll(struct pollfd *fds, nfds_t nfds, int timeout) {
   return syscall(SYS_poll, fds, nfds, timeout);
 }
+
+int kill(pid_t pid, int sig) { return syscall(SYS_kill, pid, sig); }

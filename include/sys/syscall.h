@@ -21,6 +21,7 @@
 #define SYS_getuid 24
 #define SYS_geteuid 25
 #define SYS_access 33
+#define SYS_kill 37
 #define SYS_sigaction 46
 #define SYS_ioctl 54
 #define SYS_symlink 57
