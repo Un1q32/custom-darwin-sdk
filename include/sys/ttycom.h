@@ -14,6 +14,7 @@ struct winsize {
 
 #define TIOCGETA _IOR('t', 19, struct termios)
 #define TIOCSETA _IOW('t', 20, struct termios)
+#define TIOCSPGRP _IOW('t', 118, int)
 #define TIOCGWINSZ _IOR('t', 104, struct winsize)
 
 #endif

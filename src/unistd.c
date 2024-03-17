@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ioctl.h>
 #include <sys/syslimits.h>
 #include <termios.h>
 #include <time.h>
@@ -147,3 +148,5 @@ int execlp(const char *filename, const char *arg, ...) {
   va_end(va_args);
   return execvp(filename, argv);
 }
+
+int tcsetpgrp(int fd, pid_t pgrp_id) { return ioctl(fd, TIOCSPGRP, &pgrp_id); }
