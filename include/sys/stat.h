@@ -4,6 +4,10 @@
 #include <sys/types.h>
 #include <time.h>
 
+#define S_IWUSR 0000200
+#define S_IWGRP 0000020
+#define S_IWOTH 0000002
+
 #define _STRUCT_STAT                                                           \
   {                                                                            \
     dev_t st_dev;                                                              \
