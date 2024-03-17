@@ -13,6 +13,7 @@ extern char *strchr(const char *, int);
 extern char *strrchr(const char *, int);
 extern int strcmp(const char *, const char *);
 extern int strncmp(const char *, const char *, size_t);
+extern char *strncpy(char *, const char *, size_t);
 extern char *strstr(const char *, const char *);
 extern char *strtok(char *, const char *);
 extern char *strtok_r(char *, const char *, char **);

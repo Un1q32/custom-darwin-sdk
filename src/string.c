@@ -80,6 +80,15 @@ int strncmp(const char *s1, const char *s2, size_t n) {
   return *s1_ - *s2_;
 }
 
+char *strncpy(char *dst, const char *src, size_t size) {
+  char *ret = dst;
+  while (size && (*dst++ = *src++))
+    size--;
+  while (size--)
+    *dst++ = '\0';
+  return ret;
+}
+
 char *strstr(const char *haystack, const char *needle) {
   size_t needle_len = strlen(needle);
   size_t haystack_len = strlen(haystack);
