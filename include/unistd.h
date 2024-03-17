@@ -36,5 +36,7 @@ extern int usleep(useconds_t);
 extern unsigned int sleep(unsigned int);
 extern off_t lseek(int, off_t, int);
 extern int isatty(int);
+extern int dup(int);
+extern int pipe(int[2]);
 
 #endif

@@ -214,3 +214,7 @@ int poll(struct pollfd *fds, nfds_t nfds, int timeout) {
 }
 
 int kill(pid_t pid, int sig) { return syscall(SYS_kill, pid, sig); }
+
+int dup(int oldfd) { return syscall(SYS_dup, oldfd); }
+
+int pipe(int pipefd[2]) { return syscall(SYS_pipe, pipefd); }

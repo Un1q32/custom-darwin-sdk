@@ -8,7 +8,17 @@
 #define SIGSTOP 17
 #define SIGWINCH 28
 
+#if defined(_ANSI_SOURCE) || __DARWIN_UNIX03 || defined(__cplusplus)
+#define SIG_DFL (void (*)(int))0
+#define SIG_IGN (void (*)(int))1
+#define SIG_HOLD (void (*)(int))5
 #define SIG_ERR ((void (*)(int)) - 1)
+#else
+#define SIG_DFL (void(*))0
+#define SIG_IGN (void(*))1
+#define SIG_HOLD (void(*))5
+#define SIG_ERR ((void(*)) - 1)
+#endif
 
 typedef unsigned int sigset_t;
 
