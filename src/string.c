@@ -203,6 +203,16 @@ void *memmove(void *dst, const void *src, size_t n) {
   return dst;
 }
 
+void *memchr(const void *buf, int ch, size_t size) {
+  const unsigned char *p = buf;
+  while (size--) {
+    if (*p == (unsigned char)ch)
+      return (void *)p;
+    p++;
+  }
+  return NULL;
+}
+
 void explicit_bzero(void *s, size_t n) {
   bzero(s, n);
   __asm__ volatile("" : : "r"(s) : "memory");
