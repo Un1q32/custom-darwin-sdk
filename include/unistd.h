@@ -28,6 +28,7 @@ extern int close(int);
 extern char *getcwd(char *, size_t);
 extern pid_t fork(void);
 extern pid_t getpid(void);
+extern uid_t getuid(void);
 extern int execve(const char *, char *const[], char *const[]);
 extern int execv(const char *, char *const[]);
 extern int execvp(const char *, char *const[]);

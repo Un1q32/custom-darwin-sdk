@@ -149,6 +149,8 @@ int fchdir(int fd) { return syscall(SYS_fchdir, fd); }
 
 pid_t getpid(void) { return syscall(SYS_getpid); }
 
+uid_t getuid(void) { return syscall(SYS_getuid); }
+
 pid_t fork(void) {
   pid_t child = syscall(SYS_fork);
   if (child == -1)
