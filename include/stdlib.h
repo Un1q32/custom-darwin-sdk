@@ -25,7 +25,6 @@ extern char *ftoa(long double, int);
 extern char *utox(unsigned long long);
 extern char *utoX(unsigned long long);
 extern char *getenv(const char *);
-extern int setenv(const char *, const char *, int);
 extern int system(const char *);
 extern void srand(unsigned int);
 extern int rand(void);

@@ -174,37 +174,6 @@ char *getenv(const char *name) {
   return NULL;
 }
 
-int setenv(const char *name, const char *value, int overwrite) {
-  if (name == NULL || value == NULL || name[0] == '\0' ||
-      strchr(name, '=') != NULL) {
-    errno = EINVAL;
-    return -1;
-  }
-
-  int i;
-  for (i = 0; environ[i] != NULL; i++) {
-    char *p = strchr(environ[i], '=');
-    if (!strncmp(name, environ[i], p - environ[i])) {
-      if (overwrite)
-        break;
-      else
-        return 0;
-    }
-  }
-
-  char *tmp = malloc(strlen(name) + strlen(value) + 2);
-  if (tmp) {
-    free(environ[i]);
-    environ[i] = tmp;
-  } else
-    return -1;
-  strcpy(environ[i], name);
-  strcat(environ[i], "=");
-  strcat(environ[i], value);
-  environ[i + 1] = NULL;
-  return 0;
-}
-
 int system(const char *command) {
   if (command == NULL) {
     if (access("/bin/sh", X_OK) == 0)
