@@ -25,6 +25,7 @@ extern FILE *__stderrp;
 #define __SRW 0x0010
 #define __SERR 0x0040
 
+#define BUFSIZ 1024
 #define EOF (-1)
 
 #define getc(fp) getc(fp)
