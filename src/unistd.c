@@ -150,3 +150,5 @@ int execlp(const char *filename, const char *arg, ...) {
 }
 
 int tcsetpgrp(int fd, pid_t pgrp_id) { return ioctl(fd, TIOCSPGRP, &pgrp_id); }
+
+pid_t vfork(void) { return fork(); }

@@ -222,3 +222,7 @@ int dup(int oldfd) { return syscall(SYS_dup, oldfd); }
 int pipe(int pipefd[2]) { return syscall(SYS_pipe, pipefd); }
 
 pid_t getpgrp(void) { return syscall(SYS_getpgrp); }
+
+int setuid(uid_t uid) { return syscall(SYS_setuid, uid); }
+
+int setgid(gid_t gid) { return syscall(SYS_setgid, gid); }
