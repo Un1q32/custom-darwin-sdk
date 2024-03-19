@@ -4,7 +4,9 @@
 #include <sys/syslimits.h>
 #include <unistd.h>
 
-int main() {
+int main(int argc, char *argv[]) {
+  (void)argc;
+  (void)argv;
   char pathtoolong[PATH_MAX + 1];
   int i;
   for (i = 0; i < PATH_MAX; i++)

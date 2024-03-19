@@ -345,7 +345,7 @@ void setBufferedInput(bool enable)
 	}
 }
 
-int test()
+int test(void)
 {
 	uint8_t array[SIZE];
 	// these are exponents with base 2 (1=2 2=4 3=8)

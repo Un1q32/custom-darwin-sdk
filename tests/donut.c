@@ -11,7 +11,10 @@
   y *= f;
 
 int i, j, k, x, y, o, N;
-int main() {
+
+int main(int argc, char *argv[]) {
+  (void)argc;
+  (void)argv;
   float z[1760], a = 0, e = 1, c = 1, d = 0, f, g, h, G, H, A, t, D;
   char b[1760];
   for (;;) {
