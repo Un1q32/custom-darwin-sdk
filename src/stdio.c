@@ -114,8 +114,8 @@ int fputc(int ch, FILE *stream) {
   return ch;
 }
 
-char *__tostr(const char *format, int charssofar, va_list ap, int *formatlen,
-              int *vaargs) {
+char *_tostr(const char *format, int charssofar, va_list ap, int *formatlen,
+             int *vaargs) {
   if (format == NULL || vaargs == NULL || formatlen == NULL)
     return NULL;
   *vaargs = 0;
@@ -396,7 +396,7 @@ int vsnprintf(char *str, size_t size, const char *format, va_list ap) {
   while (format[i]) {
     if (format[i] == '%') {
       int formatlen, vaargs;
-      char *tmp = __tostr(format + i + 1, j, ap, &formatlen, &vaargs);
+      char *tmp = _tostr(format + i + 1, j, ap, &formatlen, &vaargs);
 #ifndef __x86_64__
       while (vaargs--)
         va_arg(ap, int);
