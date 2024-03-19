@@ -110,6 +110,4 @@
 #define EQFULL 106
 #define ELAST 106
 
-extern int errno;
-
 #endif
