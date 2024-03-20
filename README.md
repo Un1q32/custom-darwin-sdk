@@ -28,3 +28,9 @@ To build the tests
 ```sh
 make tests
 ```
+
+To easily use the SDK, add the bin folder to your $PATH
+
+```sh
+x86_64-apple-darwin-cc something.c -lc # libc isn't linked by default
+```
