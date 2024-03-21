@@ -11,7 +11,7 @@ endif
 
 COMPILER_RT_VERSION := 18.1.1
 
-CFLAGS := -Wall -Wextra -Wpedantic -Werror
+CFLAGS := -Wall -Wextra -Wpedantic -Werror -Iinclude
 OPTFLAGS := -O2
 LDFLAGS := -mlinker-version=907 -static
 ifneq ($(shell uname),Darwin)
