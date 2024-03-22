@@ -307,3 +307,5 @@ int abs(int num) {
   else
     return num;
 }
+
+void abort(void) { exit(1); }
