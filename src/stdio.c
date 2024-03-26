@@ -132,26 +132,26 @@ char *_tostr(const char *format, int charssofar, va_list ap, int *formatlen,
         *vaargs += 1;
         format++;
       } else {
-        const char *tmp = format + 1;
-        while (isdigit(*tmp))
-          tmp++;
-        char percisionstr[tmp - format];
-        memcpy(percisionstr, format + 1, tmp - format);
-        percisionstr[tmp - format - 1] = '\0';
+        const char *strstart = format + 1, *strend = format + 1;
+        while (isdigit(*strend))
+          strend++;
+        char percisionstr[strend - strstart + 1];
+        memcpy(percisionstr, strstart, strend - strstart);
+        percisionstr[strend - strstart] = '\0';
         percision = atoi(percisionstr);
-        format = tmp - 1;
+        format = strend - 1;
       }
     } else if (*format == '0') {
       zerofill = true;
     } else if (isdigit(*format)) {
-      const char *tmp = format;
-      while (isdigit(*tmp))
-        tmp++;
-      char fillstr[tmp - format];
-      memcpy(fillstr, format, tmp - format);
-      fillstr[tmp - format] = '\0';
+      const char *strstart = format, *strend = format + 1;
+      while (isdigit(*strend))
+        strend++;
+      char fillstr[strend - strstart + 1];
+      memcpy(fillstr, strstart, strend - strstart);
+      fillstr[strend - strstart] = '\0';
       fill = atoi(fillstr);
-      format = tmp - 1;
+      format = strend - 1;
     } else if (*format == '*') {
       fill = va_arg(ap, int);
       *vaargs += 1;
