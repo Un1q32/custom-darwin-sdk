@@ -12,7 +12,7 @@ endif
 COMPILER_RT_VERSION := 18.1.2
 
 CFLAGS := -Wall -Wextra -Wpedantic -Werror -Iinclude
-OPTFLAGS := -O2
+OPTFLAGS := -g
 LDFLAGS := -mlinker-version=907 -static
 ifneq ($(shell uname),Darwin)
 LDFLAGS += -fuse-ld=ld64
@@ -34,10 +34,9 @@ endif
 
 all: sdk/usr/include sdk/usr/lib
 
-debug: OPTFLAGS := -g
-debug: all
+release: OPTFLAGS := -O2
+release: all
 
-tests: OPTFLAGS := -g
 tests: $(TESTEXES)
 
 sdk/usr/include: $(HEADERS)

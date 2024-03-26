@@ -14,13 +14,13 @@
 To build a universal SDK
 
 ```sh
-make
+make release
 ```
 
 To build an SDK for a single architecture
 
 ```sh
-make ARCHS='x86_64'
+make release ARCHS='x86_64'
 ```
 
 To build the tests
