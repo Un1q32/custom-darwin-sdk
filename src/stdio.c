@@ -114,309 +114,323 @@ int fputc(int ch, FILE *stream) {
   return ch;
 }
 
-char *_tostr(const char *format, int charssofar, va_list ap, int *formatlen,
-             int *vaargs) {
-  if (format == NULL || vaargs == NULL || formatlen == NULL)
-    return NULL;
-  *vaargs = 0;
-  char *ret = NULL, type = '\0';
-  const char *format2 = format;
-  unsigned int flags = 0, percision = 6, fill = 0;
-  bool done = false, altform = false, zerofill = false;
-  while (!done) {
-    if (*format == '#') {
-      altform = true;
-    } else if (*format == '.') {
-      if (*(format + 1) == '*') {
-        percision = va_arg(ap, int);
-        *vaargs += 1;
-        format++;
-      } else {
-        const char *strstart = format + 1, *strend = format + 1;
-        while (isdigit(*strend))
-          strend++;
-        char percisionstr[strend - strstart + 1];
-        memcpy(percisionstr, strstart, strend - strstart);
-        percisionstr[strend - strstart] = '\0';
-        percision = atoi(percisionstr);
-        format = strend - 1;
-      }
-    } else if (*format == '0') {
-      zerofill = true;
-    } else if (isdigit(*format)) {
-      const char *strstart = format, *strend = format + 1;
-      while (isdigit(*strend))
-        strend++;
-      char fillstr[strend - strstart + 1];
-      memcpy(fillstr, strstart, strend - strstart);
-      fillstr[strend - strstart] = '\0';
-      fill = atoi(fillstr);
-      format = strend - 1;
-    } else if (*format == '*') {
-      fill = va_arg(ap, int);
-      *vaargs += 1;
-    } else {
-      format--;
-      done = true;
-    }
-    format++;
-  }
-  done = false;
-  while (!done) {
-    switch (*format++) {
-    case 'l':
-      if (flags & 1 << 0)
-        flags |= 1 << 1;
-      else
-        flags |= 1 << 0;
-      break;
-    case 'h':
-      if (flags & 1 << 2)
-        flags |= 1 << 3;
-      else
-        flags |= 1 << 2;
-      break;
-    case 'j':
-      flags |= 1 << 4;
-      break;
-    case 't':
-      flags |= 1 << 5;
-      break;
-    case 'z':
-      flags |= 1 << 6;
-      break;
-    case 'L':
-      flags |= 1 << 7;
-      break;
-    case 'q':
-      flags |= 1 << 8;
-      break;
-    default:
-      format--;
-      done = true;
-      break;
-    }
-  }
-  switch (*format) {
-  case '%':
-    ret = strdup("%");
-    if (ret == NULL)
-      return NULL;
-    break;
-  case 'S':
-    flags |= 1 << 0;
-    /* fall through */
-  case 's':
-    ret = strdup(va_arg(ap, char *));
-    *vaargs += 1;
-    if (ret == NULL)
-      ret = strdup("(null)");
-    if (ret == NULL)
-      return NULL;
-    break;
-  case 'C':
-    flags |= 1 << 0;
-    /* fall through */
-  case 'c':
-    ret = malloc(2);
-    if (ret == NULL)
-      return NULL;
-    ret[0] = (unsigned char)va_arg(ap, int);
-    ret[1] = '\0';
-    *vaargs += 1;
-    break;
-  case 'd':
-  case 'i':
-    if (flags & 1 << 4)
-      ret = itoa(va_arg(ap, intmax_t));
-    else if (flags & 1 << 8)
-      ret = itoa(va_arg(ap, quad_t));
-    else if (flags & 1 << 1)
-      ret = itoa(va_arg(ap, long long));
-    else if (flags & 1 << 5 || flags & 1 << 6)
-      ret = itoa(va_arg(ap, ptrdiff_t));
-    else if (flags & 1 << 0)
-      ret = itoa(va_arg(ap, long));
-    else if (flags & 1 << 2)
-      ret = itoa((short)va_arg(ap, int));
-    else if (flags & 1 << 3)
-      ret = itoa((char)va_arg(ap, int));
-    else
-      ret = itoa(va_arg(ap, int));
-    *vaargs += 1;
-    if (ret == NULL)
-      return NULL;
-    break;
-  case 'u':
-    if (flags & 1 << 4)
-      ret = utoa(va_arg(ap, uintmax_t));
-    else if (flags & 1 << 8)
-      ret = utoa(va_arg(ap, u_quad_t));
-    else if (flags & 1 << 1)
-      ret = utoa(va_arg(ap, unsigned long long));
-    else if (flags & 1 << 5 || flags & 1 << 6)
-      ret = utoa(va_arg(ap, size_t));
-    else if (flags & 1 << 0)
-      ret = utoa(va_arg(ap, unsigned long));
-    else if (flags & 1 << 2)
-      ret = utoa((unsigned short)va_arg(ap, unsigned int));
-    else if (flags & 1 << 3)
-      ret = utoa((unsigned char)va_arg(ap, unsigned int));
-    else
-      ret = utoa(va_arg(ap, unsigned int));
-    *vaargs += 1;
-    if (ret == NULL)
-      return NULL;
-    break;
-  case 'f':
-  case 'F':
-    type = 'f';
-    if (flags & 1 << 7)
-      ret = ftoa(va_arg(ap, long double), percision);
-    else
-      ret = ftoa(va_arg(ap, double), percision);
-    *vaargs += 1;
-    if (ret == NULL)
-      return NULL;
-    break;
-  case 'p':
-    altform = true;
-    flags = 1 << 0;
-    /* fall through */
-  case 'x':
-    type = 'x';
-    if (flags & 1 << 4)
-      ret = utox(va_arg(ap, uintmax_t));
-    else if (flags & 1 << 8)
-      ret = utox(va_arg(ap, u_quad_t));
-    else if (flags & 1 << 1)
-      ret = utox(va_arg(ap, unsigned long long));
-    else if (flags & 1 << 5 || flags & 1 << 6)
-      ret = utox(va_arg(ap, size_t));
-    else if (flags & 1 << 0)
-      ret = utox(va_arg(ap, unsigned long));
-    else if (flags & 1 << 2)
-      ret = utox((unsigned short)va_arg(ap, unsigned int));
-    else if (flags & 1 << 3)
-      ret = utox((unsigned char)va_arg(ap, unsigned int));
-    else
-      ret = utox(va_arg(ap, unsigned int));
-    *vaargs += 1;
-    if (ret == NULL)
-      return NULL;
-    break;
-  case 'X':
-    type = 'X';
-    if (flags & 1 << 4)
-      ret = utoX(va_arg(ap, uintmax_t));
-    else if (flags & 1 << 8)
-      ret = utoX(va_arg(ap, u_quad_t));
-    else if (flags & 1 << 1)
-      ret = utoX(va_arg(ap, unsigned long long));
-    else if (flags & 1 << 5 || flags & 1 << 6)
-      ret = utoX(va_arg(ap, size_t));
-    else if (flags & 1 << 0)
-      ret = utoX(va_arg(ap, unsigned long));
-    else if (flags & 1 << 2)
-      ret = utoX((unsigned short)va_arg(ap, unsigned int));
-    else if (flags & 1 << 3)
-      ret = utoX((unsigned char)va_arg(ap, unsigned int));
-    else
-      ret = utoX(va_arg(ap, unsigned int));
-    *vaargs += 1;
-    if (ret == NULL)
-      return NULL;
-    break;
-  case 'n':
-    if (flags & 1 << 4)
-      *(va_arg(ap, intmax_t *)) = charssofar;
-    else if (flags & 1 << 8)
-      *(va_arg(ap, quad_t *)) = charssofar;
-    else if (flags & 1 << 1)
-      *(va_arg(ap, long long *)) = charssofar;
-    else if (flags & 1 << 5 || flags & 1 << 6)
-      *(va_arg(ap, ptrdiff_t *)) = charssofar;
-    else if (flags & 1 << 0)
-      *(va_arg(ap, long *)) = charssofar;
-    else if (flags & 1 << 2)
-      *(va_arg(ap, short *)) = charssofar;
-    else if (flags & 1 << 3)
-      *(va_arg(ap, char *)) = charssofar;
-    else
-      *(va_arg(ap, int *)) = charssofar;
-    *vaargs += 1;
-    ret = malloc(1);
-    if (ret == NULL)
-      return NULL;
-    ret[0] = '\0';
-    break;
-  default:
-    format--;
-    ret = malloc(1);
-    if (ret == NULL)
-      return NULL;
-    ret[0] = '\0';
-    break;
-  }
-  *formatlen = format - format2 + 2;
-  unsigned int retlen = strlen(ret);
-  if (altform && (type == 'x' || type == 'X'))
-    retlen += 2;
-  if (fill > retlen) {
-    char *ret2 = malloc(fill + 1);
-    if (ret2 == NULL) {
-      free(ret);
-      return NULL;
-    }
-    memset(ret2, zerofill ? '0' : ' ', fill - retlen);
-    strcpy(ret2 + fill - retlen, ret);
-    free(ret);
-    ret = ret2;
-  }
-  if (altform) {
-    retlen = strlen(ret);
-    if (type == 'x' || type == 'X') {
-      char *ret2 = malloc(retlen + 3);
-      if (ret2 == NULL) {
-        free(ret);
-        return NULL;
-      }
-      ret2[0] = '0';
-      ret2[1] = type;
-      strcpy(ret2 + 2, ret);
-      free(ret);
-      ret = ret2;
-    }
-  }
-  return ret;
-}
-
 int vsnprintf(char *str, size_t size, const char *format, va_list ap) {
   size_t i = 0, j = 0;
   while (format[i]) {
     if (format[i] == '%') {
-      int formatlen, vaargs;
-      char *tmp = _tostr(format + i + 1, j, ap, &formatlen, &vaargs);
-#ifndef __x86_64__
-      while (vaargs--)
-        va_arg(ap, int);
-#endif
-      if (tmp != NULL) {
-        size_t k = 0;
+      size_t argstrlen;
+      const char *fmt = format + i + 1, *fmt2 = format + i;
+      bool done = false, altform = false;
+      unsigned int fill = 0, percision = 6, flags = 0;
+      char fillchar = ' ';
+      while (!done) {
+        if (*fmt == '#')
+          altform = true;
+        else if (*fmt == '.') {
+          if (fmt[1] == '*') {
+            percision = va_arg(ap, int);
+            fmt++;
+          } else {
+            const char *strstart = fmt + 1, *strend = fmt + 1;
+            while (isdigit(*strend))
+              strend++;
+            char percisionstr[strend - strstart + 1];
+            memcpy(percisionstr, strstart, strend - strstart);
+            percisionstr[strend - strstart] = '\0';
+            percision = atoi(percisionstr);
+            fmt = strend - 1;
+          }
+        } else if (*fmt == '0')
+          fillchar = '0';
+        else if (isdigit(*fmt)) {
+          const char *strstart = fmt, *strend = fmt + 1;
+          while (isdigit(*strend))
+            strend++;
+          char fillstr[strend - strstart + 1];
+          memcpy(fillstr, strstart, strend - strstart);
+          fillstr[strend - strstart] = '\0';
+          fill = atoi(fillstr);
+          fmt = strend - 1;
+        } else if (*fmt == '*')
+          fill = va_arg(ap, int);
+        else {
+          fmt--;
+          done = true;
+        }
+        fmt++;
+      }
+      done = false;
+      while (!done) {
+        switch (*fmt++) {
+        case 'l':
+          if (flags & 1 << 0)
+            flags |= 1 << 1;
+          else
+            flags |= 1 << 0;
+          break;
+        case 'h':
+          if (flags & 1 << 2)
+            flags |= 1 << 3;
+          else
+            flags |= 1 << 2;
+          break;
+        case 'j':
+          flags |= 1 << 4;
+          break;
+        case 't':
+          flags |= 1 << 5;
+          break;
+        case 'z':
+          flags |= 1 << 6;
+          break;
+        case 'L':
+          flags |= 1 << 7;
+          break;
+        case 'q':
+          flags |= 1 << 8;
+          break;
+        default:
+          fmt--;
+          done = true;
+          break;
+        }
+      }
+      char *tmp = NULL;
+      size_t k = 0;
+      switch (*fmt) {
+      case '%':
+        if (j < size)
+          str[j] = '%';
+        j++;
+        break;
+      case 'S':
+        flags |= 1 << 0;
+        /* fall through */
+      case 's':
+        tmp = va_arg(ap, char *);
+        if (tmp == NULL)
+          tmp = "(null)";
+        argstrlen = strlen(tmp);
+        while (fill > argstrlen) {
+          if (j < size)
+            str[j] = fillchar;
+          j++;
+          fill--;
+        }
         while (tmp[k]) {
           if (j < size)
             str[j] = tmp[k];
           j++;
           k++;
         }
-        i += formatlen;
-        free(tmp);
-      } else {
+        break;
+      case 'C':
+        flags |= 1 << 0;
+        /* fall through */
+      case 'c':
+        if (fill > 1) {
+          if (j < size)
+            str[j] = fillchar;
+          j++;
+          fill--;
+        }
         if (j < size)
-          str[j] = format[i];
+          str[j] = va_arg(ap, int);
         j++;
-        i++;
+        break;
+      case 'd':
+      case 'i':
+        if (flags & 1 << 4)
+          tmp = itoa(va_arg(ap, intmax_t));
+        else if (flags & 1 << 8)
+          tmp = itoa(va_arg(ap, quad_t));
+        else if (flags & 1 << 1)
+          tmp = itoa(va_arg(ap, long long));
+        else if (flags & 1 << 5 || flags & 1 << 6)
+          tmp = itoa(va_arg(ap, ptrdiff_t));
+        else if (flags & 1 << 0)
+          tmp = itoa(va_arg(ap, long));
+        else if (flags & 1 << 2)
+          tmp = itoa((short)va_arg(ap, int));
+        else if (flags & 1 << 3)
+          tmp = itoa((char)va_arg(ap, int));
+        else
+          tmp = itoa(va_arg(ap, int));
+        argstrlen = strlen(tmp);
+        while (fill > argstrlen) {
+          if (j < size)
+            str[j] = fillchar;
+          j++;
+          fill--;
+        }
+        while (tmp[k]) {
+          if (j < size)
+            str[j] = tmp[k];
+          j++;
+          k++;
+        }
+        free(tmp);
+        break;
+      case 'u':
+        if (flags & 1 << 4)
+          tmp = utoa(va_arg(ap, uintmax_t));
+        else if (flags & 1 << 8)
+          tmp = utoa(va_arg(ap, u_quad_t));
+        else if (flags & 1 << 1)
+          tmp = utoa(va_arg(ap, unsigned long long));
+        else if (flags & 1 << 5 || flags & 1 << 6)
+          tmp = utoa(va_arg(ap, size_t));
+        else if (flags & 1 << 0)
+          tmp = utoa(va_arg(ap, unsigned long));
+        else if (flags & 1 << 2)
+          tmp = utoa((unsigned short)va_arg(ap, unsigned int));
+        else if (flags & 1 << 3)
+          tmp = utoa((unsigned char)va_arg(ap, unsigned int));
+        else
+          tmp = utoa(va_arg(ap, unsigned int));
+        argstrlen = strlen(tmp);
+        while (fill > argstrlen) {
+          if (j < size)
+            str[j] = fillchar;
+          j++;
+          fill--;
+        }
+        while (tmp[k]) {
+          if (j < size)
+            str[j] = tmp[k];
+          j++;
+          k++;
+        }
+        free(tmp);
+        break;
+      case 'F':
+      case 'f':
+        if (flags & 1 << 7)
+          tmp = ftoa(va_arg(ap, long double), percision);
+        else
+          tmp = ftoa(va_arg(ap, double), percision);
+        argstrlen = strlen(tmp);
+        while (fill > argstrlen) {
+          if (j < size)
+            str[j] = fillchar;
+          j++;
+          fill--;
+        }
+        while (tmp[k]) {
+          if (j < size)
+            str[j] = tmp[k];
+          j++;
+          k++;
+        }
+        free(tmp);
+        break;
+      case 'p':
+        altform = true;
+        flags |= 1 << 0;
+        /* fall through */
+      case 'x':
+        if (flags & 1 << 4)
+          tmp = utox(va_arg(ap, uintmax_t));
+        else if (flags & 1 << 8)
+          tmp = utox(va_arg(ap, u_quad_t));
+        else if (flags & 1 << 1)
+          tmp = utox(va_arg(ap, unsigned long long));
+        else if (flags & 1 << 5 || flags & 1 << 6)
+          tmp = utox(va_arg(ap, size_t));
+        else if (flags & 1 << 0)
+          tmp = utox(va_arg(ap, unsigned long));
+        else if (flags & 1 << 2)
+          tmp = utox((unsigned short)va_arg(ap, unsigned int));
+        else if (flags & 1 << 3)
+          tmp = utox((unsigned char)va_arg(ap, unsigned int));
+        else
+          tmp = utox(va_arg(ap, unsigned int));
+        argstrlen = strlen(tmp);
+        if (altform) {
+          if (j < size)
+            str[j] = '0';
+          j++;
+          if (j < size)
+            str[j] = 'x';
+          j++;
+        }
+        while (fill > argstrlen) {
+          if (j < size)
+            str[j] = fillchar;
+          j++;
+          fill--;
+        }
+        while (tmp[k]) {
+          if (j < size)
+            str[j] = tmp[k];
+          j++;
+          k++;
+        }
+        free(tmp);
+        break;
+      case 'X':
+        if (flags & 1 << 4)
+          tmp = utoX(va_arg(ap, uintmax_t));
+        else if (flags & 1 << 8)
+          tmp = utoX(va_arg(ap, u_quad_t));
+        else if (flags & 1 << 1)
+          tmp = utoX(va_arg(ap, unsigned long long));
+        else if (flags & 1 << 5 || flags & 1 << 6)
+          tmp = utoX(va_arg(ap, size_t));
+        else if (flags & 1 << 0)
+          tmp = utoX(va_arg(ap, unsigned long));
+        else if (flags & 1 << 2)
+          tmp = utoX((unsigned short)va_arg(ap, unsigned int));
+        else if (flags & 1 << 3)
+          tmp = utoX((unsigned char)va_arg(ap, unsigned int));
+        else
+          tmp = utoX(va_arg(ap, unsigned int));
+        argstrlen = strlen(tmp);
+        if (altform) {
+          if (j < size)
+            str[j] = '0';
+          j++;
+          if (j < size)
+            str[j] = 'X';
+          j++;
+        }
+        while (fill > argstrlen) {
+          if (j < size)
+            str[j] = fillchar;
+          j++;
+          fill--;
+        }
+        while (tmp[k]) {
+          if (j < size)
+            str[j] = tmp[k];
+          j++;
+          k++;
+        }
+        free(tmp);
+        break;
+      case 'n':
+        if (flags & 1 << 4)
+          *va_arg(ap, uintmax_t *) = j;
+        else if (flags & 1 << 8)
+          *va_arg(ap, u_quad_t *) = j;
+        else if (flags & 1 << 1)
+          *va_arg(ap, unsigned long long *) = j;
+        else if (flags & 1 << 5 || flags & 1 << 6)
+          *va_arg(ap, size_t *) = j;
+        else if (flags & 1 << 0)
+          *va_arg(ap, unsigned long *) = j;
+        else if (flags & 1 << 2)
+          *va_arg(ap, unsigned short *) = j;
+        else if (flags & 1 << 3)
+          *va_arg(ap, unsigned char *) = j;
+        else
+          *va_arg(ap, unsigned int *) = j;
+        break;
+      default:
+        fmt--;
+        break;
       }
+      i += fmt - fmt2 + 1;
     } else {
       if (j < size)
         str[j] = format[i];
