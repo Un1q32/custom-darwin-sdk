@@ -19,21 +19,18 @@ int main(int argc, char *argv[]) {
   }
   if (errno != ENAMETOOLONG) {
     puts("mkdir should have set errno to ENAMETOOLONG");
-    printf("errno was %d\n", errno);
     perror("mkdir");
     return 1;
   }
   i = mkdir("testdir", 0777);
   if (i == -1) {
     puts("mkdir failed");
-    printf("errno was %d\n", errno);
     perror("mkdir");
     return 1;
   }
   i = rmdir("testdir");
   if (i == -1) {
     puts("rmdir failed");
-    printf("errno was %d\n", errno);
     perror("rmdir");
     return 1;
   }
