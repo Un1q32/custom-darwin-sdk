@@ -1,6 +1,13 @@
 #ifndef _SYS_SOCKET_H_
 #define _SYS_SOCKET_H_
 
+#define SOCK_STREAM 1
+
+#define SO_REUSEADDR 0x0004
+#define SOL_SOCKET 0xFFFF
+
+#define AF_INET 2
+
 #define SHUT_WR 1
 #define SHUT_RDWR 2
 

@@ -3,6 +3,8 @@
 
 #include <sys/socket.h>
 
+#define AI_PASSIVE 0x00000001
+
 struct addrinfo {
   int ai_flags;
   int ai_family;
