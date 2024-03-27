@@ -19,7 +19,9 @@ struct sockaddr {
   char data[14];
 };
 
+extern int socket(int, int, int);
 extern int bind(int, const struct sockaddr *, socklen_t);
+extern int connect(int, const struct sockaddr *, socklen_t);
 extern int listen(int, int);
 extern int accept(int, struct sockaddr *, socklen_t *);
 extern int shutdown(int, int);

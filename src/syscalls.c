@@ -243,3 +243,11 @@ int listen(int sockfd, int backlog) {
 int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen) {
   return syscall(SYS_accept, sockfd, addr, addrlen);
 }
+
+int socket(int domain, int type, int protocol) {
+  return syscall(SYS_socket, domain, type, protocol);
+}
+
+int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
+  return syscall(SYS_connect, sockfd, addr, addrlen);
+}
