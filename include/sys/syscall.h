@@ -31,6 +31,7 @@
 #define SYS_munmap 73
 #define SYS_getpgrp 81
 #define SYS_fcntl 92
+#define SYS_bind 104
 #define SYS_gettimeofday 116
 #define SYS_settimeofday 122
 #define SYS_mkdir 136

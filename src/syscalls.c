@@ -7,6 +7,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/resource.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/syscall.h>
 #include <sys/syslimits.h>
@@ -226,3 +227,7 @@ pid_t getpgrp(void) { return syscall(SYS_getpgrp); }
 int setuid(uid_t uid) { return syscall(SYS_setuid, uid); }
 
 int setgid(gid_t gid) { return syscall(SYS_setgid, gid); }
+
+int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
+  return syscall(SYS_bind, sockfd, addr, addrlen);
+}
