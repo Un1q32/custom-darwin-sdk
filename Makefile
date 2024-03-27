@@ -57,7 +57,7 @@ sdk/usr/lib: src/libc.a crt/start.o
 tests/bin/%: tests/%.c all
 	@printf " \033[1;32mCC\033[0m $@\n"
 	$(V)$(CC) -isysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
-	$(V)$(CC) -isysroot sdk $(LDFLAGS) $(OPTFLAGS) -lc tests/$*.o -o $@
+	$(V)$(CC) -isysroot sdk $(LDFLAGS) $(OPTFLAGS) -nostdlib -lstart.o -lc tests/$*.o -o $@
 	$(V)ldid -S $@
 
 src/libc.a: $(ARCHS) $(OBJS)
