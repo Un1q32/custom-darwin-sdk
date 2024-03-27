@@ -233,3 +233,5 @@ int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
 int dup(int oldfd) { return syscall(SYS_dup, oldfd); }
 
 int dup2(int oldfd, int newfd) { return syscall(SYS_dup2, oldfd, newfd); }
+
+int shutdown(int sockfd, int how) { return syscall(SYS_shutdown, sockfd, how); }

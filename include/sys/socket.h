@@ -10,5 +10,6 @@ struct sockaddr {
 };
 
 extern int bind(int, const struct sockaddr *, socklen_t);
+extern int shutdown(int, int);
 
 #endif

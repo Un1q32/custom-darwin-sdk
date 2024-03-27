@@ -35,6 +35,7 @@
 #define SYS_bind 104
 #define SYS_gettimeofday 116
 #define SYS_settimeofday 122
+#define SYS_shutdown 134
 #define SYS_mkdir 136
 #define SYS_rmdir 137
 #define SYS_setgid 181
