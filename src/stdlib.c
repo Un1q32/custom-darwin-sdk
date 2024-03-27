@@ -93,6 +93,10 @@ unsigned long strtoul(const char *nptr, char **endptr, int base) {
 
 int atoi(const char *nptr) { return (int)strtol(nptr, NULL, 10); }
 
+long atol(const char *nptr) { return strtol(nptr, NULL, 10); }
+
+long long atoll(const char *nptr) { return strtoll(nptr, NULL, 10); }
+
 char *utoa(unsigned long long num) {
   char buf[32];
   char *p = buf + 31;
