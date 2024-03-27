@@ -218,8 +218,6 @@ int poll(struct pollfd *fds, nfds_t nfds, int timeout) {
 
 int kill(pid_t pid, int sig) { return syscall(SYS_kill, pid, sig); }
 
-int dup(int oldfd) { return syscall(SYS_dup, oldfd); }
-
 int pipe(int pipefd[2]) { return syscall(SYS_pipe, pipefd); }
 
 pid_t getpgrp(void) { return syscall(SYS_getpgrp); }
@@ -231,3 +229,7 @@ int setgid(gid_t gid) { return syscall(SYS_setgid, gid); }
 int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
   return syscall(SYS_bind, sockfd, addr, addrlen);
 }
+
+int dup(int oldfd) { return syscall(SYS_dup, oldfd); }
+
+int dup2(int oldfd, int newfd) { return syscall(SYS_dup2, oldfd, newfd); }
