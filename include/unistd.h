@@ -46,6 +46,7 @@ extern unsigned int sleep(unsigned int);
 extern off_t lseek(int, off_t, int);
 extern int isatty(int);
 extern int dup(int);
+extern int dup2(int, int);
 extern int pipe(int[2]);
 extern int tcsetpgrp(int, pid_t);
 extern pid_t getpgrp(void);
