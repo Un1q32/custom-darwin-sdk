@@ -110,39 +110,6 @@ char *strstr(const char *haystack, const char *needle) {
   return NULL;
 }
 
-char *strtok(char *str, const char *delim) {
-  static char *next = NULL;
-  if (str)
-    next = str;
-  if (!next)
-    return NULL;
-  char *ret = next;
-  next += strspn(next, delim);
-  if (!*next) {
-    next = NULL;
-    return ret;
-  }
-  next[strcspn(next, delim)] = '\0';
-  return ret;
-}
-
-char *strtok_r(char *str, const char *delim, char **saveptr) {
-  char *ret;
-  if (!str)
-    str = *saveptr;
-  str += strspn(str, delim);
-  if (!*str) {
-    *saveptr = str;
-    return NULL;
-  }
-  ret = str;
-  str += strcspn(str, delim);
-  if (*str)
-    *str++ = '\0';
-  *saveptr = str;
-  return ret;
-}
-
 size_t strspn(const char *str, const char *accept) {
   size_t ret = 0;
   while (*str && strchr(accept, *str++))
@@ -258,6 +225,34 @@ void *memchr(const void *buf, int ch, size_t size) {
     p++;
   }
   return NULL;
+}
+
+char *strtok(char *str, const char *delim) {
+  static char *next = NULL;
+  if (str)
+    next = str;
+  else if (!next)
+    return NULL;
+  str = next + strspn(next, delim);
+  next = str + strcspn(str, delim);
+  if (next == str)
+    return (next = NULL);
+  next = *next ? *next = '\0', next + 1 : NULL;
+  return str;
+}
+
+char *strtok_r(char *str, const char *delim, char **saveptr) {
+  char *token;
+  if (!str)
+    str = *saveptr;
+  str += strspn(str, delim);
+  if (!*str)
+    return *saveptr = str, NULL;
+  token = str;
+  str = strpbrk(str, delim);
+  if (str)
+    *str++ = '\0';
+  return *saveptr = str, token;
 }
 
 void explicit_bzero(void *s, size_t n) {
