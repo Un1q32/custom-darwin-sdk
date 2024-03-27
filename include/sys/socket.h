@@ -21,6 +21,7 @@ struct sockaddr {
 
 extern int bind(int, const struct sockaddr *, socklen_t);
 extern int listen(int, int);
+extern int accept(int, struct sockaddr *, socklen_t *);
 extern int shutdown(int, int);
 
 #endif

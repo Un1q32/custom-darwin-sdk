@@ -239,3 +239,7 @@ int shutdown(int sockfd, int how) { return syscall(SYS_shutdown, sockfd, how); }
 int listen(int sockfd, int backlog) {
   return syscall(SYS_listen, sockfd, backlog);
 }
+
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen) {
+  return syscall(SYS_accept, sockfd, addr, addrlen);
+}
