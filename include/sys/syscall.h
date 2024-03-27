@@ -47,6 +47,8 @@
 #define SYS_shutdown 134
 #define SYS_mkdir 136
 #define SYS_rmdir 137
+#define SYS_utimes 138
+#define SYS_futimes 139
 #define SYS_setgid 181
 #define SYS_mmap 197
 #define SYS_lseek 199

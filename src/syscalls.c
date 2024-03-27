@@ -270,3 +270,11 @@ ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags,
 ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags) {
   return syscall(SYS_recvmsg, sockfd, msg, flags);
 }
+
+int futimes(int fd, const struct timeval times[2]) {
+  return syscall(SYS_futimes, fd, times);
+}
+
+int utimes(const char *filename, const struct timeval times[2]) {
+  return syscall(SYS_utimes, filename, times);
+}
