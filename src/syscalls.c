@@ -235,3 +235,7 @@ int dup(int oldfd) { return syscall(SYS_dup, oldfd); }
 int dup2(int oldfd, int newfd) { return syscall(SYS_dup2, oldfd, newfd); }
 
 int shutdown(int sockfd, int how) { return syscall(SYS_shutdown, sockfd, how); }
+
+int listen(int sockfd, int backlog) {
+  return syscall(SYS_listen, sockfd, backlog);
+}

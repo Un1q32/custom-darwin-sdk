@@ -33,6 +33,7 @@
 #define SYS_dup2 90
 #define SYS_fcntl 92
 #define SYS_bind 104
+#define SYS_listen 106
 #define SYS_gettimeofday 116
 #define SYS_settimeofday 122
 #define SYS_shutdown 134
