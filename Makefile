@@ -30,6 +30,10 @@ ifndef VERBOSE
 V := @
 endif
 
+ifdef NOCODESIGN
+CS := \#
+endif
+
 .PHONY: all debug tests clean clangd
 
 all: sdk/usr/include sdk/usr/lib
@@ -58,7 +62,7 @@ tests/bin/%: tests/%.c all
 	@printf " \033[1;32mCC\033[0m $@\n"
 	$(V)$(CC) -isysroot sdk -std=c99 $(CFLAGS) $(OPTFLAGS) -c $< -o tests/$*.o
 	$(V)$(CC) -isysroot sdk $(LDFLAGS) $(OPTFLAGS) -nostdlib -lstart.o -lc tests/$*.o -o $@
-	$(V)ldid -S $@
+	$(V)$(CS)ldid -S $@
 
 src/libc.a: $(ARCHS) $(OBJS)
 	@printf " \033[1;34mAR\033[0m %s\n" "libc.a"
