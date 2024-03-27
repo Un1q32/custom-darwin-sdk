@@ -252,6 +252,16 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen) {
   return syscall(SYS_connect, sockfd, addr, addrlen);
 }
 
+int getsockopt(int sockfd, int level, int optname, void *optval,
+               socklen_t *optlen) {
+  return syscall(SYS_getsockopt, sockfd, level, optname, optval, optlen);
+}
+
+int setsockopt(int sockfd, int level, int optname, const void *optval,
+               socklen_t optlen) {
+  return syscall(SYS_setsockopt, sockfd, level, optname, optval, optlen);
+}
+
 ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags,
                  struct sockaddr *src_addr, socklen_t *addrlen) {
   return syscall(SYS_recvfrom, sockfd, buf, len, flags, src_addr, addrlen);

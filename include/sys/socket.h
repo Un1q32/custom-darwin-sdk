@@ -39,6 +39,8 @@ extern int connect(int, const struct sockaddr *, socklen_t);
 extern int listen(int, int);
 extern int accept(int, struct sockaddr *, socklen_t *);
 extern int shutdown(int, int);
+extern int getsockopt(int, int, int, void *, socklen_t *);
+extern int setsockopt(int, int, int, const void *, socklen_t);
 extern ssize_t recv(int, void *, size_t, int);
 extern ssize_t recvfrom(int, void *, size_t, int, struct sockaddr *,
                         socklen_t *);
