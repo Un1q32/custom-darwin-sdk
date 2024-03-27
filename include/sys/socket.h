@@ -9,4 +9,6 @@ struct sockaddr {
   char data[14];
 };
 
+extern int bind(int, const struct sockaddr *, socklen_t);
+
 #endif
