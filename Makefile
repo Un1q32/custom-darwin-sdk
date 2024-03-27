@@ -51,7 +51,7 @@ sdk/usr/lib: src/libc.a crt/start.o
 	$(V)mkdir -p sdk/usr/lib
 	$(V)cp src/libc.a sdk/usr/lib
 	$(V)cp crt/start.o sdk/usr/lib
-	$(V)for lib in libSystem.a libgcc_s.1.a libgcc_s.10.5.a libgcc_s.10.4.a libm.a; do ln -sf libc.a sdk/usr/lib/$$lib; done
+	$(V)for lib in libSystem.a libgcc_s.1.a libgcc_s.10.5.a libgcc_s.10.4.a libgcc_static.a libm.a; do ln -sf libc.a sdk/usr/lib/$$lib; done
 	$(V)for obj in crt0.o crt1.o crt1.3.1.o crt1.10.5.o crt1.10.6.o; do ln -sf start.o sdk/usr/lib/$$obj; done
 
 tests/bin/%: tests/%.c all
