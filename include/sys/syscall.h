@@ -20,6 +20,9 @@
 #define SYS_setuid 23
 #define SYS_getuid 24
 #define SYS_geteuid 25
+#define SYS_recvmsg 27
+#define SYS_sendmsg 28
+#define SYS_recvfrom 29
 #define SYS_accept 30
 #define SYS_access 33
 #define SYS_kill 37
