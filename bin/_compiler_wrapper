@@ -1,0 +1,15 @@
+#!/bin/sh
+
+target="${0##*/}"
+target="${target%-*}"
+
+[ "$(uname)" != "Darwin" ] && linker='-fuse-ld=ld64' && linkerver='-mlinker-version=907'
+
+exec clang \
+    -target "$target" \
+    -isysroot "${0%/*}/../sdk" \
+    -Wno-unused-command-line-argument \
+    -static \
+    "$linker" \
+    "$linkerver" \
+    "$@"

@@ -1,0 +1,6 @@
+*.o
+libc.a
+/sdk/usr
+.clangd
+/compiler-rt
+.DS_Store
