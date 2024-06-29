@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-/* TODO: this works, but it pins the CPU at 100% usage, find out how apple does
- * it */
+/* TODO: this pins the CPU at 100% usage and breaks if the system time is
+ * changed, fix it. */
 
 int nanosleep(const struct timespec *req, struct timespec *rem) {
   if (req->tv_nsec < 0 || req->tv_nsec >= 1000000000) {
