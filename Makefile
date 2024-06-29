@@ -82,6 +82,10 @@ i386: ARCH := i386
 i386: compiler-rt sdk/usr/include $(HEADERS)
 	@$(MAKE) -f arch/$(ARCH)/$(ARCH).mk NOASM=$(NOASM) BUILTIN_CC="$(BUILTIN_CC)" V=$(V) CFLAGS="$(CFLAGS)" OPTFLAGS="$(OPTFLAGS)"
 
+armv4t: ARCH := armv4t
+armv4t: compiler-rt sdk/usr/include $(HEADERS)
+	@$(MAKE) -f arch/$(ARCH)/$(ARCH).mk NOASM=$(NOASM) BUILTIN_CC="$(BUILTIN_CC)" V=$(V) CFLAGS="$(CFLAGS)" OPTFLAGS="$(OPTFLAGS)"
+
 armv5: ARCH := armv5
 armv5: compiler-rt sdk/usr/include $(HEADERS)
 	@$(MAKE) -f arch/$(ARCH)/$(ARCH).mk NOASM=$(NOASM) BUILTIN_CC="$(BUILTIN_CC)" V=$(V) CFLAGS="$(CFLAGS)" OPTFLAGS="$(OPTFLAGS)"
