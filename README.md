@@ -6,17 +6,17 @@
 
 > Currently supports i386, x86_64, x86_64h, armv4t, armv5, armv6, armv7, armv7s, armv7k, arm64, and arm64e (arm64 and arm64e are untested)
 
-## Requirements: (macOS)
+## Building:
+
+### Requirements: (macOS)
 
 - Just install the Xcode Command Line Tools
 
-## Requirements: (Linux, BSD, etc.)
+### Requirements: (Linux, BSD, etc.)
 
 - Clang (GCC recieves less testing but should work)
 - [ld64](https://github.com/tpoechtrager/cctools-port), (it needs to be in path as `ld64.ld64`)
 - lipo (from cctools-port or llvm-lipo, it needs to be in path as `lipo`)
-
-## Building:
 
 To build for all architectures:
 
