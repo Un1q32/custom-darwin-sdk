@@ -9,12 +9,13 @@ LIBTOOL := llvm-libtool-darwin
 endif
 
 COMPILER_RT_VERSION := 18.1.8
+LD64_VERSION := 951.9
 
 CFLAGS := -Wall -Wextra -Wpedantic
 OPTFLAGS := -g
 LDFLAGS := -static
 ifneq ($(shell uname),Darwin)
-LDFLAGS += -fuse-ld=ld64 -mlinker-version=951.9
+LDFLAGS += -fuse-ld=ld64 -mlinker-version=$(LD64_VERSION)
 endif
 
 SRCS := $(wildcard src/*/*.c)
@@ -79,6 +80,10 @@ arm64e:
 
 i386: ARCH := i386
 i386: compiler-rt sdk/usr/include $(HEADERS)
+	@$(MAKE) -f arch/$(ARCH)/$(ARCH).mk NOASM=$(NOASM) BUILTIN_CC="$(BUILTIN_CC)" V=$(V) CFLAGS="$(CFLAGS)" OPTFLAGS="$(OPTFLAGS)"
+
+armv5: ARCH := armv5
+armv5: compiler-rt sdk/usr/include $(HEADERS)
 	@$(MAKE) -f arch/$(ARCH)/$(ARCH).mk NOASM=$(NOASM) BUILTIN_CC="$(BUILTIN_CC)" V=$(V) CFLAGS="$(CFLAGS)" OPTFLAGS="$(OPTFLAGS)"
 
 armv6: ARCH := armv6

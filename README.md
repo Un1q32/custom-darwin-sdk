@@ -4,7 +4,7 @@
 
 > Easily create static binaries
 
-> Currently supports i386, x86_64, x86_64h, armv6, armv7, armv7s, armv7k, arm64, and arm64e (arm64 and arm64e are untested)
+> Currently supports i386, x86_64, x86_64h, armv5, armv6, armv7, armv7s, armv7k, arm64, and arm64e (arm64 and arm64e are untested)
 
 ## Requirements: (macOS)
 
